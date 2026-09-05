@@ -283,9 +283,20 @@ def main():
     topics.sort(key=lambda t: t[2])
 
     total = len(all_entries)
-    body_parts = []
+
+    # "Browse by topic:" -- same idea as til.simonwillison.net's own homepage,
+    # adapted for a static site: his links to a separate Datasette page per
+    # topic, ours jumps to that topic's <h2> section further down this same
+    # page, since there's no per-topic filtering backend here.
+    browse_links = " &middot; ".join(
+        '<a href="#{topic}" title="{count} TIL{plural}">{topic}</a> {count}'.format(
+            topic=topic, count=len(rows), plural="" if len(rows) == 1 else "s"
+        )
+        for topic, rows, _ in sorted(topics, key=lambda t: t[0])
+    )
+    body_parts = [f"<p><strong>Browse by topic:</strong> {browse_links}</p>"]
     for topic, rows, _ in topics:
-        body_parts.append(f"<h2>{topic}</h2>\n<ul>")
+        body_parts.append(f'<h2 id="{topic}">{topic}</h2>\n<ul>')
         for row in rows:
             body_parts.append(
                 '<li><a href="{topic}/{slug}.html">{title}</a> - {date}</li>'.format(topic=topic, **row)
