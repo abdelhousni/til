@@ -12,6 +12,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Adding an Atom feed and syntax highlighting to a static site build script](https://abdelhousni.github.io/til/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
 * [Publishing a TIL collection as a static GitHub Pages site](https://abdelhousni.github.io/til/github-pages/static-site-instead-of-datasette.html) - 2026-09-05
 
+## podman
+
+* [Hosting a simple PHP page with Podman + Caddy, with automatic HTTPS](https://abdelhousni.github.io/til/podman/caddy-php-fpm-automatic-https.html) - 2026-09-05
+
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
@@ -26,8 +30,4 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [robots.txt for a small static site is basically a pointer to the sitemap](https://abdelhousni.github.io/til/seo/robots-txt-is-mostly-just-pointing-at-the-sitemap.html) - 2026-09-05
 * [A schema.org Person block is what actually helps you rank for your own name](https://abdelhousni.github.io/til/seo/schema-org-person-for-name-search.html) - 2026-09-05
 * [Verifying a GitHub Pages site with Bing Webmaster Tools (no DNS needed)](https://abdelhousni.github.io/til/seo/verifying-a-github-pages-site-with-bing.html) - 2026-09-05
-
-## podman
-
-* [Hosting a simple PHP page with Podman + Caddy, with automatic HTTPS](https://abdelhousni.github.io/til/podman/caddy-php-fpm-automatic-https.html) - unknown
 <!-- index ends -->
