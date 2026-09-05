@@ -23,6 +23,7 @@ SITE_URL = "https://abdelhousni.github.io/til"
 SITE_AUTHOR = "Abdellatif Housni"
 AUTHOR_GITHUB_URL = "https://github.com/abdelhousni"
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
+BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 FEED_ENTRY_LIMIT = 50
 
@@ -82,6 +83,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{description}">
 <meta name="author" content="{author}">
+<meta name="msvalidate.01" content="{bing_verification_code}">
 <link rel="canonical" href="{url}/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{title}">
@@ -288,6 +290,7 @@ def main():
             author=SITE_AUTHOR,
             url=SITE_URL,
             person_schema=PERSON_SCHEMA.format(author=SITE_AUTHOR, site_url=SITE_URL, github_url=AUTHOR_GITHUB_URL),
+            bing_verification_code=BING_VERIFICATION_CODE,
         )
     )
     (site / "feed.atom").write_text(build_feed(all_entries))
