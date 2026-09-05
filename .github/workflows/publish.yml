@@ -37,6 +37,8 @@ jobs:
         git push
     - name: Build site
       run: python build_site.py
+    - name: Check for dead links
+      run: python check_links.py --external
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:

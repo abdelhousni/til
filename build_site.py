@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the static GitHub Pages site (_site/) from the TIL markdown files."""
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -122,6 +123,16 @@ def strip_leading_title(text, title):
     return text
 
 
+# Matches markdown links to a sibling .md file, e.g. [text](other-entry.md)
+# or [text](other-entry.md#section). Deliberately excludes http(s):// links
+# and anchors, since those are either external or don't need rewriting.
+RELATIVE_MD_LINK_RE = re.compile(r"(?<=\]\()(?!https?://)([^)\s]+?)\.md(#[^)]*)?(?=\))")
+
+
+def rewrite_relative_md_links(text):
+    return RELATIVE_MD_LINK_RE.sub(lambda m: f"{m.group(1)}.html{m.group(2) or ''}", text)
+
+
 def build_feed(entries):
     entries = sorted(entries, key=lambda e: e["date"], reverse=True)[:FEED_ENTRY_LIMIT]
     updated = f"{entries[0]['date']}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
@@ -159,7 +170,7 @@ def main():
             title = title_for(md, text)
             date = created_date(md)
             slug = md.stem
-            body_text = strip_leading_title(text, title)
+            body_text = rewrite_relative_md_links(strip_leading_title(text, title))
             html_body = markdown.markdown(
                 body_text,
                 extensions=["fenced_code", "tables", "codehilite"],
