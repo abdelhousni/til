@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build the static GitHub Pages site (_site/) from the TIL markdown files."""
+import json
 import pathlib
 import re
 import shutil
@@ -21,7 +22,10 @@ site = root / "_site"
 SITE_TITLE = "Abdellatif Housni: TIL"
 SITE_URL = "https://abdelhousni.github.io/til"
 SITE_AUTHOR = "Abdellatif Housni"
-AUTHOR_GITHUB_URL = "https://github.com/abdelhousni"
+AUTHOR_SAME_AS = [
+    "https://github.com/abdelhousni",
+    "https://www.linkedin.com/in/abdelhousni/",
+]
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
@@ -38,15 +42,15 @@ def plain_text_summary(html_body, limit=160):
     return text if len(text) <= limit else text[: limit - 1].rsplit(" ", 1)[0] + "…"
 
 
-PERSON_SCHEMA = """<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "{author}",
-  "url": "{site_url}/",
-  "sameAs": ["{github_url}"]
-}}
-</script>"""
+def build_person_schema():
+    data = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": SITE_AUTHOR,
+        "url": f"{SITE_URL}/",
+        "sameAs": AUTHOR_SAME_AS,
+    }
+    return f'<script type="application/ld+json">\n{json.dumps(data, indent=2)}\n</script>'
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -289,7 +293,7 @@ def main():
             description=attr_escape(SITE_DESCRIPTION),
             author=SITE_AUTHOR,
             url=SITE_URL,
-            person_schema=PERSON_SCHEMA.format(author=SITE_AUTHOR, site_url=SITE_URL, github_url=AUTHOR_GITHUB_URL),
+            person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
         )
     )
