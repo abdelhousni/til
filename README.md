@@ -40,6 +40,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 ## tls
 
+* [Adding a certificate to a Java keystore/truststore with keytool](https://abdelhousni.github.io/til/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 * [Checking a TLS certificate's dates, issuer, and SANs with openssl](https://abdelhousni.github.io/til/tls/openssl-checking-cert-dates-and-details.html) - 2026-09-05
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://abdelhousni.github.io/til/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
 <!-- index ends -->
