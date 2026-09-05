@@ -9,20 +9,42 @@ also check external links (skipped by default to keep local runs fast and
 offline-friendly).
 """
 import pathlib
-import re
 import sys
 import urllib.error
 import urllib.request
+from html.parser import HTMLParser
 
 root = pathlib.Path(__file__).parent.resolve()
 site = root / "_site"
 
-HREF_RE = re.compile(r'href="([^"]+)"')
 TIMEOUT = 10
 
 
+class HrefCollector(HTMLParser):
+    """Collects href values from real <a> tags only.
+
+    A regex scan over the raw HTML would also match the literal text
+    'href="..."' when it appears as content inside a <pre>/<code> block (our
+    own TIL posts show HTML/Python snippets containing href="..." examples),
+    and Pygments splits that text across multiple <span> tags, which mangles
+    a naive regex match entirely. Parsing real tags avoids both problems.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.hrefs = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            for name, value in attrs:
+                if name == "href" and value:
+                    self.hrefs.append(value)
+
+
 def links_in(html_path):
-    return HREF_RE.findall(html_path.read_text())
+    collector = HrefCollector()
+    collector.feed(html_path.read_text())
+    return collector.hrefs
 
 
 def check_internal(html_path, href):
