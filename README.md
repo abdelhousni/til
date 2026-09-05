@@ -4,12 +4,13 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->18<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->19<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
 
 * [Using the Foreman/Satellite dynamic inventory plugin](https://abdelhousni.github.io/til/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
+* [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://abdelhousni.github.io/til/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [Starting an Ansible role project with uv for the venv](https://abdelhousni.github.io/til/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
 * [Targeting hosts the same way, whether the inventory is static or dynamic](https://abdelhousni.github.io/til/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
 
