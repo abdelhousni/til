@@ -4,11 +4,12 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->12<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->13<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
 
+* [Using the Foreman/Satellite dynamic inventory plugin](https://abdelhousni.github.io/til/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
 * [Starting an Ansible role project with uv for the venv](https://abdelhousni.github.io/til/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
 
 ## github-pages
