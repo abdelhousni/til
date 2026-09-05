@@ -4,6 +4,7 @@ import pathlib
 import shutil
 import subprocess
 import sys
+from xml.sax.saxutils import escape
 
 root = pathlib.Path(__file__).parent.resolve()
 
@@ -13,9 +14,13 @@ root = pathlib.Path(__file__).parent.resolve()
 sys.path = [p for p in sys.path if p not in ("", ".", str(root))]
 
 import markdown  # noqa: E402
+from pygments.formatters import HtmlFormatter  # noqa: E402
+
 site = root / "_site"
 SITE_TITLE = "Abdel Housni: TIL"
+SITE_URL = "https://abdelhousni.github.io/til"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
+FEED_ENTRY_LIMIT = 50
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -24,6 +29,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <title>{title} - TIL</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 </head>
 <body>
 <header><a href="../index.html">&larr; All TILs</a></header>
@@ -43,15 +49,35 @@ INDEX_TEMPLATE = """<!doctype html>
 <title>{title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
+<link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
 </head>
 <body>
-<header><h1>{title}</h1><p>{count} TILs so far.</p></header>
+<header><h1>{title}</h1><p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p></header>
 <main>
 {body}
 </main>
 </body>
 </html>
 """
+
+FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>{title}</title>
+<link href="{site_url}/feed.atom" rel="self"/>
+<link href="{site_url}/"/>
+<id>{site_url}/</id>
+<updated>{updated}</updated>
+{entries}
+</feed>
+"""
+
+FEED_ENTRY_TEMPLATE = """<entry>
+<title>{title}</title>
+<link href="{url}"/>
+<id>{url}</id>
+<updated>{updated}</updated>
+<content type="html">{content}</content>
+</entry>"""
 
 STYLE = """
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
@@ -96,13 +122,31 @@ def strip_leading_title(text, title):
     return text
 
 
+def build_feed(entries):
+    entries = sorted(entries, key=lambda e: e["date"], reverse=True)[:FEED_ENTRY_LIMIT]
+    updated = f"{entries[0]['date']}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
+    entry_xml = "\n".join(
+        FEED_ENTRY_TEMPLATE.format(
+            title=escape(e["title"]),
+            url=e["url"],
+            updated=f"{e['date']}T00:00:00Z",
+            content=escape(e["html_body"]),
+        )
+        for e in entries
+    )
+    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, updated=updated, entries=entry_xml)
+
+
 def main():
     if site.exists():
         shutil.rmtree(site)
     site.mkdir()
-    (site / "style.css").write_text(STYLE)
+
+    formatter = HtmlFormatter(style="default")
+    (site / "style.css").write_text(STYLE + "\n" + formatter.get_style_defs(".codehilite"))
 
     topics = []
+    all_entries = []
     for entry in sorted(root.iterdir()):
         if not entry.is_dir() or entry.name in SKIP_DIRS or entry.name.startswith("."):
             continue
@@ -116,19 +160,29 @@ def main():
             date = created_date(md)
             slug = md.stem
             body_text = strip_leading_title(text, title)
-            html_body = markdown.markdown(body_text, extensions=["fenced_code", "tables"])
+            html_body = markdown.markdown(
+                body_text,
+                extensions=["fenced_code", "tables", "codehilite"],
+                extension_configs={"codehilite": {"guess_lang": False}},
+            )
             out_dir = site / entry.name
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / f"{slug}.html").write_text(
-                PAGE_TEMPLATE.format(title=title, topic=entry.name, date=date, body=html_body)
+                PAGE_TEMPLATE.format(
+                    title=title, topic=entry.name, date=date, body=html_body, site_title=SITE_TITLE
+                )
             )
-            rows.append({"title": title, "date": date, "slug": slug})
+            row = {"title": title, "date": date, "slug": slug}
+            rows.append(row)
+            all_entries.append(
+                {**row, "topic": entry.name, "html_body": html_body, "url": f"{SITE_URL}/{entry.name}/{slug}.html"}
+            )
         rows.sort(key=lambda r: r["date"])
         topics.append((entry.name, rows, rows[0]["date"]))
 
     topics.sort(key=lambda t: t[2])
 
-    total = sum(len(rows) for _, rows, _ in topics)
+    total = len(all_entries)
     body_parts = []
     for topic, rows, _ in topics:
         body_parts.append(f"<h2>{topic}</h2>\n<ul>")
@@ -141,6 +195,7 @@ def main():
     (site / "index.html").write_text(
         INDEX_TEMPLATE.format(title=SITE_TITLE, count=total, body="\n".join(body_parts))
     )
+    (site / "feed.atom").write_text(build_feed(all_entries))
 
 
 if __name__ == "__main__":
