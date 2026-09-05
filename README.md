@@ -4,9 +4,13 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->11<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->12<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
+## ansible
+
+* [Starting an Ansible role project with uv for the venv](https://abdelhousni.github.io/til/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
+
 ## github-pages
 
 * [Adding an Atom feed and syntax highlighting to a static site build script](https://abdelhousni.github.io/til/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
