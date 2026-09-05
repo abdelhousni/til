@@ -20,8 +20,32 @@ from pygments.formatters import HtmlFormatter  # noqa: E402
 site = root / "_site"
 SITE_TITLE = "Abdel Housni: TIL"
 SITE_URL = "https://abdelhousni.github.io/til"
+SITE_AUTHOR = "Abdel Housni"
+AUTHOR_GITHUB_URL = "https://github.com/abdelhousni"
+SITE_DESCRIPTION = "Abdel Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 FEED_ENTRY_LIMIT = 50
+
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def plain_text_summary(html_body, limit=160):
+    """First paragraph of rendered HTML, tags stripped, for a <meta description>."""
+    match = re.search(r"<p>(.*?)</p>", html_body, re.DOTALL)
+    text = TAG_RE.sub("", match.group(1)) if match else ""
+    text = " ".join(text.split())
+    return text if len(text) <= limit else text[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
+PERSON_SCHEMA = """<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{author}",
+  "url": "{site_url}/",
+  "sameAs": ["{github_url}"]
+}}
+</script>"""
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -29,6 +53,13 @@ PAGE_TEMPLATE = """<!doctype html>
 <meta charset="utf-8">
 <title>{title} - TIL</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{description}">
+<meta name="author" content="{author}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 </head>
@@ -49,8 +80,16 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta charset="utf-8">
 <title>{title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{description}">
+<meta name="author" content="{author}">
+<link rel="canonical" href="{url}/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="{url}/">
 <link rel="stylesheet" href="style.css">
 <link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
+{person_schema}
 </head>
 <body>
 <header><h1>{title}</h1><p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p></header>
@@ -59,6 +98,23 @@ INDEX_TEMPLATE = """<!doctype html>
 </main>
 </body>
 </html>
+"""
+
+SITEMAP_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{urls}
+</urlset>
+"""
+
+SITEMAP_URL_TEMPLATE = """<url>
+<loc>{loc}</loc>
+<lastmod>{lastmod}</lastmod>
+</url>"""
+
+ROBOTS_TXT = """User-agent: *
+Allow: /
+
+Sitemap: {site_url}/sitemap.xml
 """
 
 FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
@@ -133,6 +189,19 @@ def rewrite_relative_md_links(text):
     return RELATIVE_MD_LINK_RE.sub(lambda m: f"{m.group(1)}.html{m.group(2) or ''}", text)
 
 
+def attr_escape(text):
+    return escape(text, {'"': "&quot;"})
+
+
+def build_sitemap(all_entries):
+    urls = [SITEMAP_URL_TEMPLATE.format(loc=f"{SITE_URL}/", lastmod=max(e["date"] for e in all_entries))] if all_entries else []
+    urls += [
+        SITEMAP_URL_TEMPLATE.format(loc=e["url"], lastmod=e["date"])
+        for e in sorted(all_entries, key=lambda e: e["url"])
+    ]
+    return SITEMAP_TEMPLATE.format(urls="\n".join(urls))
+
+
 def build_feed(entries):
     entries = sorted(entries, key=lambda e: e["date"], reverse=True)[:FEED_ENTRY_LIMIT]
     updated = f"{entries[0]['date']}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
@@ -176,18 +245,25 @@ def main():
                 extensions=["fenced_code", "tables", "codehilite"],
                 extension_configs={"codehilite": {"guess_lang": False}},
             )
+            url = f"{SITE_URL}/{entry.name}/{slug}.html"
+            description = attr_escape(plain_text_summary(html_body))
             out_dir = site / entry.name
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / f"{slug}.html").write_text(
                 PAGE_TEMPLATE.format(
-                    title=title, topic=entry.name, date=date, body=html_body, site_title=SITE_TITLE
+                    title=title,
+                    topic=entry.name,
+                    date=date,
+                    body=html_body,
+                    site_title=SITE_TITLE,
+                    description=description,
+                    author=SITE_AUTHOR,
+                    url=url,
                 )
             )
             row = {"title": title, "date": date, "slug": slug}
             rows.append(row)
-            all_entries.append(
-                {**row, "topic": entry.name, "html_body": html_body, "url": f"{SITE_URL}/{entry.name}/{slug}.html"}
-            )
+            all_entries.append({**row, "topic": entry.name, "html_body": html_body, "url": url})
         rows.sort(key=lambda r: r["date"])
         topics.append((entry.name, rows, rows[0]["date"]))
 
@@ -204,9 +280,19 @@ def main():
         body_parts.append("</ul>")
 
     (site / "index.html").write_text(
-        INDEX_TEMPLATE.format(title=SITE_TITLE, count=total, body="\n".join(body_parts))
+        INDEX_TEMPLATE.format(
+            title=SITE_TITLE,
+            count=total,
+            body="\n".join(body_parts),
+            description=attr_escape(SITE_DESCRIPTION),
+            author=SITE_AUTHOR,
+            url=SITE_URL,
+            person_schema=PERSON_SCHEMA.format(author=SITE_AUTHOR, site_url=SITE_URL, github_url=AUTHOR_GITHUB_URL),
+        )
     )
     (site / "feed.atom").write_text(build_feed(all_entries))
+    (site / "sitemap.xml").write_text(build_sitemap(all_entries))
+    (site / "robots.txt").write_text(ROBOTS_TXT.format(site_url=SITE_URL))
 
 
 if __name__ == "__main__":
