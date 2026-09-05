@@ -25,6 +25,7 @@ SITE_AUTHOR = "Abdellatif Housni"
 AUTHOR_SAME_AS = [
     "https://github.com/abdelhousni",
     "https://www.linkedin.com/in/abdelhousni/",
+    "https://mastodon.social/@abdelhousni",
 ]
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
@@ -51,6 +52,11 @@ def build_person_schema():
         "sameAs": AUTHOR_SAME_AS,
     }
     return f'<script type="application/ld+json">\n{json.dumps(data, indent=2)}\n</script>'
+
+
+def build_rel_me_links():
+    return "\n".join(f'<link href="{url}" rel="me">' for url in AUTHOR_SAME_AS)
+
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -95,6 +101,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{url}/">
 <link rel="stylesheet" href="style.css">
 <link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
+{rel_me_links}
 {person_schema}
 </head>
 <body>
@@ -276,9 +283,20 @@ def main():
     topics.sort(key=lambda t: t[2])
 
     total = len(all_entries)
-    body_parts = []
+
+    # "Browse by topic:" -- same idea as til.simonwillison.net's own homepage,
+    # adapted for a static site: his links to a separate Datasette page per
+    # topic, ours jumps to that topic's <h2> section further down this same
+    # page, since there's no per-topic filtering backend here.
+    browse_links = " &middot; ".join(
+        '<a href="#{topic}" title="{count} TIL{plural}">{topic}</a> {count}'.format(
+            topic=topic, count=len(rows), plural="" if len(rows) == 1 else "s"
+        )
+        for topic, rows, _ in sorted(topics, key=lambda t: t[0])
+    )
+    body_parts = [f"<p><strong>Browse by topic:</strong> {browse_links}</p>"]
     for topic, rows, _ in topics:
-        body_parts.append(f"<h2>{topic}</h2>\n<ul>")
+        body_parts.append(f'<h2 id="{topic}">{topic}</h2>\n<ul>')
         for row in rows:
             body_parts.append(
                 '<li><a href="{topic}/{slug}.html">{title}</a> - {date}</li>'.format(topic=topic, **row)
@@ -292,6 +310,7 @@ def main():
             body="\n".join(body_parts),
             description=attr_escape(SITE_DESCRIPTION),
             author=SITE_AUTHOR,
+            rel_me_links=build_rel_me_links(),
             url=SITE_URL,
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,

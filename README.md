@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->8<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->9<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## github-pages
@@ -26,4 +26,8 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [robots.txt for a small static site is basically a pointer to the sitemap](https://abdelhousni.github.io/til/seo/robots-txt-is-mostly-just-pointing-at-the-sitemap.html) - 2026-09-05
 * [A schema.org Person block is what actually helps you rank for your own name](https://abdelhousni.github.io/til/seo/schema-org-person-for-name-search.html) - 2026-09-05
 * [Verifying a GitHub Pages site with Bing Webmaster Tools (no DNS needed)](https://abdelhousni.github.io/til/seo/verifying-a-github-pages-site-with-bing.html) - 2026-09-05
+
+## podman
+
+* [Hosting a simple PHP page with Podman + Caddy, with automatic HTTPS](https://abdelhousni.github.io/til/podman/caddy-php-fpm-automatic-https.html) - unknown
 <!-- index ends -->
