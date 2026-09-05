@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->17<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->18<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -33,6 +33,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 ## python
 
+* [Getting a newer Python on RHEL without touching the system python3](https://abdelhousni.github.io/til/python/newer-python-with-uv-without-touching-system-python-rhel.html) - 2026-09-05
 * [A regex link checker breaks on the exact HTML it was meant to check](https://abdelhousni.github.io/til/python/regex-vs-htmlparser-for-dead-links.html) - 2026-09-05
 
 ## seo
