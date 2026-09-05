@@ -25,6 +25,7 @@ SITE_AUTHOR = "Abdellatif Housni"
 AUTHOR_SAME_AS = [
     "https://github.com/abdelhousni",
     "https://www.linkedin.com/in/abdelhousni/",
+    "https://mastodon.social/@abdelhousni",
 ]
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
@@ -51,6 +52,11 @@ def build_person_schema():
         "sameAs": AUTHOR_SAME_AS,
     }
     return f'<script type="application/ld+json">\n{json.dumps(data, indent=2)}\n</script>'
+
+
+def build_rel_me_links():
+    return "\n".join(f'<link href="{url}" rel="me">' for url in AUTHOR_SAME_AS)
+
 
 PAGE_TEMPLATE = """<!doctype html>
 <html lang="en">
@@ -95,6 +101,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{url}/">
 <link rel="stylesheet" href="style.css">
 <link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
+{rel_me_links}
 {person_schema}
 </head>
 <body>
@@ -292,6 +299,7 @@ def main():
             body="\n".join(body_parts),
             description=attr_escape(SITE_DESCRIPTION),
             author=SITE_AUTHOR,
+            rel_me_links=build_rel_me_links(),
             url=SITE_URL,
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
