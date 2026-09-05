@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->17<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->18<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -17,6 +17,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Adding an Atom feed and syntax highlighting to a static site build script](https://abdelhousni.github.io/til/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
 * [Publishing a TIL collection as a static GitHub Pages site](https://abdelhousni.github.io/til/github-pages/static-site-instead-of-datasette.html) - 2026-09-05
+
+## gitlab-ci
+
+* [A simple GitLab CI pipeline for ansible-lint on a custom Python image](https://abdelhousni.github.io/til/gitlab-ci/ansible-lint-custom-python-image.html) - 2026-09-05
 
 ## http
 
