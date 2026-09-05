@@ -1,4 +1,0 @@
-#!/bin/bash
-python build_database.py
-python generate_screenshots.py
-python update_readme.py --rewrite
