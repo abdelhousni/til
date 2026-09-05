@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->5<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->9<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## github-pages
@@ -23,4 +23,11 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## python
 
 * [A regex link checker breaks on the exact HTML it was meant to check](https://abdelhousni.github.io/til/python/regex-vs-htmlparser-for-dead-links.html) - 2026-09-05
+
+## seo
+
+* [Don't hand-write a sitemap.xml, generate it from data you already have](https://abdelhousni.github.io/til/seo/generating-a-sitemap-from-existing-data.html) - 2026-09-05
+* [robots.txt for a small static site is basically a pointer to the sitemap](https://abdelhousni.github.io/til/seo/robots-txt-is-mostly-just-pointing-at-the-sitemap.html) - 2026-09-05
+* [A schema.org Person block is what actually helps you rank for your own name](https://abdelhousni.github.io/til/seo/schema-org-person-for-name-search.html) - 2026-09-05
+* [Verifying a GitHub Pages site with Bing Webmaster Tools (no DNS needed)](https://abdelhousni.github.io/til/seo/verifying-a-github-pages-site-with-bing.html) - 2026-09-05
 <!-- index ends -->
