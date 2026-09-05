@@ -73,3 +73,98 @@ I went with the sysctl change — it's a one-line, one-time fix and keeps everyt
 ## Result
 
 `podman ps` shows both containers running, `https://example.com` serves the PHP page with a valid padlock, and there's nothing PHP- or web-server-related installed on the host itself — just Podman.
+
+## Making it survive a reboot: Quadlet
+
+Plain `podman run` containers don't come back after a reboot. [Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) is Podman's native way to describe containers, networks, and volumes as systemd unit files, so `systemctl` manages them like any other service — start, stop, status, logs via `journalctl`, and restart-on-boot for free.
+
+Each Podman resource gets its own unit file, in `~/.config/containers/systemd/` for a rootless setup like this one (`/etc/containers/systemd/` for a rootful one):
+
+`~/.config/containers/systemd/webnet.network` — replaces the `podman network create` command:
+
+```
+[Unit]
+Description=Bridge network for the PHP/Caddy stack
+
+[Network]
+NetworkName=webnet
+
+[Install]
+WantedBy=default.target
+```
+
+`~/.config/containers/systemd/caddy-data.volume` — replaces the plain `-v caddy_data:/data` named volume:
+
+```
+[Unit]
+Description=Persistent storage for Caddy's ACME account and certificates
+
+[Volume]
+
+[Install]
+WantedBy=default.target
+```
+
+`~/.config/containers/systemd/php.container`:
+
+```
+[Unit]
+Description=PHP-FPM for myapp
+After=webnet-network.service
+Requires=webnet-network.service
+
+[Container]
+Image=docker.io/library/php:8.3-fpm-alpine
+ContainerName=php
+Network=webnet.network
+Volume=/home/YOUR_USER/myapp/app:/srv:ro
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+```
+
+`~/.config/containers/systemd/caddy.container`:
+
+```
+[Unit]
+Description=Caddy reverse proxy for myapp
+After=webnet-network.service php.service caddy-data-volume.service
+Requires=webnet-network.service php.service caddy-data-volume.service
+
+[Container]
+Image=docker.io/library/caddy:2-alpine
+ContainerName=caddy
+Network=webnet.network
+PublishPort=80:80
+PublishPort=443:443
+Volume=/home/YOUR_USER/myapp/Caddyfile:/etc/caddy/Caddyfile:ro
+Volume=/home/YOUR_USER/myapp/app:/srv:ro
+Volume=caddy-data.volume:/data
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+```
+
+(Substitute your actual home directory for `/home/YOUR_USER`.)
+
+Then:
+
+```sh
+systemctl --user daemon-reload
+systemctl --user start caddy.service
+loginctl enable-linger $USER
+```
+
+Three things worth knowing here, none of them obvious from the unit files alone:
+
+- **Unit naming doesn't just drop the extension.** `webnet.network` becomes `webnet-network.service`, and `caddy-data.volume` becomes `caddy-data-volume.service` — that's why the `After=`/`Requires=` lines above reference `webnet-network.service`, not `webnet.service`. A `.container` file is the one exception: `php.container` becomes plain `php.service`.
+- **The `[Install]` section doesn't need a separate `systemctl enable`.** Quadlet applies it automatically the moment `daemon-reload` generates the service — starting `caddy.service` once is enough for it (and, via `Requires=`, its dependencies) to also come back on the next boot.
+- **`loginctl enable-linger $USER` is what makes rootless services survive a reboot at all**, not just a logout. Without it, systemd tears down your user's entire service manager (and everything running under it) as soon as your last session ends — including on a headless server where you were never really "logged in" to begin with.
+
+Same result as the manual `podman run` version, but now `systemctl status caddy` and `journalctl --user -u caddy` work like they would for any other service, and a reboot doesn't require me to remember three commands in the right order.
