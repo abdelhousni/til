@@ -60,3 +60,7 @@ It can take a few minutes for the probe to show up as "Connected" on its page un
 ## Why this works fine unprivileged
 
 The probe ships its own busybox binary for ping/traceroute-style measurements and grants it raw-socket access via a Linux file capability (`setcap cap_net_raw=ep`) at install time, rather than needing the whole process to run as root. File capabilities work fine inside an unprivileged LXC's own user namespace, so there was no need to reach for a privileged container just to let it send ICMP packets.
+
+## Result
+
+Mine has been up and connected since following these exact steps — you can see it live at [atlas.ripe.net/probes/1017419](https://atlas.ripe.net/probes/1017419/), quietly contributing measurements from a 512MB unprivileged LXC that costs nothing extra to run alongside everything else on the same Proxmox host.
