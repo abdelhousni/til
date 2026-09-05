@@ -18,11 +18,11 @@ import markdown  # noqa: E402
 from pygments.formatters import HtmlFormatter  # noqa: E402
 
 site = root / "_site"
-SITE_TITLE = "Abdel Housni: TIL"
+SITE_TITLE = "Abdellatif Housni: TIL"
 SITE_URL = "https://abdelhousni.github.io/til"
-SITE_AUTHOR = "Abdel Housni"
+SITE_AUTHOR = "Abdellatif Housni"
 AUTHOR_GITHUB_URL = "https://github.com/abdelhousni"
-SITE_DESCRIPTION = "Abdel Housni's Today I Learned notes: short, practical write-ups on things learned while building."
+SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 FEED_ENTRY_LIMIT = 50
 
