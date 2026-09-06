@@ -137,6 +137,10 @@ FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 <link href="{site_url}/"/>
 <id>{site_url}/</id>
 <updated>{updated}</updated>
+<author>
+<name>{author}</name>
+<uri>{site_url}/</uri>
+</author>
 {entries}
 </feed>
 """
@@ -174,6 +178,22 @@ def created_date(path):
         if dates:
             return dates[-1]
     return "unknown"
+
+
+def last_modified_datetime(path):
+    """Full ISO-8601 timestamp of the most recent commit touching this file.
+
+    Atom's <updated> exists so feed readers can tell whether an entry
+    changed since they last fetched it -- using the *creation* date here
+    means an edited entry never looks updated to a subscriber, which is
+    exactly the bug this fixes.
+    """
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%aI", "--", str(path)],
+        cwd=root, capture_output=True, text=True, check=True,
+    )
+    timestamp = result.stdout.strip()
+    return timestamp if timestamp else "1970-01-01T00:00:00Z"
 
 
 def title_for(path, text):
@@ -216,18 +236,21 @@ def build_sitemap(all_entries):
 
 
 def build_feed(entries):
-    entries = sorted(entries, key=lambda e: e["date"], reverse=True)[:FEED_ENTRY_LIMIT]
-    updated = f"{entries[0]['date']}T00:00:00Z" if entries else "1970-01-01T00:00:00Z"
+    # Sorted and stamped by last_modified, not creation date -- an edited
+    # older entry should surface near the top and look "updated" to
+    # subscribers, the same way any other feed behaves.
+    entries = sorted(entries, key=lambda e: e["last_modified"], reverse=True)[:FEED_ENTRY_LIMIT]
+    updated = entries[0]["last_modified"] if entries else "1970-01-01T00:00:00Z"
     entry_xml = "\n".join(
         FEED_ENTRY_TEMPLATE.format(
             title=escape(e["title"]),
             url=e["url"],
-            updated=f"{e['date']}T00:00:00Z",
+            updated=e["last_modified"],
             content=escape(e["html_body"]),
         )
         for e in entries
     )
-    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, updated=updated, entries=entry_xml)
+    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, author=SITE_AUTHOR, updated=updated, entries=entry_xml)
 
 
 def main():
@@ -251,6 +274,7 @@ def main():
             text = md.read_text()
             title = title_for(md, text)
             date = created_date(md)
+            last_modified = last_modified_datetime(md)
             slug = md.stem
             body_text = rewrite_relative_md_links(strip_leading_title(text, title))
             html_body = markdown.markdown(
@@ -276,7 +300,9 @@ def main():
             )
             row = {"title": title, "date": date, "slug": slug}
             rows.append(row)
-            all_entries.append({**row, "topic": entry.name, "html_body": html_body, "url": url})
+            all_entries.append(
+                {**row, "topic": entry.name, "html_body": html_body, "url": url, "last_modified": last_modified}
+            )
         rows.sort(key=lambda r: r["date"])
         topics.append((entry.name, rows, rows[0]["date"]))
 
