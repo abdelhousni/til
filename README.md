@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->19<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->20<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -31,6 +31,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Hosting a simple PHP page with Podman + Caddy, with automatic HTTPS](https://abdelhousni.github.io/til/podman/caddy-php-fpm-automatic-https.html) - 2026-09-05
 * [Moving a container image between hosts with podman save + scp + load, no registry](https://abdelhousni.github.io/til/podman/save-scp-load-image-between-hosts.html) - 2026-09-05
+* [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://abdelhousni.github.io/til/podman/docker-and-podman-hello-world.html) - 2026-09-06
 
 ## proxmox
 
