@@ -36,6 +36,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
+* [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
 
 ## python
 
