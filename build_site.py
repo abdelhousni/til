@@ -31,6 +31,7 @@ SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical 
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 FEED_ENTRY_LIMIT = 50
+RECENT_TILS_LIMIT = 10
 
 TAG_RE = re.compile(r"<[^>]+>")
 
@@ -158,9 +159,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Ar
 header { margin-bottom: 2rem; }
 header a { text-decoration: none; color: #0969da; }
 h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3rem; margin-top: 2.5rem; }
+h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
 li { margin: .25rem 0; }
 .meta { color: #57606a; font-size: .9rem; }
+.topic { color: #57606a; font-size: .85rem; font-weight: normal; }
+.topic a { color: inherit; }
 pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; border-radius: 6px; }
 code { background: #f6f8fa; padding: .1rem .3rem; border-radius: 4px; }
 pre code { background: none; padding: 0; }
@@ -321,6 +325,22 @@ def main():
         for topic, rows, _ in sorted(topics, key=lambda t: t[0])
     )
     body_parts = [f"<p><strong>Browse by topic:</strong> {browse_links}</p>"]
+
+    # "Recent TILs" -- same section til.simonwillison.net's own homepage
+    # leads with: a reverse-chronological feed of the latest entries with a
+    # short excerpt each, distinct from the exhaustive per-topic lists below.
+    recent = sorted(all_entries, key=lambda e: e["date"], reverse=True)[:RECENT_TILS_LIMIT]
+    if recent:
+        body_parts.append("<h2>Recent TILs</h2>")
+        for e in recent:
+            excerpt = plain_text_summary(e["html_body"], limit=280)
+            body_parts.append(
+                '<h3><span class="topic"><a href="#{topic}">{topic}</a></span> '
+                '<a href="{topic}/{slug}.html">{title}</a> - {date}</h3>\n<p>{excerpt}</p>'.format(
+                    topic=e["topic"], slug=e["slug"], title=e["title"], date=e["date"], excerpt=excerpt
+                )
+            )
+
     for topic, rows, _ in topics:
         body_parts.append(f'<h2 id="{topic}">{topic}</h2>\n<ul>')
         for row in rows:
