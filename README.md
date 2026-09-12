@@ -13,7 +13,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://abdelhousni.github.io/til/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [Starting an Ansible role project with uv for the venv](https://abdelhousni.github.io/til/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
 * [Targeting hosts the same way, whether the inventory is static or dynamic](https://abdelhousni.github.io/til/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
-* [git tag basics, grounded in how Ansible collection releases actually use them](https://abdelhousni.github.io/til/ansible/git-tag-basics-collection-releases.html) - 2026-09-10
+* [git tag basics, grounded in how Ansible collection releases actually use them](https://abdelhousni.github.io/til/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 
 ## github-pages
 
