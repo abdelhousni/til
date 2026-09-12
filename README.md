@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->25<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->26<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -60,6 +60,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## cloud-init
 
 * [Layering extra cloud-init config without fighting Terraform/OpenTofu's auto-generated user-data](https://abdelhousni.github.io/til/cloud-init/vendor-data-alongside-terraform-user-data.html) - 2026-09-07
+
+## git
+
+* [Installing git, gh, and glab, and the auth each one actually needs](https://abdelhousni.github.io/til/git/git-gh-glab-install-and-auth.html) - 2026-09-12
 
 ## oauth2
 
