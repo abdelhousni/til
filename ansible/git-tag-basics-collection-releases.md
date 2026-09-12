@@ -51,3 +51,22 @@ gh release create 2.1.0 --title "2.1.0" --notes "See CHANGELOG.rst for details."
 ```
 
 `gh release create` takes an existing tag name and wraps a GitHub Release around it — the tag has to exist and be pushed first. Get the tag wrong (prefix, typo, wrong commit) and the release inherits that mistake.
+
+## The GitLab equivalent: the pushed tag drives the pipeline
+
+On a GitLab-hosted collection, the same pushed tag is what a release pipeline reacts to — no separate "create a release" command to run by hand:
+
+```yaml
+# .gitlab-ci.yml
+release_job:
+  stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Releasing $CI_COMMIT_TAG"
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: "See CHANGELOG.rst for details."
+```
+
+`rules: - if: $CI_COMMIT_TAG` is what scopes this job to tag pipelines specifically — without it, the job would also try to run on every ordinary branch push. `$CI_COMMIT_TAG` is a predefined variable GitLab sets to the tag name when (and only when) a pipeline was triggered by a tag push, so the job reads the version back from the tag instead of it being typed in twice. The `release` keyword then does what `gh release create` does on GitHub: it turns that tag into an actual GitLab Release once the job runs.
