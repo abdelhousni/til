@@ -82,7 +82,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <p class="meta">{topic} - {date}</p>
 {body}
 </main>
-</body>
+{mermaid_script}</body>
 </html>
 """
 
@@ -169,7 +169,23 @@ pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; border-radius: 6px; 
 code { background: #f6f8fa; padding: .1rem .3rem; border-radius: 4px; }
 pre code { background: none; padding: 0; }
 a { color: #0969da; }
+pre.mermaid { background: none; padding: 0; text-align: center; }
+pre.mermaid svg { max-width: 100%; height: auto; }
 """
+
+MERMAID_SCRIPT = """<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true });
+</script>
+"""
+
+# Matches a fenced ```mermaid ... ``` block. Pulled out and swapped for a raw
+# <pre class="mermaid"> block *before* the text reaches python-markdown,
+# because codehilite/fenced_code don't know "mermaid" as a language and would
+# otherwise flatten it into an ordinary, unlabelled highlighted code block --
+# indistinguishable from any other unrecognized language, so nothing could
+# find it afterwards to render as a diagram.
+MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
 def created_date(path):
@@ -281,6 +297,9 @@ def main():
             last_modified = last_modified_datetime(md)
             slug = md.stem
             body_text = rewrite_relative_md_links(strip_leading_title(text, title))
+            body_text, has_mermaid = MERMAID_FENCE_RE.subn(
+                lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+            )
             html_body = markdown.markdown(
                 body_text,
                 extensions=["fenced_code", "tables", "codehilite"],
@@ -300,6 +319,7 @@ def main():
                     description=description,
                     author=SITE_AUTHOR,
                     url=url,
+                    mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
                 )
             )
             row = {"title": title, "date": date, "slug": slug}
