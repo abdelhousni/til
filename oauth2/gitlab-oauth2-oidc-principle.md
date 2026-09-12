@@ -12,7 +12,7 @@ This guide uses **GitLab** as the application a user wants to access and an exte
 |---|---|---|
 | **User** | Alice | Wants to use GitLab |
 | **Client / Relying Party (RP)** | GitLab | Redirects Alice to the IdP and creates her GitLab session |
-| **Authorization Server / OpenID Provider (OP)** | `https://id.example.example` | Authenticates Alice and issues tokens |
+| **Authorization Server / OpenID Provider (OP)** | `https://id.example.com` | Authenticates Alice and issues tokens |
 | **Resource Server** | GitLab API, or another protected API | Validates an access token before serving an API request |
 
 GitLab is registered at the IdP as a client. The registration includes a `client_id`, a secure client-authentication method where appropriate, and exact allowed redirect URIs.
@@ -20,7 +20,7 @@ GitLab is registered at the IdP as a client. The registration includes a `client
 ```text
 GitLab client_id: gitlab-prod
 Allowed callback: https://gitlab.example.com/users/auth/openid_connect/callback
-Issuer:           https://id.example.example
+Issuer:           https://id.example.com
 ```
 
 The actual GitLab callback depends on its configured provider and must be copied from the GitLab/IdP configuration—never guessed or made broadly wildcarded.
@@ -39,7 +39,7 @@ sequenceDiagram
     Alice->>GL: Open GitLab / click "Sign in with SSO"
     GL->>GL: Generate state, nonce, code_verifier<br/>Derive S256 code_challenge
     GL-->>Alice: 302 redirect to IdP /authorize
-    Alice->>IdP: GET /authorize?response_type=code<br/>client_id=gitlab-prod&scope=openid profile email<br/>&state=...&nonce=...&code_challenge=...
+    Alice->>IdP: GET /authorize?response_type=code<br/>client_id=gitlab-prod&scope=openid profile email<br/>&redirect_uri=https://gitlab.example.com/...callback<br/>&state=...&nonce=...<br/>&code_challenge=...&code_challenge_method=S256
     IdP->>Alice: Authenticate user (password, MFA, passkey, etc.)
     Alice->>IdP: Complete authentication / consent if policy requires it
     IdP-->>Alice: 302 to registered GitLab callback<br/>?code=ONE_TIME_CODE&state=...
@@ -49,7 +49,7 @@ sequenceDiagram
     IdP->>IdP: Verify client, code, redirect URI, and PKCE proof
     IdP-->>GL: id_token + access_token<br/>(and optionally refresh_token)
     GL->>GL: Validate ID token: signature, iss, aud, exp, nonce
-    GL->>GL: Map sub/claims to a GitLab account, create session
+    GL->>GL: Map iss+sub claims to a GitLab account, create session
     GL-->>Alice: GitLab session cookie / signed-in page
 ```
 
@@ -57,7 +57,7 @@ sequenceDiagram
 
 - **`state`** binds the response to the login request and protects the browser flow against request/response confusion and CSRF-style attacks.
 - **`nonce`** binds the OIDC ID token to the original authentication request and helps prevent replay.
-- **PKCE** means that a stolen authorization `code` is not enough: the attacker also needs the original `code_verifier` held by GitLab.
+- **PKCE** means that a stolen authorization `code` is not enough: the attacker also needs the original `code_verifier` held by GitLab. Send `code_challenge_method=S256` explicitly — [RFC 7636 §4.3](https://datatracker.ietf.org/doc/html/rfc7636#section-4.3) defaults a request that omits it to `plain`, which sends the verifier itself over the wire and gives up most of what PKCE is for.
 - The authorization code is **short-lived and single-use**. It is exchanged server-to-server at `/token`; it is not the login session or an API credential.
 - GitLab should accept a callback only at an **exact pre-registered redirect URI**.
 
@@ -68,17 +68,19 @@ sequenceDiagram
 ```mermaid
 flowchart LR
     IdP[Identity Provider]
-    IdP -->|ID token| GL[GitLab]
-    IdP -->|Access token| C[Approved API client]
-    C -->|Authorization: Bearer access_token| API[GitLab API or another resource API]
+    IdP -->|ID token| GL[GitLab as OIDC client]
+    IdP -->|Access token| GL
 
-    GL -->|Creates| S[GitLab browser session]
+    GL -->|Consumes ID token, creates| S[GitLab browser session]
     S --> U[Authenticated user experience]
+    GL -->|Forwards, Authorization: Bearer access_token| API[Resource API the token was issued for]
 
     style GL fill:#fc6d26,color:#fff,stroke:#333
     style IdP fill:#4f46e5,color:#fff,stroke:#333
     style API fill:#10b981,color:#fff,stroke:#333
 ```
+
+The token endpoint hands GitLab both tokens in the same response (step 12 of the flow above). The split that matters is what GitLab does with each: it **consumes** the ID token itself to establish who Alice is, and only **forwards** the access token to the API that token was issued for.
 
 | Artifact | Audience / receiver | Purpose | Never do this |
 |---|---|---|---|
@@ -98,7 +100,7 @@ The identity provider owns authentication. GitLab decides how external identitie
 ```mermaid
 flowchart TD
     A[Alice authenticates at IdP] --> B[ID token / UserInfo claims]
-    B --> C{sub = stable opaque user ID}
+    B --> C{iss + sub = stable opaque user ID}
     B --> D{Optional attributes<br/>email, name, groups}
     C --> E[GitLab external identity]
     D --> F[Account provisioning / group mapping policy]
@@ -111,7 +113,7 @@ flowchart TD
     style H fill:#10b981,color:#fff
 ```
 
-Use `sub` as the stable external identifier where possible. Email and display name are useful attributes, but they can change; group claims also require explicit lifecycle and authorization design.
+Use the **(`iss`, `sub`) pair** as the stable external identifier. [OIDC Core §2](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) only guarantees `sub` is locally unique *within one issuer*, so `sub` on its own is not a globally unique key: add a second provider, or migrate IdPs, and two different people can collide on the same `sub` value and end up sharing one GitLab account. Email and display name are useful attributes, but they can change; group claims also require explicit lifecycle and authorization design.
 
 **Authentication is not authorization:** a valid IdP login tells GitLab who Alice is. GitLab's groups, roles, project membership, protected branches, and CI/CD permissions determine what Alice can do inside GitLab.
 
@@ -137,7 +139,7 @@ Before enabling SSO for GitLab, document these decisions:
 
 1. What is the exact OIDC issuer URL?
 2. What GitLab public URL and exact callback URI are registered?
-3. Which claims identify a user? Is `sub` retained as the durable identity key?
+3. Which claims identify a user? Is the (`iss`, `sub`) pair retained as the durable identity key?
 4. Will GitLab create users automatically, link existing accounts, or restrict login to pre-provisioned users?
 5. Are groups sent as claims? What is the authoritative source and removal/offboarding process?
 6. Which scopes are required, and which are deliberately not requested?
