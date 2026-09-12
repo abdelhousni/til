@@ -1,0 +1,67 @@
+# Useful ~/.ssh/config patterns for IaC-provisioned hosts
+
+Plain default SSH behavior assumes a small, stable set of hosts you connect to by hand. IaC (Terraform/OpenTofu, Ansible) breaks that assumption constantly: hosts get created and destroyed, the same private IP gets reused by a completely different VM a week later, and half the fleet sits behind a bastion. A few `~/.ssh/config` options exist specifically for this.
+
+## The ephemeral-host-key problem
+
+Two bad defaults show up in copy-pasted configs:
+
+- `StrictHostKeyChecking yes` refuses to connect to any host it hasn't seen before — unworkable when Terraform hands you a brand-new IP every run.
+- `StrictHostKeyChecking no` accepts *anything*, including a genuinely changed key on a host that's been MITM'd, silently defeating the check entirely.
+
+`StrictHostKeyChecking accept-new` is the middle ground built for exactly this: it auto-accepts a host key it has never seen, but still refuses a connection if a *known* host's key changes. New IaC-provisioned host → seamless first connection. Existing host with a suddenly different key → still stops you, per [the OpenSSH `ssh_config` manual](https://man.openbsd.org/ssh_config.5#StrictHostKeyChecking).
+
+```
+Host *.lab.internal
+    StrictHostKeyChecking accept-new
+    UserKnownHostsFile ~/.ssh/known_hosts.d/lab.known_hosts
+```
+
+The second line matters as much as the first. When a destroyed-and-recreated VM gets the same IP a different host used last month, your permanent `~/.ssh/known_hosts` still has *that* host's key on file — `accept-new` won't save you there, because from ssh's point of view the key genuinely changed. Pointing `UserKnownHostsFile` at a separate, per-environment file means wiping that one file (or letting it get rebuilt every cycle) doesn't touch the known-hosts entries for anything that isn't ephemeral.
+
+## ProxyJump for hosts behind a bastion
+
+```
+Host bastion
+    HostName bastion.example.com
+    User ops
+
+Host 10.0.1.*
+    ProxyJump bastion
+    User ops
+```
+
+`ProxyJump` makes ssh open a connection to `bastion` first, then tunnel the real connection to the target through it — one config block instead of a hand-rolled `ssh -J` on every invocation, and it also makes `scp`, `rsync -e ssh`, and Ansible's own ssh connections go through the bastion automatically, since they all read this same file.
+
+## Reusing connections: ControlMaster + ControlPersist
+
+```
+Host *.lab.internal
+    ControlMaster auto
+    ControlPath ~/.ssh/control/%r@%h:%p
+    ControlPersist 10m
+```
+
+The first connection to a host opens a real TCP+SSH handshake and keeps it alive in the background for 10 minutes after you disconnect; every connection after that reuses that same socket instead of renegotiating SSH from scratch. Ansible cares enough about this that it's not just a tip — [`ansible-core`'s own `ssh` connection plugin](https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/connection/ssh.py) defaults `ssh_args` to `-C -o ControlMaster=auto -o ControlPersist=60s`, baking the same reuse into every playbook run whether or not `~/.ssh/config` says anything. Setting it here too gets you the identical speedup for everything *else* that shells out to `ssh` against the same fleet — a plain manual `ssh`, `scp`, `rsync -e ssh`, `git` over an `ssh://` remote — and lets you push the persistence window past Ansible's 60-second default for a long series of ad hoc commands.
+
+## Include: per-environment config Terraform/Ansible can own
+
+```
+# top of ~/.ssh/config
+Include ~/.ssh/config.d/*.conf
+
+Host *
+    ForwardAgent no
+```
+
+`Include` pulls in every matching file, expanded and processed in lexical order, with relative filenames resolved against `~/.ssh`. That makes it a clean handoff point: a `terraform output` or an Ansible inventory-generation step writes `~/.ssh/config.d/staging.conf` for one environment without ever touching the file you edit by hand — tear an environment down, delete its one generated file, done. The one rule that matters: for any option, **the first match wins**, so `Include` needs to come before a catch-all `Host *` block, not after it — a value already set by an earlier block is never overwritten by a later one.
+
+## IdentitiesOnly, so automation doesn't get locked out
+
+```
+Host *.lab.internal
+    IdentityFile ~/.ssh/id_lab_ed25519
+    IdentitiesOnly yes
+```
+
+A dev workstation's `ssh-agent` often ends up holding a handful of keys for different systems. Without `IdentitiesOnly yes`, ssh offers *all* of them to the server before falling back to `IdentityFile`, and a hardened `sshd` with a low `MaxAuthTries` can reject the connection for too many failed attempts before it ever gets to the one key that would've worked. Pinning the exact key for automation-facing hosts makes the connection deterministic instead of order-of-keys-in-agent-dependent.
