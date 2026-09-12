@@ -47,8 +47,8 @@ Mermaid ships an ESM build that scans the page for `.mermaid` elements and rende
 
 ```mermaid
 graph LR
-  A["```mermaid``` fence in .md"] --> B[regex pulls it out]
-  B --> C["raw <pre class='mermaid'>"]
+  A[mermaid fenced block in .md] --> B[regex pulls it out]
+  B --> C[raw pre.mermaid element]
   C --> D[python-markdown passes it through untouched]
   D --> E[mermaid.js renders it client-side]
 ```
