@@ -65,11 +65,14 @@ A stable, known IP before anything gets deployed on top of it — ordinary Netwo
           ContainerName: caddy
           Network: appnet.network
           PublishPort: "80:80"
-          Volume: /srv/Caddyfile:/etc/caddy/Caddyfile:ro
-          Volume: /srv/app:/srv:ro
+          Volume:
+            - /srv/Caddyfile:/etc/caddy/Caddyfile:ro
+            - /srv/app:/srv:ro
 ```
 
 Every piece here maps directly onto the raw Quadlet syntax from the manual version — `Network: appnet.network` is exactly the `Network=appnet.network` line from a hand-written `.container` file, just expressed as a YAML key. `type: network` with an empty `Network: {}` produces the equivalent of the plain `podman network create` step from before.
+
+One thing that isn't obvious from a single-value example: a hand-written Quadlet unit lets a key like `Volume=` repeat as many separate lines as you need. A YAML mapping can't have two keys with the same name, so the role represents that repetition as a YAML **list** under one `Volume:` key instead — that's what `caddy`'s two mounts above are. `linux-system-roles.podman`'s own CI test file does the same thing for `Environment:`, which confirms the pattern rather than it being a guess.
 
 ## Ordering isn't cosmetic
 
