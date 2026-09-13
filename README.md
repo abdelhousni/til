@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->27<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->28<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -35,6 +35,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Moving a container image between hosts with podman save + scp + load, no registry](https://abdelhousni.github.io/til/podman/save-scp-load-image-between-hosts.html) - 2026-09-05
 * [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://abdelhousni.github.io/til/podman/docker-and-podman-hello-world.html) - 2026-09-06
 * [Podman equivalents to Docker's Dive image-layer explorer](https://abdelhousni.github.io/til/podman/podman-equivalent-to-docker-dive.html) - 2026-09-12
+* [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://abdelhousni.github.io/til/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
 
 ## proxmox
 
