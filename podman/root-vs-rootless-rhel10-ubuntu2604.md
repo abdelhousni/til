@@ -21,3 +21,10 @@ Podman is packaged in `universe`, Ubuntu's community-maintained tier — not `ma
 ## The practical takeaway
 
 The rootless *mechanism* is the same everywhere Podman runs — it's Linux user namespaces plus `/etc/subuid`/`/etc/subgid`, full stop. What actually differs between these two is packaging posture: RHEL treats Podman and rootless-by-default as the supported, documented path; Ubuntu treats it as a community package you opted into, so double-check its `universe` version against upstream before assuming a fix or feature described in Podman's own docs has landed yet.
+
+## Reference reading
+
+- [Podman's own rootless tutorial](https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md): the canonical admin-side setup doc — subuid/subgid allocation, the user-mode networking tool requirement, cgroup delegation.
+- [RHEL 10: Building, running, and managing containers — "Special considerations for rootless containers"](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/building_running_and_managing_containers/introduction-to-containers): the storage-path, config-path, and privileged-port specifics cited above, straight from the source.
+- [Ubuntu's `podman` package page for 26.04 "Resolute"](https://packages.ubuntu.com/resolute/podman): confirms the exact shipped version and that it's built from the `universe` component, not `main`.
+- [Podman's `RELEASE_NOTES.md`](https://github.com/containers/podman/blob/main/RELEASE_NOTES.md): the pasta-by-default switch and slirp4netns's removal, in Podman's own changelog.
