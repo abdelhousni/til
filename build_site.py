@@ -106,7 +106,13 @@ INDEX_TEMPLATE = """<!doctype html>
 {person_schema}
 </head>
 <body>
-<header><h1>{title}</h1><p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p></header>
+<header>
+<h1>{title}</h1>
+<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>.<br>
+<a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
+</p>
+<p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p>
+</header>
 <main>
 {body}
 </main>
