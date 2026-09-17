@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->31<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->32<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -76,6 +76,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 ## kubernetes
 
+* [Cleanly stopping an RKE2 node for planned maintenance](https://abdelhousni.github.io/til/kubernetes/rke2-node-maintenance-drain-reboot.html) - 2026-09-16
 * [What Kubernetes actually is, and how it works](https://abdelhousni.github.io/til/kubernetes/what-is-kubernetes-and-how-it-works.html) - 2026-09-17
 
 ## ssh
