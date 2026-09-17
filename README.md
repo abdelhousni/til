@@ -4,7 +4,7 @@ My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->30<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->31<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -71,6 +71,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## oauth2
 
 * [GitLab with OAuth 2.0 / OIDC — the simple principle](https://abdelhousni.github.io/til/oauth2/gitlab-oauth2-oidc-principle.html) - 2026-09-12
+
+## ssh
+
+* [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://abdelhousni.github.io/til/ssh/ssh-config-patterns-for-iac.html) - 2026-09-12
 
 ## kubernetes
 
