@@ -72,11 +72,11 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [GitLab with OAuth 2.0 / OIDC — the simple principle](https://abdelhousni.github.io/til/oauth2/gitlab-oauth2-oidc-principle.html) - 2026-09-12
 
-## ssh
-
-* [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://abdelhousni.github.io/til/ssh/ssh-config-patterns-for-iac.html) - 2026-09-12
-
 ## kubernetes
 
 * [What Kubernetes actually is, and how it works](https://abdelhousni.github.io/til/kubernetes/what-is-kubernetes-and-how-it-works.html) - 2026-09-17
+
+## ssh
+
+* [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://abdelhousni.github.io/til/ssh/ssh-config-patterns-for-iac.html) - 2026-09-17
 <!-- index ends -->
