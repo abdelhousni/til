@@ -50,14 +50,20 @@ flowchart TB
 Kubernetes is declarative: you never tell it "start a container." You tell it "I want 3 replicas of this," write that desired state down, and something keeps nudging reality toward it until they match — indefinitely, not just once.
 
 ```mermaid
-flowchart LR
-    A[You run kubectl apply] --> B[kube-apiserver validates and writes]
-    B --> C[(etcd holds the desired state)]
-    C --> D[Scheduler and controllers watch etcd]
-    D --> E[kubelet on the chosen node acts]
-    E --> F[Actual state on the node]
-    F --> G[kubelet reports status back]
-    G --> B
+sequenceDiagram
+    actor You
+    participant API as kube-apiserver
+    participant Store as etcd
+    participant Ctrl as Scheduler and controllers
+    participant Node as kubelet
+
+    You->>API: kubectl apply (desired state)
+    API->>Store: validate and write
+    loop Continuously
+        Ctrl->>Store: watch for changes
+        Ctrl->>Node: schedule and act
+        Node->>API: report actual state
+    end
 ```
 
 That loop is why killing a Pod by hand doesn't work the way it looks like it should: the Deployment controller notices the replica count dropped below desired, and starts a new one before you've finished reading the output of `kubectl get pods`. It's also why a `kubectl apply` you ran an hour ago can still be "reconciling" — nothing about this model promises the desired state is reached instantly, only that the system keeps working toward it.
