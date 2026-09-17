@@ -49,4 +49,4 @@ The thing worth sitting with: **there is no daemon.** Between one `apply` and th
 
 ## Where this series goes next
 
-Packer builds the images Terraform then provisions infrastructure from, and Nomad is what actually runs workloads on infrastructure Terraform stood up. The next two entries cover each in turn, then a final one on how the three actually fit together.
+Packer builds the images Terraform then provisions infrastructure from, and Nomad is what actually runs workloads on infrastructure Terraform stood up — the next two entries cover each in turn, then a final one on how the three actually fit together. Queued after that: a Terraform state management deep-dive (locking, drift, `import`/`moved`/`removed`), Terraform modules (input/output contracts, local vs Registry), ephemeral values and write-only arguments for handling secrets, and the handful of things OpenTofu genuinely has that Terraform doesn't — native state/plan encryption being the headline.
