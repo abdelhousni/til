@@ -16,13 +16,19 @@ This is the same HCL2 language Terraform/OpenTofu uses — same variable/local s
 ## What actually happens during a build
 
 ```mermaid
-flowchart LR
-    T[HCL2 template] --> S[source block: base image or ISO]
-    S --> TEMP[Packer launches a temporary build instance]
-    TEMP --> PROV[provisioner blocks run: shell, Ansible, etc]
-    PROV --> POST[post-processor blocks: compress, upload, manifest]
-    POST --> ART[Artifact: AMI, qcow2, template, container image]
-    TEMP --> DESTROY[Temporary build instance destroyed]
+sequenceDiagram
+    actor You
+    participant Packer
+    participant Instance as Temporary build instance
+    participant Artifact as Artifact store
+
+    You->>Packer: packer build template.pkr.hcl
+    Packer->>Instance: launch from the source block
+    Packer->>Instance: run provisioners (shell, Ansible, etc)
+    Instance-->>Packer: machine is configured
+    Packer->>Artifact: run post-processors (compress, upload, manifest)
+    Packer->>Instance: destroy
+    Packer-->>You: artifact ready (AMI, qcow2, template, container image)
 ```
 
 `packer build` launches a genuinely real, temporary instance of whatever the `source` describes, runs every `provisioner` against it in order — same as configuring any other machine — then runs the `post-processor` chain against the result, and only then tears the temporary instance down. What survives is the artifact; the instance that built it doesn't.
