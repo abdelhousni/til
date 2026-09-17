@@ -65,3 +65,38 @@ Host *.lab.internal
 ```
 
 A dev workstation's `ssh-agent` often ends up holding a handful of keys for different systems. Without `IdentitiesOnly yes`, ssh offers *all* of them to the server before falling back to `IdentityFile`, and a hardened `sshd` with a low `MaxAuthTries` can reject the connection for too many failed attempts before it ever gets to the one key that would've worked. Pinning the exact key for automation-facing hosts makes the connection deterministic instead of order-of-keys-in-agent-dependent.
+
+## Ansible layers its own SSH settings on top
+
+Ansible's default connection plugin shells out to the system `ssh` binary, so everything above still applies underneath — but [`ansible-core`'s `ssh` connection plugin](https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/connection/ssh.py) also has its own settings, each independently useful:
+
+- **`host_key_checking`** (default `True`) — Ansible's own layer on top of `StrictHostKeyChecking`. Turning this off is the equivalent of `StrictHostKeyChecking no` for every play, with the same downside; prefer fixing it at the `~/.ssh/config` level with `accept-new` as above rather than disabling it Ansible-wide.
+- **`control_path_dir`** (default `~/.ansible/cp`) — Ansible keeps its own `ControlPersist` sockets separate from anything in `~/.ssh/config`. This exists partly to dodge a classic failure: a raw `%h-%p-%r` control path can exceed the ~104-byte limit on a Unix domain socket path once the hostname is long enough, and Ansible has auto-hashed the generated path since version 2.3 specifically to avoid it — a hand-written `ControlPath` template doesn't get that protection for free.
+- **`ssh_transfer_method`** (default `smart`, tries sftp then scp then a piped `dd`) — worth knowing because OpenSSH 9.0 deprecated the legacy `scp` protocol; if `smart` ends up falling back to `scp` against a newer OpenSSH server, it needs `scp_extra_args="-O"` to keep working.
+- **`pipelining`** (default `False`) — reduces the number of SSH operations per module execution, but per Ansible's own config docs it's disabled by default because it "conflicts with privilege escalation (become)" unless `requiretty` is disabled in `/etc/sudoers` on every managed host first.
+- **`reconnection_retries`** (default `0`) — only retries when SSH itself returns exit code 255; any other exit code means the remote command ran and failed, which retrying won't fix.
+
+## The four places to set an Ansible SSH setting, and which one wins
+
+Every setting above can be set as an `ansible.cfg` key, an environment variable, an inventory/host variable, or (for a couple of them) a command-line flag — and which one wins if more than one is set is fixed and, in one place, genuinely counter-intuitive.
+
+```ini
+# ansible.cfg
+[ssh_connection]
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s
+control_path_dir = ~/.ansible/cp
+pipelining = True
+```
+
+```sh
+# environment variable
+export ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s"
+```
+
+```yaml
+# group_vars/lab.yml — inventory variable
+ansible_ssh_common_args: "-o ProxyJump=bastion"
+ansible_user: ops
+```
+
+Per [Ansible's own precedence documentation](https://docs.ansible.com/projects/ansible/latest/reference_appendices/general_precedence.html), the four categories rank, lowest to highest: **configuration settings** (`ansible.cfg`, with an environment variable outranking a same-named `ansible.cfg` entry) → **command-line options** → **playbook keywords** → **variables** (inventory, `group_vars`/`host_vars`, `-e`). The surprising part: an inventory variable like `ansible_ssh_common_args` set on a single host **outranks a `--ssh-common-args` flag passed on the command line** — the flag only overrides `ansible.cfg`, nothing set as a variable. Debugging "why is my `--ssh-common-args` being ignored on this one host" almost always ends at a `group_vars`/`host_vars` file setting the same thing.
