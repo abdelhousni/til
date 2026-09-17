@@ -1,6 +1,8 @@
 # Today I Learned
 
-My Today I Learned snippets. Site pattern and tooling adapted from [simonw/til](https://github.com/simonw/til).
+Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhousni/til). Site pattern and tooling adapted from [simonw/til](https://github.com/simonw/til).
+
+[![Linkedin Badge](https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&logo=Linkedin&logoColor=white&labelColor=0A66C2&link=https://www.linkedin.com/in/abdelhousni/)](https://www.linkedin.com/in/abdelhousni/)
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
