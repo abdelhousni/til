@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->32<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->33<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -82,4 +82,8 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## ssh
 
 * [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://abdelhousni.github.io/til/ssh/ssh-config-patterns-for-iac.html) - 2026-09-17
+
+## terraform
+
+* [What Terraform/OpenTofu actually is, and how it works](https://abdelhousni.github.io/til/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
 <!-- index ends -->
