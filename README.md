@@ -102,7 +102,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 ## apache
 
-* [A conditional redirect that skips one path, the current Apache way](https://abdelhousni.github.io/til/apache/conditional-redirect-exclude-one-path.html) - 2026-09-18
+* [A conditional redirect that skips one path, on Apache 2.2 through 2.4](https://abdelhousni.github.io/til/apache/conditional-redirect-exclude-one-path.html) - 2026-09-18
 
 ## linux
 
