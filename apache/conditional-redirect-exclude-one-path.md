@@ -1,6 +1,6 @@
 # A conditional redirect that skips one path, on Apache 2.2 through 2.4
 
-A [2018 Stack Overflow question](https://stackoverflow.com/questions/48653179/apache-redirection-based-on-url-from-the-same-webserver) has a scenario worth revisiting: redirect everything under `/zabbix/` to HTTPS, except `api_jsonrpc.php`, which a set of scripts needed to keep hitting over plain HTTP. The asker's attempt, on Apache 2.2:
+A 2018 Stack Overflow question from [Maddprof](https://stackoverflow.com/users/4625048/maddprof), ["Apache redirection based on URL from the same webserver"](https://stackoverflow.com/questions/48653179/apache-redirection-based-on-url-from-the-same-webserver), has a scenario worth revisiting: redirect everything under `/zabbix/` to HTTPS, except `api_jsonrpc.php`, which a set of scripts needed to keep hitting over plain HTTP. The asker's attempt, on Apache 2.2:
 
 ```apache
 RedirectMatch /zabbix/(!api_jsonrpc.php)(.*) https://<servername>/zabbix/$2
@@ -72,3 +72,7 @@ flowchart TD
 ```
 
 Whichever form is used, the fix for the original question was never "find the right regex trick" — it was moving the exception out of the match pattern and into an explicit condition, which `RedirectMatch` alone was never built to express.
+
+---
+
+**Source**: [Maddprof's question on Stack Overflow](https://stackoverflow.com/questions/48653179/apache-redirection-based-on-url-from-the-same-webserver), used here under Stack Overflow's [CC BY-SA content license](https://stackoverflow.com/help/licensing) for the scenario and the original (broken) directive it's built around. Everything past that — the fix, the 2.2/2.4 comparison, the diagram — is this entry's own, checked against Apache's own docs rather than the question's answers.
