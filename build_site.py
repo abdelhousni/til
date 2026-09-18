@@ -108,7 +108,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <body>
 <header>
 <h1>{title}</h1>
-<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>.<br>
+<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
 <a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
 </p>
 <p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p>
