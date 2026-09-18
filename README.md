@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->40<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->43<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -80,6 +80,9 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [What Kubernetes actually is, and how it works](https://abdelhousni.github.io/til/kubernetes/what-is-kubernetes-and-how-it-works.html) - 2026-09-17
 * [Getting kubectl to work against RKE2 from off the node](https://abdelhousni.github.io/til/kubernetes/kubectl-off-node-rke2-tls-san.html) - 2026-09-18
 * [Pods, Deployments, Services — the minimum object model](https://abdelhousni.github.io/til/kubernetes/pods-deployments-services-object-model.html) - 2026-09-18
+* [RKE2's default CNI is Canal, and you pick it before the first start](https://abdelhousni.github.io/til/kubernetes/rke2-cni-canal-and-alternatives.html) - 2026-09-18
+* [RKE2's ingress default moved to Traefik, because ingress-nginx is ending](https://abdelhousni.github.io/til/kubernetes/rke2-ingress-traefik-nginx-retirement.html) - 2026-09-18
+* [RKE2 ships no default StorageClass, and a PVC will sit Pending forever](https://abdelhousni.github.io/til/kubernetes/rke2-no-default-storageclass.html) - 2026-09-18
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 
