@@ -1,6 +1,6 @@
 # Finding and force-closing a locked file on a Windows SMB share
 
-Someone leaves for the day with a spreadsheet still open over the network, or a desktop app crashes without releasing its file handle, and now everyone else gets: *"The document `filename` is locked for editing by another user."* Condensed and re-verified against current Microsoft docs from [a walkthrough on woshub.com](https://woshub.com/managing-open-files-windows-server-share/) — three ways to find and clear that lock, from oldest to most useful.
+Someone leaves for the day with a spreadsheet still open over the network, or a desktop app crashes without releasing its file handle, and now everyone else gets: *"The document `filename` is locked for editing by another user."* Three ways to find and clear that lock, from oldest to most useful — condensed and re-verified against current Microsoft docs, but the structure and the walkthrough itself are [Windows OS Hub's](https://woshub.com/managing-open-files-windows-server-share/), not mine; full credit there for the original writeup.
 
 ## GUI: Computer Management
 
@@ -100,3 +100,7 @@ Both confirmed in `Get-SmbOpenFile`'s current parameter list, useful specificall
 
 - **`-ScopeName`** filters to files open through a particular Scale-Out File Server (SOFS) scope, when multiple file server roles share one cluster.
 - **`-IncludeHidden`** surfaces handles the SMB server creates and uses internally, normally left out of the default listing — genuinely a debugging-only flag, not something to leave on.
+
+---
+
+**Source**: [Windows OS Hub — "How to View and Close Open Files in Windows Server SMB Share?"](https://woshub.com/managing-open-files-windows-server-share/) (published December 8, 2023). Their screenshots aren't reproduced here — see the original for the GUI and console views this entry describes in text and code instead.
