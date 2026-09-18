@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->43<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->45<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -81,6 +81,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Getting kubectl to work against RKE2 from off the node](https://abdelhousni.github.io/til/kubernetes/kubectl-off-node-rke2-tls-san.html) - 2026-09-18
 * [Pods, Deployments, Services — the minimum object model](https://abdelhousni.github.io/til/kubernetes/pods-deployments-services-object-model.html) - 2026-09-18
 * [RKE2's default CNI is Canal, and you pick it before the first start](https://abdelhousni.github.io/til/kubernetes/rke2-cni-canal-and-alternatives.html) - 2026-09-18
+* [Going HA with RKE2: three servers, one address, and the datastore choice](https://abdelhousni.github.io/til/kubernetes/rke2-ha-embedded-etcd-external-datastore.html) - 2026-09-18
 * [RKE2's ingress default moved to Traefik, because ingress-nginx is ending](https://abdelhousni.github.io/til/kubernetes/rke2-ingress-traefik-nginx-retirement.html) - 2026-09-18
 * [RKE2 ships no default StorageClass, and a PVC will sit Pending forever](https://abdelhousni.github.io/til/kubernetes/rke2-no-default-storageclass.html) - 2026-09-18
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
@@ -98,6 +99,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://abdelhousni.github.io/til/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [What Terraform/OpenTofu actually is, and how it works](https://abdelhousni.github.io/til/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
+
+## apache
+
+* [A conditional redirect that skips one path, on Apache 2.2 through 2.4](https://abdelhousni.github.io/til/apache/conditional-redirect-exclude-one-path.html) - 2026-09-18
 
 ## linux
 
