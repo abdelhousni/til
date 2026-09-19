@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->46<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->48<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -86,6 +86,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [RKE2 ships no default StorageClass, and a PVC will sit Pending forever](https://abdelhousni.github.io/til/kubernetes/rke2-no-default-storageclass.html) - 2026-09-18
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
+* [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
 
 ## packer
 
@@ -99,6 +100,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://abdelhousni.github.io/til/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [What Terraform/OpenTofu actually is, and how it works](https://abdelhousni.github.io/til/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
+* [Terraform state locking just dropped its DynamoDB requirement](https://abdelhousni.github.io/til/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-19
 
 ## apache
 
