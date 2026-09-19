@@ -433,7 +433,7 @@ def series_touching(topic, series_nav):
     return sections
 
 
-def build_topic_body(topic, rows, sections):
+def build_topic_body(topic, rows, sections, entries_by_key):
     parts = []
     for series_title, members in sections:
         parts.append(f"<h2>Reading order: {escape(series_title)}</h2>")
@@ -447,14 +447,16 @@ def build_topic_body(topic, rows, sections):
         parts.append("</ol>")
     if sections:
         parts.append("<h2>Everything in this topic, oldest first</h2>")
-    parts.append("<ul>")
+    # Title and date alone don't tell a reader whether an entry is the one they
+    # want. Same first-paragraph excerpt the homepage's "Recent TILs" shows --
+    # the topic label is dropped, since the page already is the topic.
     for row in rows:
+        excerpt = plain_text_summary(entries_by_key[f"{topic}/{row['slug']}"]["html_body"], limit=280)
         parts.append(
-            '<li><a href="{slug}.html">{title}</a> - {date}</li>'.format(
-                slug=row["slug"], title=escape(row["title"]), date=row["date"]
+            '<h3><a href="{slug}.html">{title}</a> - {date}</h3>\n<p>{excerpt}</p>'.format(
+                slug=row["slug"], title=escape(row["title"]), date=row["date"], excerpt=excerpt
             )
         )
-    parts.append("</ul>")
     return "\n".join(parts)
 
 
@@ -601,6 +603,7 @@ def main():
             bing_verification_code=BING_VERIFICATION_CODE,
         )
     )
+    entries_by_key = {f"{e['topic']}/{e['slug']}": e for e in all_entries}
     for topic, rows, _ in topics:
         topic_url = f"{SITE_URL}/{topic}/"
         plural = "" if len(rows) == 1 else "s"
@@ -609,7 +612,7 @@ def main():
                 topic=topic,
                 count=len(rows),
                 plural=plural,
-                body=build_topic_body(topic, rows, series_touching(topic, series_nav)),
+                body=build_topic_body(topic, rows, series_touching(topic, series_nav), entries_by_key),
                 site_title=SITE_TITLE,
                 description=attr_escape(f"{len(rows)} TIL{plural} filed under {topic} on {SITE_TITLE}."),
                 author=SITE_AUTHOR,
