@@ -41,7 +41,7 @@ flowchart LR
     end
 ```
 
-## The other one, only on SELinux hosts
+## The other one, SELinux-specific — and why AppArmor doesn't need it
 
 On Fedora or RHEL (SELinux enforcing by default), a bind mount also needs a relabel suffix or the container's process gets denied access to files it should be able to read:
 
@@ -54,6 +54,8 @@ On Fedora or RHEL (SELinux enforcing by default), a bind mount also needs a rela
 ```
 
 Per [Podman's own volume docs](https://docs.podman.io/en/latest/markdown/podman-run.1.html), the `:Z` suffix "tells Podman to label the content with a private unshared label" so SELinux permits the container to use it. On a non-SELinux host (most Ubuntu/Debian desktops) it's simply ignored — harmless to include everywhere, but easy to forget until the first `Permission denied` on a machine that actually enforces it.
+
+**Ubuntu/Debian's AppArmor has no equivalent flag, and that's not an oversight** — the two confinement models work differently at the level that matters here. SELinux labels individual files and checks the label on every access, which is exactly why a *bind-mounted* file needs relabeling before a confined process can touch it. AppArmor confines a process by profile, not by labeling filesystem objects, so there's nothing per-mount to set: per [`containers.conf`'s own documentation](https://github.com/containers/common/blob/main/docs/containers.conf.5.md), Podman generates and loads a default `container-default` AppArmor profile automatically, and a bind mount just works under it without a `:Z`-style suffix. The AppArmor equivalent of reaching for `label=disable` on SELinux is `--security-opt apparmor=unconfined` — a whole-container escape hatch, only needed if the container does something the default profile actually blocks (loading kernel modules, raw sockets, that class of thing), which a devcontainer running `terraform`/`ansible-playbook` normally doesn't.
 
 Neither of these two is Docker-specific advice ported over; both are rootless-Podman realities that only surface once you've actually made the switch — the same territory this site's [rootless Podman entry](../podman/root-vs-rootless-rhel10-ubuntu2604.md) covers from the CLI side rather than the devcontainer side.
 
