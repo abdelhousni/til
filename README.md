@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->46<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->47<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -111,4 +111,8 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## windows
 
 * [Finding and force-closing a locked file on a Windows SMB share](https://abdelhousni.github.io/til/windows/close-open-smb-files-powershell.html) - 2026-09-18
+
+## vscode
+
+* [Pointing VS Code's Dev Containers extension at Podman](https://abdelhousni.github.io/til/vscode/dev-containers-podman-instead-of-docker.html) - 2026-09-19
 <!-- index ends -->
