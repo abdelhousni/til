@@ -117,3 +117,34 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Pointing VS Code's Dev Containers extension at Podman](https://abdelhousni.github.io/til/vscode/dev-containers-podman-instead-of-docker.html) - 2026-09-19
 <!-- index ends -->
+
+---
+
+## Running the site locally
+
+The published site is built by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) running three scripts and uploading `_site/`. The `Makefile` runs the same three, in the same order, so a clean `make preflight` locally means a clean deploy.
+
+```bash
+git clone https://github.com/abdelhousni/til.git    # not --depth 1, see below
+cd til
+make serve            # creates .venv, installs deps, builds, serves on :8000
+```
+
+| target | what it does |
+| --- | --- |
+| `make help` | list these targets |
+| `make venv` | create `.venv` and install `requirements.txt` |
+| `make build` | build the site into `_site/` |
+| `make serve` | build, then serve on `localhost:8000` (`make serve PORT=9000` to move it) |
+| `make check` | build + internal link check, fast |
+| `make check-external` | build + external link check, slow — this one is the deploy gate |
+| `make readme` | regenerate the index in this README |
+| `make preflight` | everything CI runs, in CI's order |
+| `make clean` / `clean-all` | drop `_site/`, and `.venv/` too |
+
+Two things worth knowing, both of which produce *wrong output* rather than an error, which is why `make` checks for them:
+
+- **Clone with full history.** Entry dates come from `git log --follow --diff-filter=A`, so a `--depth 1` clone dates every entry `unknown` and scrambles the ordering. CI sets `fetch-depth: 0` for the same reason.
+- **Commit before you build.** An uncommitted `.md` file has no history to read a creation date from, so it renders as `unknown` and leaks into the README index if you regenerate it.
+
+Serve `_site/` rather than opening it with `file://`. Internal links are all relative, so the locally-served copy behaves exactly like the `/til/` subpath in production — but Mermaid diagrams load as an ES module from a CDN, which a `file://` origin blocks. Canonical URLs, `sitemap.xml` and `feed.atom` always point at the production host; that is expected locally.
