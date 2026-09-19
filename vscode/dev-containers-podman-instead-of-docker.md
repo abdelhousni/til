@@ -56,3 +56,29 @@ On Fedora or RHEL (SELinux enforcing by default), a bind mount also needs a rela
 Per [Podman's own volume docs](https://docs.podman.io/en/latest/markdown/podman-run.1.html), the `:Z` suffix "tells Podman to label the content with a private unshared label" so SELinux permits the container to use it. On a non-SELinux host (most Ubuntu/Debian desktops) it's simply ignored — harmless to include everywhere, but easy to forget until the first `Permission denied` on a machine that actually enforces it.
 
 Neither of these two is Docker-specific advice ported over; both are rootless-Podman realities that only surface once you've actually made the switch — the same territory this site's [rootless Podman entry](../podman/root-vs-rootless-rhel10-ubuntu2604.md) covers from the CLI side rather than the devcontainer side.
+
+## Put together: a container for running Terraform and Ansible, not just editing them
+
+This is the shape it actually takes for infrastructure-as-code work — a container with `tofu`/`terraform` and `ansible-playbook` installed and runnable, not just their file types syntax-highlighted:
+
+```json
+// .devcontainer/devcontainer.json
+{
+  "name": "iac-toolbox",
+  "build": { "dockerfile": "Dockerfile" },
+  "runArgs": ["--userns=keep-id"],
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,Z"
+  ],
+  "postCreateCommand": "make setup",
+  "customizations": {
+    "vscode": {
+      "extensions": ["hashicorp.terraform", "redhat.ansible"]
+    }
+  }
+}
+```
+
+The extensions are what make this an IaC container specifically — `hashicorp.terraform` for HCL formatting and validation, `redhat.ansible` for YAML/Jinja linting against real role and playbook schemas — while `--userns=keep-id` and the `:Z`-suffixed SSH mount from above are what make `terraform apply` and `ansible-playbook -i inventory` actually usable from inside it: an SSH key rootless Podman can't read, or a state file the host user can't write back to after the container edits it, defeats the point of running either tool in a container at all.
+
+The [HashiCorp series](../terraform/what-is-terraform-opentofu-and-how-it-works.md) and [RKE2/Kubernetes series](../kubernetes/what-is-kubernetes-and-how-it-works.md) on this site are exactly the kind of work a container built this way is for — a reproducible place to run `terraform`/`tofu` and `ansible-playbook` without installing either toolchain on bare metal.
