@@ -15,13 +15,16 @@ Per [the official specification, v1.0.0](https://www.conventionalcommits.org/en/
 ```
 
 ```
-feat(auth): add OAuth2 login support
+fix(ansible): make the etcd-snapshot role idempotent
 
-Replaces the old session-cookie flow. Existing sessions
-are invalidated on deploy.
+rke2 etcd-snapshot save ran on every apply, even with nothing
+to snapshot. changed_when now checks snapshot_save.stdout
+instead of defaulting to true.
 
-Refs: JIRA-1234
+Refs: ABD-14
 ```
+
+Nothing about the format is code-specific — an Ansible role, a Terraform module, or a Packer template changes through the same mechanism as any other file: a commit, reviewed as a diff. The type in front of the colon is what turns "here's a diff" into "here's a diff that changes what gets provisioned, not just a comment."
 
 ## The part that's surprising: the spec requires exactly two types
 
@@ -48,17 +51,18 @@ That's what separates this from just a house style for readable commit logs: a t
 ## Marking a breaking change: two ways, same effect
 
 ```
-feat!: drop support for config.yaml v1 format
+feat(terraform)!: switch S3 state locking to use_lockfile
 ```
 
 or, keeping the header plain and pushing the detail into a footer:
 
 ```
-feat: add config.yaml v2 loader
+feat(terraform): switch S3 state locking to use_lockfile
 
-BREAKING CHANGE: v1 config files are no longer accepted; run the migration script first.
+BREAKING CHANGE: dynamodb_table is no longer read. Run `terraform init
+-reconfigure` after this lands, or applies will fail to acquire a lock.
 ```
 
-Both trigger a MAJOR bump under the spec's own SemVer mapping. The footer form is the one built for detail — a one-line header can't hold a migration note — but the `!` is the faster, greppable signal that something in this commit needs a second look before merging.
+That's not an invented example — it's the exact migration [the state-locking entry](../terraform/state-locking-inspection-refactoring-drift.md) in this series covers, and it's a genuinely good fit for a `BREAKING CHANGE` footer: the point of the footer isn't just "this is major," it's telling the next person what to actually *do* about it, which a one-line header can't hold. Both forms trigger a MAJOR bump under the spec's own SemVer mapping — the `!` is the faster, greppable signal that something in this commit needs a second look before merging; the footer is where the migration step lives.
 
 One case-sensitivity detail easy to get backwards: everyday types (`feat`, `fix`, `docs`, ...) are case-insensitive, but `BREAKING CHANGE` as a footer token must be exactly that — uppercase — for tooling to recognize it. `BREAKING-CHANGE` with a hyphen is defined as a synonym for the same footer, for compatibility with tools that can't easily emit a space inside a token name.
