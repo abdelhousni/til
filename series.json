@@ -10,7 +10,8 @@
       "kubernetes/rke2-cni-canal-and-alternatives.md",
       "kubernetes/rke2-no-default-storageclass.md",
       "kubernetes/rke2-ingress-traefik-nginx-retirement.md",
-      "kubernetes/rke2-ha-embedded-etcd-external-datastore.md"
+      "kubernetes/rke2-ha-embedded-etcd-external-datastore.md",
+      "kubernetes/rke2-etcd-snapshot-restore-drill.md"
     ]
   },
   "hashicorp": {
