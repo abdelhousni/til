@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->48<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->49<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -69,6 +69,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## git
 
 * [Installing git, gh, and glab, and the auth each one actually needs](https://abdelhousni.github.io/til/git/git-gh-glab-install-and-auth.html) - 2026-09-12
+* [Conventional Commits: only two types are actually required by the spec](https://abdelhousni.github.io/til/git/conventional-commits-format.html) - 2026-09-19
 
 ## oauth2
 
