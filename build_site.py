@@ -77,7 +77,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 </head>
 <body>
-<header><a href="../index.html">&larr; All TILs</a></header>
+<header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a></header>
 <main>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
@@ -115,6 +115,33 @@ INDEX_TEMPLATE = """<!doctype html>
 <p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p>
 </header>
 <main>
+{body}
+</main>
+</body>
+</html>
+"""
+
+TOPIC_TEMPLATE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{topic} - {site_title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{description}">
+<meta name="author" content="{author}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{topic} - {site_title}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="{url}">
+<link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
+</head>
+<body>
+<header><a href="../index.html">&larr; All TILs</a></header>
+<main>
+<h1>{topic}</h1>
+<p class="meta">{count} TIL{plural} filed under {topic}.</p>
 {body}
 </main>
 </body>
@@ -193,6 +220,9 @@ nav.series { margin-top: 2.5rem; border-top: 1px solid #d0d7de; padding-top: 1re
 nav.series .series-part { color: #57606a; font-size: .9rem; margin: 0 0 .5rem; }
 nav.series ul { list-style: none; padding: 0; margin: 0; }
 nav.series li { margin: .35rem 0; }
+ol.reading-order { padding-left: 1.4rem; }
+ol.reading-order li { margin: .25rem 0; }
+.elsewhere { color: #57606a; font-size: .85rem; }
 """
 
 MERMAID_SCRIPT = """<script type="module">
@@ -268,8 +298,14 @@ def attr_escape(text):
     return escape(text, {'"': "&quot;"})
 
 
-def build_sitemap(all_entries):
+def build_sitemap(all_entries, topics):
     urls = [SITEMAP_URL_TEMPLATE.format(loc=f"{SITE_URL}/", lastmod=max(e["date"] for e in all_entries))] if all_entries else []
+    # Topic indexes are real landing pages, not just directories -- without
+    # them here a crawler only ever reaches a topic through the homepage.
+    urls += [
+        SITEMAP_URL_TEMPLATE.format(loc=f"{SITE_URL}/{topic}/", lastmod=max(r["date"] for r in rows))
+        for topic, rows, _ in sorted(topics, key=lambda t: t[0])
+    ]
     urls += [
         SITEMAP_URL_TEMPLATE.format(loc=e["url"], lastmod=e["date"])
         for e in sorted(all_entries, key=lambda e: e["url"])
@@ -365,6 +401,7 @@ def load_series(articles):
                 "series_title": series["title"],
                 "position": position,
                 "total": len(keys),
+                "entry": by_key[key],
                 "prev": by_key[keys[position - 2]] if position > 1 else None,
                 "next": by_key[keys[position]] if position < len(keys) else None,
             }
@@ -373,6 +410,52 @@ def load_series(articles):
     if errors:
         raise SystemExit("series.json is out of sync with the entries:\n  - " + "\n  - ".join(errors))
     return nav
+
+
+def series_touching(topic, series_nav):
+    """Every series with at least one entry in this topic, each in reading order.
+
+    A series can span topics -- the HashiCorp one lives in terraform/ and
+    packer/ -- so the whole series is returned, not just this topic's slice,
+    and the caller marks the entries that live elsewhere.
+    """
+    keys = []
+    for info in series_nav.values():
+        if info["entry"]["topic"] == topic and info["series"] not in keys:
+            keys.append(info["series"])
+    sections = []
+    for series_key in keys:
+        members = sorted(
+            (i for i in series_nav.values() if i["series"] == series_key),
+            key=lambda i: i["position"],
+        )
+        sections.append((members[0]["series_title"], members))
+    return sections
+
+
+def build_topic_body(topic, rows, sections):
+    parts = []
+    for series_title, members in sections:
+        parts.append(f"<h2>Reading order: {escape(series_title)}</h2>")
+        parts.append('<ol class="reading-order">')
+        for info in members:
+            entry = info["entry"]
+            here = entry["topic"] == topic
+            href = f'{entry["slug"]}.html' if here else f'../{entry["topic"]}/{entry["slug"]}.html'
+            elsewhere = "" if here else f' <span class="elsewhere">in {entry["topic"]}</span>'
+            parts.append(f'<li><a href="{href}">{escape(entry["title"])}</a>{elsewhere}</li>')
+        parts.append("</ol>")
+    if sections:
+        parts.append("<h2>Everything in this topic, oldest first</h2>")
+    parts.append("<ul>")
+    for row in rows:
+        parts.append(
+            '<li><a href="{slug}.html">{title}</a> - {date}</li>'.format(
+                slug=row["slug"], title=escape(row["title"]), date=row["date"]
+            )
+        )
+    parts.append("</ul>")
+    return "\n".join(parts)
 
 
 def render_series_nav(info):
@@ -498,7 +581,7 @@ def main():
             )
 
     for topic, rows, _ in topics:
-        body_parts.append(f'<h2 id="{topic}">{topic}</h2>\n<ul>')
+        body_parts.append(f'<h2 id="{topic}"><a href="{topic}/">{topic}</a></h2>\n<ul>')
         for row in rows:
             body_parts.append(
                 '<li><a href="{topic}/{slug}.html">{title}</a> - {date}</li>'.format(topic=topic, **row)
@@ -518,8 +601,24 @@ def main():
             bing_verification_code=BING_VERIFICATION_CODE,
         )
     )
+    for topic, rows, _ in topics:
+        topic_url = f"{SITE_URL}/{topic}/"
+        plural = "" if len(rows) == 1 else "s"
+        (site / topic / "index.html").write_text(
+            TOPIC_TEMPLATE.format(
+                topic=topic,
+                count=len(rows),
+                plural=plural,
+                body=build_topic_body(topic, rows, series_touching(topic, series_nav)),
+                site_title=SITE_TITLE,
+                description=attr_escape(f"{len(rows)} TIL{plural} filed under {topic} on {SITE_TITLE}."),
+                author=SITE_AUTHOR,
+                url=topic_url,
+            )
+        )
+
     (site / "feed.atom").write_text(build_feed(all_entries))
-    (site / "sitemap.xml").write_text(build_sitemap(all_entries))
+    (site / "sitemap.xml").write_text(build_sitemap(all_entries, topics))
     (site / "robots.txt").write_text(ROBOTS_TXT.format(site_url=SITE_URL))
 
 
