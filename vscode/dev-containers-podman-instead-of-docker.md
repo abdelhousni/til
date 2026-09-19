@@ -84,3 +84,20 @@ This is the shape it actually takes for infrastructure-as-code work — a contai
 The extensions are what make this an IaC container specifically — `hashicorp.terraform` for HCL formatting and validation, `redhat.ansible` for YAML/Jinja linting against real role and playbook schemas — while `--userns=keep-id` and the `:Z`-suffixed SSH mount from above are what make `terraform apply` and `ansible-playbook -i inventory` actually usable from inside it: an SSH key rootless Podman can't read, or a state file the host user can't write back to after the container edits it, defeats the point of running either tool in a container at all.
 
 The [HashiCorp series](../terraform/what-is-terraform-opentofu-and-how-it-works.md) and [RKE2/Kubernetes series](../kubernetes/what-is-kubernetes-and-how-it-works.md) on this site are exactly the kind of work a container built this way is for — a reproducible place to run `terraform`/`tofu` and `ansible-playbook` without installing either toolchain on bare metal.
+
+## Ansible Execution Environments raise a different question: containers inside the container
+
+`redhat.ansible` — already in the example above — supports a second mode: instead of running the `ansible` on whatever's installed in the devcontainer, it can shell out to an **Execution Environment**, a container image with a pinned `ansible-core` version and collections baked in (the same mechanism `ansible-navigator`/`ansible-builder` use in CI). That's a real fork in the road once the devcontainer is already a container, because an EE run from inside it means Podman launching a *second* container from within the first one.
+
+Two settings decide whether that question even comes up. Per the extension's own [`package.json` schema](https://github.com/ansible/vscode-ansible/blob/main/package.json):
+
+```json
+{
+  "ansible.executionEnvironment.enabled": false,
+  "ansible.executionEnvironment.containerEngine": "auto"
+}
+```
+
+`enabled` defaults to **`false`** in the VS Code extension — worth knowing precisely because `ansible-navigator`'s own CLI default is the opposite (`execution-environment.enabled: true`, `container-engine: auto`, meaning podman first, docker second). Left at the extension's default, `redhat.ansible` just runs `ansible-lint`/`ansible-playbook` against whatever `ansible-core` is on the devcontainer's own `PATH` — no nested container, no question to answer. That's also why the earlier example installs Ansible into the devcontainer image directly via `postCreateCommand: "make setup"` rather than pointing at an EE image: for a devcontainer that's already a controlled, reproducible environment, the devcontainer *is* the execution environment, and there's nothing further to nest.
+
+Flip `executionEnvironment.enabled` to `true` — say, to run the exact same EE image (default `ghcr.io/ansible/community-ansible-dev-tools:latest`) that CI uses — and now Podman inside the devcontainer has to launch another container, genuinely nested. Rootless Podman-in-rootless-Podman is generally workable (unlike Docker-in-Docker, it doesn't need a privileged daemon), but it's a real added layer, not a free abstraction — worth reaching for only when matching CI's exact EE image is the actual goal, not by default. If you do enable it, the EE's own volume mounts carry the identical SELinux concern this entry already covered: `execution-environment.volume-mounts` takes an `options` field, and setting it to `"Z"` is `ansible-navigator` relabeling its own bind mounts into the EE container for exactly the same reason `:Z` shows up on the devcontainer's mounts above.
