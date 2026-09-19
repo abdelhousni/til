@@ -30,6 +30,7 @@ AUTHOR_SAME_AS = [
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
+SERIES_MANIFEST = root / "series.json"
 FEED_ENTRY_LIMIT = 50
 RECENT_TILS_LIMIT = 10
 
@@ -81,7 +82,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
 {body}
-</main>
+{series_nav}</main>
 {mermaid_script}</body>
 </html>
 """
@@ -119,6 +120,17 @@ INDEX_TEMPLATE = """<!doctype html>
 </body>
 </html>
 """
+
+SERIES_NAV_TEMPLATE = """<nav class="series" aria-label="Series navigation">
+<p class="series-part">Part {position} of {total} in the <strong>{series_title}</strong> series</p>
+<ul>
+{links}
+</ul>
+</nav>
+"""
+
+SERIES_PREV_TEMPLATE = """<li class="series-prev">&larr; Previous: <a href="../{topic}/{slug}.html">{title}</a></li>"""
+SERIES_NEXT_TEMPLATE = """<li class="series-next">Next: <a href="../{topic}/{slug}.html">{title}</a> &rarr;</li>"""
 
 SITEMAP_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -177,6 +189,10 @@ pre code { background: none; padding: 0; }
 a { color: #0969da; }
 pre.mermaid { background: none; padding: 0; text-align: center; }
 pre.mermaid svg { max-width: 100%; height: auto; }
+nav.series { margin-top: 2.5rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
+nav.series .series-part { color: #57606a; font-size: .9rem; margin: 0 0 .5rem; }
+nav.series ul { list-style: none; padding: 0; margin: 0; }
+nav.series li { margin: .35rem 0; }
 """
 
 MERMAID_SCRIPT = """<script type="module">
@@ -279,6 +295,103 @@ def build_feed(entries):
     return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, author=SITE_AUTHOR, updated=updated, entries=entry_xml)
 
 
+ORDINALS = [
+    "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
+    "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth",
+    "Eighteenth", "Nineteenth", "Twentieth",
+]
+
+# An intro line like "Fourth entry in the RKE2/Kubernetes series." Anchored to
+# the start of a line on purpose, so a mid-sentence "the second entry" in some
+# other article's prose isn't read as a series declaration.
+SERIES_PROSE_RE = re.compile(r"^(\w+) entry in the .+? series\b", re.MULTILINE)
+
+
+def ordinal_errors(articles, nav):
+    """Entries whose declared ordinal disagrees with the manifest, or that declare one at all without being listed."""
+    errors = []
+    for article in articles:
+        match = SERIES_PROSE_RE.search(article["text"])
+        if not match:
+            continue
+        key = f"{article['topic']}/{article['slug']}"
+        info = nav.get(key)
+        if info is None:
+            errors.append(
+                f"{key}.md calls itself the {match.group(1).lower()} entry in a series, but no series in the manifest lists it"
+            )
+            continue
+        expected = ORDINALS[info["position"] - 1] if info["position"] <= len(ORDINALS) else None
+        if expected and match.group(1).lower() != expected.lower():
+            errors.append(
+                f"{key}.md says \"{match.group(1)} entry\", but '{info['series']}' lists it at position "
+                f"{info['position']} (\"{expected}\")"
+            )
+    return errors
+
+
+def load_series(articles):
+    """Map "topic/slug" to its position in a series, from the series.json manifest.
+
+    Reading order is a property of the series, not of any one article, so it
+    lives in a single manifest rather than in per-article front matter.
+    Reordering then touches one file instead of N, and can't silently skip or
+    duplicate a position the way N independently-maintained ordinals can --
+    which is exactly what had already drifted here: the first two entries of
+    the RKE2 series never declared an ordinal at all, so nothing tied them to
+    the seven that did. JSON rather than YAML keeps this stdlib-only.
+    """
+    if not SERIES_MANIFEST.exists():
+        return {}
+
+    by_key = {f"{a['topic']}/{a['slug']}": a for a in articles}
+    manifest = json.loads(SERIES_MANIFEST.read_text())
+    nav, listed_in, errors = {}, {}, []
+
+    for series_key, series in manifest.items():
+        keys = []
+        for path in series["entries"]:
+            key = path[:-3] if path.endswith(".md") else path
+            if key not in by_key:
+                errors.append(f"'{series_key}' lists {path}, which is not a TIL in this repo")
+            elif key in listed_in:
+                errors.append(f"'{series_key}' lists {path}, already listed in '{listed_in[key]}'")
+            else:
+                listed_in[key] = series_key
+                keys.append(key)
+        for position, key in enumerate(keys, start=1):
+            nav[key] = {
+                "series": series_key,
+                "series_title": series["title"],
+                "position": position,
+                "total": len(keys),
+                "prev": by_key[keys[position - 2]] if position > 1 else None,
+                "next": by_key[keys[position]] if position < len(keys) else None,
+            }
+
+    errors += ordinal_errors(articles, nav)
+    if errors:
+        raise SystemExit("series.json is out of sync with the entries:\n  - " + "\n  - ".join(errors))
+    return nav
+
+
+def render_series_nav(info):
+    if not info:
+        return ""
+    links = []
+    for template, neighbour in ((SERIES_PREV_TEMPLATE, info["prev"]), (SERIES_NEXT_TEMPLATE, info["next"])):
+        if neighbour:
+            links.append(
+                template.format(topic=neighbour["topic"], slug=neighbour["slug"], title=escape(neighbour["title"]))
+            )
+    return SERIES_NAV_TEMPLATE.format(
+        position=info["position"],
+        total=info["total"],
+        series_title=escape(info["series_title"]),
+        links="\n".join(links),
+    )
+
+
 def main():
     if site.exists():
         shutil.rmtree(site)
@@ -287,54 +400,71 @@ def main():
     formatter = HtmlFormatter(style="default")
     (site / "style.css").write_text(STYLE + "\n" + formatter.get_style_defs(".codehilite"))
 
-    topics = []
-    all_entries = []
-    for entry in sorted(root.iterdir()):
-        if not entry.is_dir() or entry.name in SKIP_DIRS or entry.name.startswith("."):
+    # Read every entry's title before rendering any page: a series nav block
+    # links to its neighbours by title, so page N can't be written until
+    # N-1 and N+1 have been read.
+    articles = []
+    for topic_dir in sorted(root.iterdir()):
+        if not topic_dir.is_dir() or topic_dir.name in SKIP_DIRS or topic_dir.name.startswith("."):
             continue
-        md_files = sorted(entry.glob("*.md"))
-        if not md_files:
-            continue
-        rows = []
-        for md in md_files:
+        for md in sorted(topic_dir.glob("*.md")):
             text = md.read_text()
-            title = title_for(md, text)
-            date = created_date(md)
-            last_modified = last_modified_datetime(md)
-            slug = md.stem
-            body_text = rewrite_relative_md_links(strip_leading_title(text, title))
-            body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-                lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+            articles.append(
+                {
+                    "path": md,
+                    "text": text,
+                    "topic": topic_dir.name,
+                    "slug": md.stem,
+                    "title": title_for(md, text),
+                }
             )
-            html_body = markdown.markdown(
-                body_text,
-                extensions=["fenced_code", "tables", "codehilite"],
-                extension_configs={"codehilite": {"guess_lang": False}},
+
+    series_nav = load_series(articles)
+
+    rows_by_topic = {}
+    all_entries = []
+    for article in articles:
+        md, text, title = article["path"], article["text"], article["title"]
+        topic, slug = article["topic"], article["slug"]
+        date = created_date(md)
+        last_modified = last_modified_datetime(md)
+        body_text = rewrite_relative_md_links(strip_leading_title(text, title))
+        body_text, has_mermaid = MERMAID_FENCE_RE.subn(
+            lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+        )
+        html_body = markdown.markdown(
+            body_text,
+            extensions=["fenced_code", "tables", "codehilite"],
+            extension_configs={"codehilite": {"guess_lang": False}},
+        )
+        url = f"{SITE_URL}/{topic}/{slug}.html"
+        description = attr_escape(plain_text_summary(html_body))
+        out_dir = site / topic
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / f"{slug}.html").write_text(
+            PAGE_TEMPLATE.format(
+                title=title,
+                topic=topic,
+                date=date,
+                body=html_body,
+                series_nav=render_series_nav(series_nav.get(f"{topic}/{slug}")),
+                site_title=SITE_TITLE,
+                description=description,
+                author=SITE_AUTHOR,
+                url=url,
+                mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
             )
-            url = f"{SITE_URL}/{entry.name}/{slug}.html"
-            description = attr_escape(plain_text_summary(html_body))
-            out_dir = site / entry.name
-            out_dir.mkdir(parents=True, exist_ok=True)
-            (out_dir / f"{slug}.html").write_text(
-                PAGE_TEMPLATE.format(
-                    title=title,
-                    topic=entry.name,
-                    date=date,
-                    body=html_body,
-                    site_title=SITE_TITLE,
-                    description=description,
-                    author=SITE_AUTHOR,
-                    url=url,
-                    mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
-                )
-            )
-            row = {"title": title, "date": date, "slug": slug}
-            rows.append(row)
-            all_entries.append(
-                {**row, "topic": entry.name, "html_body": html_body, "url": url, "last_modified": last_modified}
-            )
+        )
+        row = {"title": title, "date": date, "slug": slug}
+        rows_by_topic.setdefault(topic, []).append(row)
+        all_entries.append(
+            {**row, "topic": topic, "html_body": html_body, "url": url, "last_modified": last_modified}
+        )
+
+    topics = []
+    for topic, rows in rows_by_topic.items():
         rows.sort(key=lambda r: r["date"])
-        topics.append((entry.name, rows, rows[0]["date"]))
+        topics.append((topic, rows, rows[0]["date"]))
 
     topics.sort(key=lambda t: t[2])
 

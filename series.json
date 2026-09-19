@@ -1,0 +1,24 @@
+{
+  "rke2-kubernetes": {
+    "title": "RKE2/Kubernetes from scratch",
+    "entries": [
+      "kubernetes/what-is-kubernetes-and-how-it-works.md",
+      "kubernetes/what-is-rke2-and-how-it-works.md",
+      "kubernetes/rke2-single-node-lab-install.md",
+      "kubernetes/kubectl-off-node-rke2-tls-san.md",
+      "kubernetes/pods-deployments-services-object-model.md",
+      "kubernetes/rke2-cni-canal-and-alternatives.md",
+      "kubernetes/rke2-no-default-storageclass.md",
+      "kubernetes/rke2-ingress-traefik-nginx-retirement.md",
+      "kubernetes/rke2-ha-embedded-etcd-external-datastore.md"
+    ]
+  },
+  "hashicorp": {
+    "title": "HashiCorp infrastructure tooling",
+    "entries": [
+      "terraform/what-is-terraform-opentofu-and-how-it-works.md",
+      "packer/what-is-packer-and-how-it-works.md",
+      "terraform/terraform-opentofu-nomad-packer-how-they-relate.md"
+    ]
+  }
+}
