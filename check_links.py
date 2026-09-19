@@ -51,6 +51,12 @@ def check_internal(html_path, href):
     target = (html_path.parent / href.split("#")[0]).resolve()
     if not target.exists():
         return f"{html_path.relative_to(site)}: broken link -> {href}"
+    # A link to a directory only resolves if there is an index.html for the
+    # server to hand back. Without this, a link to a topic directory passes
+    # here while GitHub Pages serves a 404 for it -- which is exactly what
+    # /til/kubernetes/ did before topic index pages existed.
+    if target.is_dir() and not (target / "index.html").exists():
+        return f"{html_path.relative_to(site)}: directory link with no index.html -> {href}"
     return None
 
 
