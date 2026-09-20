@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->52<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->53<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -90,6 +90,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
 * [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
+* [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://abdelhousni.github.io/til/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
 
 ## packer
 
