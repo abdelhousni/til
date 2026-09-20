@@ -1,6 +1,6 @@
 # What RKE2 actually is, and how its pieces fit together
 
-A closer look at the "packaging" [the Kubernetes-fundamentals entry](what-is-kubernetes-and-how-it-works.html) waved at: what RKE2 specifically is, why it exists as a separate thing from plain `kubeadm` Kubernetes or Rancher's own older RKE, and how its control plane actually starts up given that a Kubernetes control plane normally needs itself to already be running.
+A closer look at the "packaging" [the Kubernetes-fundamentals entry](what-is-kubernetes-and-how-it-works.md) waved at: what RKE2 specifically is, why it exists as a separate thing from plain `kubeadm` Kubernetes or Rancher's own older RKE, and how its control plane actually starts up given that a Kubernetes control plane normally needs itself to already be running.
 
 ## What RKE2 is, and why it exists
 
@@ -42,4 +42,4 @@ Verified directly against current RKE2 source and the live release-channel API (
 
 ## Where the earlier entries in this series fit on this map
 
-The [single-node lab install](rke2-single-node-lab-install.html) entry is what starts the `rke2-server` unit in the diagram above. The [kubectl-from-off-the-node](kubectl-off-node-rke2-tls-san.html) entry is about reaching the `kube-apiserver` static pod once it's up. The [node-maintenance](rke2-node-maintenance-drain-reboot.html) entry is about what has to happen to the `etcd` static pod specifically before a control-plane node reboots. Next up: the object model those bottom-half components actually run — Pods, Deployments, Services.
+The [single-node lab install](rke2-single-node-lab-install.md) entry is what starts the `rke2-server` unit in the diagram above. The [kubectl-from-off-the-node](kubectl-off-node-rke2-tls-san.md) entry is about reaching the `kube-apiserver` static pod once it's up. The [node-maintenance](rke2-node-maintenance-drain-reboot.md) entry is about what has to happen to the `etcd` static pod specifically before a control-plane node reboots. Next up: the object model those bottom-half components actually run — Pods, Deployments, Services.
