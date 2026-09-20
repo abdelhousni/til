@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->51<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->52<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -89,6 +89,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
+* [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
 
 ## packer
 
