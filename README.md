@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->48<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->49<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -61,6 +61,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Adding a certificate to a Java keystore/truststore with keytool](https://abdelhousni.github.io/til/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 * [Checking a TLS certificate's dates, issuer, and SANs with openssl](https://abdelhousni.github.io/til/tls/openssl-checking-cert-dates-and-details.html) - 2026-09-05
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://abdelhousni.github.io/til/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
+* [Diagnosing "works in some browsers, fails in others" with a missing intermediate](https://abdelhousni.github.io/til/tls/checking-a-certificate-chain-with-openssl.html) - 2026-09-20
 
 ## cloud-init
 
