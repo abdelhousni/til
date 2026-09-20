@@ -112,6 +112,33 @@ sequenceDiagram
     P->>P: ExecStartPost: podman image prune -f
 ```
 
+## `Notify=healthy` only covers the moment of the update — a second key covers everything after
+
+Everything above answers one question: did *this specific restart*, the one `podman auto-update` just triggered, succeed or fail? It says nothing about Caddy degrading an hour later without crashing — hung, refusing connections, admin API wedged — after having passed its healthcheck once already. Podman has a name for that state, `unhealthy`, and by default, per [`podman-run(1)`'s own `--health-on-failure` docs](https://docs.podman.io/en/latest/markdown/podman-run.1.html#health-on-failure-action), it does *nothing about it*:
+
+> Action to take once the container transitions to an unhealthy state. The default is `none`.
+
+The other three choices are `kill`, `restart`, and `stop` — and the docs are explicit about which one belongs in a Quadlet unit, which already has `Restart=always` in its `[Service]` block:
+
+> Do not combine the `restart` action with the `--restart` flag. When running inside of a systemd unit, consider using the `kill` or `stop` action instead to make use of systemd's restart policy.
+
+So the addition to `caddy.container` is one more line, not a replacement for anything already there:
+
+```ini
+[Container]
+HealthCmd=wget -q -O /dev/null http://127.0.0.1:2019/config/
+HealthInterval=30s
+HealthRetries=3
+HealthOnFailure=kill
+
+[Service]
+Restart=always
+```
+
+`HealthOnFailure=kill` and `Restart=always` together mean: three consecutive failed checks kill the unit, systemd's own restart policy (already sitting there for an unrelated reason — plain crash recovery) brings it back. `Restart=always` alone never would have — it only fires when the process actually exits, and a hung-but-still-running Caddy never does that on its own.
+
+One thing worth knowing before assuming `HealthCmd` is doing two separate jobs in the example above: Podman actually runs a distinct **startup** health check before the **regular** one ever starts, governed by its own `HealthStartupCmd`/`HealthStartupInterval`/`HealthStartupRetries`/`HealthStartupSuccess` keys — useful for a service whose bootstrap is slower or needs gentler polling than its steady-state check. Neither `caddy.container` nor this addition sets any of those, and per [the same docs](https://docs.podman.io/en/latest/markdown/podman-run.1.html#health-startup-cmd-command-command-arg1), that's a defined fallback, not an oversight: *"If `--health-cmd` option was set, but `--health-startup-cmd` one was missed, then value of `--health-cmd` option is used for startup health check."* `HealthStartPeriod` is the actual mechanism doing the "give it time to boot" job here — a grace window during which failures don't count toward `HealthRetries` at all, simpler than standing up a whole second check for a container that starts as fast as Caddy does.
+
 ## What's actually named `caddy`, and what's gone after a successful update
 
 Both existing entries set `ContainerName=caddy`/`ContainerName: adminer` explicitly. That matters for anything written after the fact: per the same Quadlet docs, *"a `$name.container` file creates a `$name.service` unit and a `systemd-$name` Podman container. The `ContainerName` option allows for overriding this default name."* Since both entries already override it, `podman inspect caddy` is correct — `podman inspect systemd-caddy` is not, despite `systemd-<name>` being what a Quadlet file *without* an explicit `ContainerName` would produce.
