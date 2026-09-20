@@ -102,7 +102,7 @@ When multiple config files are in play, the accumulating form matters too — pe
 
 ## Split roles are built from these same taints
 
-[The HA entry](rke2-ha-embedded-etcd-external-datastore.md) covered separating etcd from the control plane. The scheduling half of that separation is taints, and RKE2's own split-server integration test spells out both halves of the pattern — dedicated etcd nodes:
+[The HA entry](rke2-ha-embedded-etcd-external-datastore.md) covered separating etcd from the control plane. The scheduling half of that separation is taints, and [RKE2's own split-server integration test](https://github.com/rancher/rke2/blob/master/tests/docker/splitserver/splitserver_test.go) spells out both halves of the pattern — dedicated etcd nodes:
 
 ```yaml
 disable-apiserver: true
