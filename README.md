@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->53<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->54<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -45,6 +45,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
+* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://abdelhousni.github.io/til/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://abdelhousni.github.io/til/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 
 ## python
