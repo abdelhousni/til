@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build the static GitHub Pages site (_site/) from the TIL markdown files."""
+import html
 import json
 import pathlib
 import re
@@ -28,10 +29,16 @@ AUTHOR_SAME_AS = [
     "https://mastodon.social/@abdelhousni",
 ]
 SITE_DESCRIPTION = "Abdellatif Housni's Today I Learned notes: short, practical write-ups on things learned while building."
+LLMS_TXT_SUMMARY = (
+    "Short, practical write-ups on things learned while building -- Linux, containers, "
+    "Kubernetes/RKE2, infrastructure-as-code, TLS and the tooling around them. "
+    "{count} entries across {topic_count} topics, each one a self-contained page."
+)
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 SERIES_MANIFEST = root / "series.json"
 FEED_ENTRY_LIMIT = 50
+LLMS_TXT_EXCERPT_LIMIT = 200
 RECENT_TILS_LIMIT = 10
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -75,6 +82,8 @@ PAGE_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
+<link rel="alternate" type="text/markdown" href="{slug}.md">
+<link rel="describedby" href="../llms.txt">
 </head>
 <body>
 <header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a></header>
@@ -103,6 +112,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{url}/">
 <link rel="stylesheet" href="style.css">
 <link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
+<link rel="describedby" href="llms.txt">
 {rel_me_links}
 {person_schema}
 </head>
@@ -136,6 +146,7 @@ TOPIC_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
+<link rel="describedby" href="../llms.txt">
 </head>
 <body>
 <header><a href="../index.html">&larr; All TILs</a></header>
@@ -311,6 +322,56 @@ def build_sitemap(all_entries, topics):
         for e in sorted(all_entries, key=lambda e: e["url"])
     ]
     return SITEMAP_TEMPLATE.format(urls="\n".join(urls))
+
+
+def build_llms_txt(all_entries, topics, series_nav):
+    """An /llms.txt index, per the proposal at https://llmstxt.org/.
+
+    Required shape, in order: an H1, a blockquote summary, any non-heading
+    prose, then H2 sections whose lists are "[name](url): notes" links. The
+    links point at the markdown twin of each entry rather than its HTML,
+    since the whole point is to hand an agent something it can read directly.
+
+    Topics are the sections, alphabetically, so every entry appears exactly
+    once -- a series is noted inline on its members instead of getting its own
+    section, which would list those entries twice.
+    """
+    lines = [
+        f"# {SITE_TITLE}",
+        "",
+        "> " + LLMS_TXT_SUMMARY.format(count=len(all_entries), topic_count=len(topics)),
+        "",
+        "Every entry is published as markdown next to its HTML, at the same path with "
+        "`.md` in place of `.html`; the links below point at the markdown. Sections are "
+        "topics. Each line gives the entry's first-publication date, its place in a "
+        "reading series where it has one, and how it opens.",
+        "",
+    ]
+    for topic, rows, _ in sorted(topics, key=lambda t: t[0]):
+        lines.append(f"## {topic}")
+        lines.append("")
+        for row in rows:
+            entry = next(e for e in all_entries if e["topic"] == topic and e["slug"] == row["slug"])
+            notes = [row["date"] + "."]
+            info = series_nav.get(f"{topic}/{row['slug']}")
+            if info:
+                notes.append(
+                    f'Part {info["position"]} of {info["total"]} in the {info["series_title"]} series.'
+                )
+            notes.append(html.unescape(plain_text_summary(entry["html_body"], limit=LLMS_TXT_EXCERPT_LIMIT)))
+            url = entry["url"].removesuffix(".html") + ".md"
+            lines.append(f'- [{row["title"]}]({url}): {" ".join(notes)}')
+        lines.append("")
+    lines += [
+        "## Optional",
+        "",
+        f"- [Homepage]({SITE_URL}/): the rendered site, with the same entries grouped by topic.",
+        f"- [Atom feed]({SITE_URL}/feed.atom): stamped by last modification, not first publication.",
+        f"- [Sitemap]({SITE_URL}/sitemap.xml): every HTML page, including the per-topic indexes.",
+        "- [Source repository](https://github.com/abdelhousni/til): the markdown these pages are built from.",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def build_feed(entries):
@@ -526,10 +587,15 @@ def main():
         description = attr_escape(plain_text_summary(html_body))
         out_dir = site / topic
         out_dir.mkdir(parents=True, exist_ok=True)
+        # The markdown twin is the source verbatim: its relative links already
+        # point at sibling .md files, which is exactly right once those are
+        # published here too.
+        (out_dir / f"{slug}.md").write_text(text)
         (out_dir / f"{slug}.html").write_text(
             PAGE_TEMPLATE.format(
                 title=title,
                 topic=topic,
+                slug=slug,
                 date=date,
                 body=html_body,
                 series_nav=render_series_nav(series_nav.get(f"{topic}/{slug}")),
@@ -623,6 +689,7 @@ def main():
     (site / "feed.atom").write_text(build_feed(all_entries))
     (site / "sitemap.xml").write_text(build_sitemap(all_entries, topics))
     (site / "robots.txt").write_text(ROBOTS_TXT.format(site_url=SITE_URL))
+    (site / "llms.txt").write_text(build_llms_txt(all_entries, topics, series_nav))
 
 
 if __name__ == "__main__":
