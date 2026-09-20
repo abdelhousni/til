@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->48<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->50<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -44,6 +44,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
+* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://abdelhousni.github.io/til/proxmox/debugging-cloud-init-on-first-boot.html) - unknown
 
 ## python
 
@@ -104,6 +105,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## apache
 
 * [A conditional redirect that skips one path, on Apache 2.2 through 2.4](https://abdelhousni.github.io/til/apache/conditional-redirect-exclude-one-path.html) - 2026-09-18
+* [A 503 maintenance page for everyone except your own IP, on current Apache](https://abdelhousni.github.io/til/apache/maintenance-mode-allow-one-ip.html) - 2026-09-20
 
 ## linux
 
