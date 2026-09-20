@@ -81,4 +81,4 @@ Worth flagging rather than papering over: RKE2 logs `Unknown flag --snapshotter 
 
 ## Where this series goes next
 
-RBAC — who's actually allowed to run any of the commands in this entry.
+Scheduling — which node any of this actually runs on, and why RKE2's servers have been accepting workloads all along when the most common Kubernetes installer taints its control plane to refuse them.
