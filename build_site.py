@@ -251,16 +251,34 @@ MERMAID_SCRIPT = """<script type="module">
 MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
-def created_date(path):
+def created_date_and_timestamp(path):
+    """(YYYY-MM-DD, unix seconds) of the commit that first added this file.
+
+    The date is what a reader sees; the timestamp is only ever a sort key.
+    Both come out of one `git log` call so the two can never disagree.
+
+    The timestamp exists because ordering by the short date alone stops
+    being an ordering the moment two entries share a day, which happens
+    routinely here. Python's sort is stable, so same-day entries keep the
+    order the tree was walked in -- topic directory, then filename -- and
+    the newest entry of the day lands below older ones under a heading
+    that promises the opposite. Unix seconds also compare correctly across
+    timezones, which an ISO-8601 string compared as text does not.
+
+    A file with no creation commit yet sorts as though it were the newest
+    thing in the repository, which is what a local preview of a draft
+    wants, and matches what the "unknown" string happened to do before.
+    """
     for args in (
-        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad", "--date=short", "--", str(path)],
-        ["git", "log", "--follow", "--format=%ad", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad\t%at", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--format=%ad\t%at", "--date=short", "--", str(path)],
     ):
         result = subprocess.run(args, cwd=root, capture_output=True, text=True, check=True)
-        dates = result.stdout.strip().splitlines()
-        if dates:
-            return dates[-1]
-    return "unknown"
+        lines = result.stdout.strip().splitlines()
+        if lines:
+            date, _, stamp = lines[-1].partition("\t")
+            return date, int(stamp)
+    return "unknown", float("inf")
 
 
 def last_modified_datetime(path):
@@ -572,7 +590,7 @@ def main():
     for article in articles:
         md, text, title = article["path"], article["text"], article["title"]
         topic, slug = article["topic"], article["slug"]
-        date = created_date(md)
+        date, created_ts = created_date_and_timestamp(md)
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
@@ -606,7 +624,7 @@ def main():
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
             )
         )
-        row = {"title": title, "date": date, "slug": slug}
+        row = {"title": title, "date": date, "created_ts": created_ts, "slug": slug}
         rows_by_topic.setdefault(topic, []).append(row)
         all_entries.append(
             {**row, "topic": topic, "html_body": html_body, "url": url, "last_modified": last_modified}
@@ -614,7 +632,12 @@ def main():
 
     topics = []
     for topic, rows in rows_by_topic.items():
-        rows.sort(key=lambda r: r["date"])
+        rows.sort(key=lambda r: r["created_ts"])
+        # Topics stay ordered by first-entry *date*, deliberately: several
+        # topics were seeded on the same day, so switching this key to the
+        # timestamp too would reshuffle every section on the homepage to fix
+        # an ordering nobody reads as chronological. The entries inside each
+        # topic are what had to be corrected.
         topics.append((topic, rows, rows[0]["date"]))
 
     topics.sort(key=lambda t: t[2])
@@ -636,7 +659,7 @@ def main():
     # "Recent TILs" -- same section til.simonwillison.net's own homepage
     # leads with: a reverse-chronological feed of the latest entries with a
     # short excerpt each, distinct from the exhaustive per-topic lists below.
-    recent = sorted(all_entries, key=lambda e: e["date"], reverse=True)[:RECENT_TILS_LIMIT]
+    recent = sorted(all_entries, key=lambda e: e["created_ts"], reverse=True)[:RECENT_TILS_LIMIT]
     if recent:
         body_parts.append("<h2>Recent TILs</h2>")
         for e in recent:
