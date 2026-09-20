@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->50<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->51<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -93,6 +93,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## packer
 
 * [What Packer actually is, and how it works](https://abdelhousni.github.io/til/packer/what-is-packer-and-how-it-works.html) - 2026-09-17
+* [Kickstart, cloud-init and Image Builder are three layers, not three choices](https://abdelhousni.github.io/til/packer/rhel-template-kickstart-cloud-init-image-builder.html) - 2026-09-20
 
 ## ssh
 
