@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->54<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->55<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -40,6 +40,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://abdelhousni.github.io/til/podman/docker-and-podman-hello-world.html) - 2026-09-06
 * [Podman equivalents to Docker's Dive image-layer explorer](https://abdelhousni.github.io/til/podman/podman-equivalent-to-docker-dive.html) - 2026-09-12
 * [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://abdelhousni.github.io/til/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
+* [Auto-updating the Caddy/Adminer/PHP Quadlet stack needs more than one AutoUpdate key](https://abdelhousni.github.io/til/podman/quadlet-autoupdate-caddy-adminer-php.html) - 2026-09-20
 
 ## proxmox
 
