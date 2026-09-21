@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->50<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->54<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -40,12 +40,13 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://abdelhousni.github.io/til/podman/docker-and-podman-hello-world.html) - 2026-09-06
 * [Podman equivalents to Docker's Dive image-layer explorer](https://abdelhousni.github.io/til/podman/podman-equivalent-to-docker-dive.html) - 2026-09-12
 * [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://abdelhousni.github.io/til/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
-* [Auto-updating the Caddy/Adminer/PHP Quadlet stack needs more than one AutoUpdate key](https://abdelhousni.github.io/til/podman/quadlet-autoupdate-caddy-adminer-php.html) - 2026-09-20
 
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
+* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://abdelhousni.github.io/til/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
+* [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://abdelhousni.github.io/til/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 
 ## python
 
@@ -89,10 +90,13 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
+* [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
+* [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://abdelhousni.github.io/til/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
 
 ## packer
 
 * [What Packer actually is, and how it works](https://abdelhousni.github.io/til/packer/what-is-packer-and-how-it-works.html) - 2026-09-17
+* [Kickstart, cloud-init and Image Builder are three layers, not three choices](https://abdelhousni.github.io/til/packer/rhel-template-kickstart-cloud-init-image-builder.html) - 2026-09-20
 
 ## ssh
 
