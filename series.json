@@ -20,7 +20,8 @@
     "entries": [
       "terraform/what-is-terraform-opentofu-and-how-it-works.md",
       "packer/what-is-packer-and-how-it-works.md",
-      "terraform/terraform-opentofu-nomad-packer-how-they-relate.md"
+      "terraform/terraform-opentofu-nomad-packer-how-they-relate.md",
+      "terraform/state-locking-inspection-refactoring-drift.md"
     ]
   }
 }
