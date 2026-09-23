@@ -27,14 +27,31 @@ jobs:
         python-version: "3.12"
     - name: Install dependencies
       run: pip install -r requirements.txt
-    - name: Update README index
-      run: python update_readme.py --rewrite
-    - name: Commit README if changed
+    - name: Regenerate the README index and push it if it changed
       run: |
         git config --global user.email "actions@users.noreply.github.com"
         git config --global user.name "README-bot"
-        git diff --quiet -- README.md || (git add README.md && git commit -m "Updated README")
-        git push
+        # The index is generated, so a race with another run has nothing to
+        # merge: throw our commit away, regenerate on top of whatever landed,
+        # and try again.
+        for attempt in 1 2 3; do
+          python update_readme.py --rewrite
+          if git diff --quiet -- README.md; then
+            echo "README index already in sync; nothing to push."
+            exit 0
+          fi
+          git add README.md
+          git commit -m "Updated README"
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          echo "push rejected on attempt $attempt; refreshing from origin/main"
+          git fetch origin main
+          git reset --hard FETCH_HEAD
+        done
+        # The README is repo bookkeeping and is not part of _site, so it must
+        # never block publishing. The next run regenerates it anyway.
+        echo "::warning::README index could not be pushed after 3 attempts; the next run will regenerate it."
     - name: Build site
       run: python build_site.py
     - name: Check for dead links

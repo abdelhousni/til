@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->48<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->56<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -17,6 +17,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Targeting hosts the same way, whether the inventory is static or dynamic](https://abdelhousni.github.io/til/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://abdelhousni.github.io/til/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://abdelhousni.github.io/til/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
+* [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://abdelhousni.github.io/til/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
 
 ## github-pages
 
@@ -39,11 +40,15 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://abdelhousni.github.io/til/podman/docker-and-podman-hello-world.html) - 2026-09-06
 * [Podman equivalents to Docker's Dive image-layer explorer](https://abdelhousni.github.io/til/podman/podman-equivalent-to-docker-dive.html) - 2026-09-12
 * [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://abdelhousni.github.io/til/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
+* [Pointing Podman at an Artifactory mirror without editing a single image name](https://abdelhousni.github.io/til/podman/artifactory-as-a-pull-through-mirror.html) - 2026-09-21
+* [Auto-updating the Caddy/Adminer/PHP Quadlet stack needs more than one AutoUpdate key](https://abdelhousni.github.io/til/podman/quadlet-autoupdate-caddy-adminer-php.html) - 2026-09-21
 
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
+* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://abdelhousni.github.io/til/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
+* [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://abdelhousni.github.io/til/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 
 ## python
 
@@ -87,10 +92,13 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Installing a single-node RKE2 server for a lab](https://abdelhousni.github.io/til/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [What RKE2 actually is, and how its pieces fit together](https://abdelhousni.github.io/til/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
+* [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://abdelhousni.github.io/til/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
+* [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://abdelhousni.github.io/til/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
 
 ## packer
 
 * [What Packer actually is, and how it works](https://abdelhousni.github.io/til/packer/what-is-packer-and-how-it-works.html) - 2026-09-17
+* [Kickstart, cloud-init and Image Builder are three layers, not three choices](https://abdelhousni.github.io/til/packer/rhel-template-kickstart-cloud-init-image-builder.html) - 2026-09-20
 
 ## ssh
 
@@ -100,7 +108,6 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://abdelhousni.github.io/til/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [What Terraform/OpenTofu actually is, and how it works](https://abdelhousni.github.io/til/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
-* [Terraform state locking just dropped its DynamoDB requirement](https://abdelhousni.github.io/til/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-19
 
 ## apache
 
@@ -113,4 +120,39 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## windows
 
 * [Finding and force-closing a locked file on a Windows SMB share](https://abdelhousni.github.io/til/windows/close-open-smb-files-powershell.html) - 2026-09-18
+
+## vscode
+
+* [Pointing VS Code's Dev Containers extension at Podman](https://abdelhousni.github.io/til/vscode/dev-containers-podman-instead-of-docker.html) - 2026-09-19
 <!-- index ends -->
+
+---
+
+## Running the site locally
+
+The published site is built by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) running three scripts and uploading `_site/`. The `Makefile` runs the same three, in the same order, so a clean `make preflight` locally means a clean deploy.
+
+```bash
+git clone https://github.com/abdelhousni/til.git    # not --depth 1, see below
+cd til
+make serve            # creates .venv, installs deps, builds, serves on :8000
+```
+
+| target | what it does |
+| --- | --- |
+| `make help` | list these targets |
+| `make venv` | create `.venv` and install `requirements.txt` |
+| `make build` | build the site into `_site/` |
+| `make serve` | build, then serve on `localhost:8000` (`make serve PORT=9000` to move it) |
+| `make check` | build + internal link check, fast |
+| `make check-external` | build + external link check, slow — this one is the deploy gate |
+| `make readme` | regenerate the index in this README |
+| `make preflight` | everything CI runs, in CI's order |
+| `make clean` / `clean-all` | drop `_site/`, and `.venv/` too |
+
+Two things worth knowing, both of which produce *wrong output* rather than an error, which is why `make` checks for them:
+
+- **Clone with full history.** Entry dates come from `git log --follow --diff-filter=A`, so a `--depth 1` clone dates every entry `unknown` and scrambles the ordering. CI sets `fetch-depth: 0` for the same reason.
+- **Commit before you build.** An uncommitted `.md` file has no history to read a creation date from, so it renders as `unknown` and leaks into the README index if you regenerate it.
+
+Serve `_site/` rather than opening it with `file://`. Internal links are all relative, so the locally-served copy behaves exactly like the `/til/` subpath in production — but Mermaid diagrams load as an ES module from a CDN, which a `file://` origin blocks. Canonical URLs, `sitemap.xml` and `feed.atom` always point at the production host; that is expected locally.

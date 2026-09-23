@@ -47,6 +47,8 @@ kubectl get pods -l app=nginx     # the 3 Pods that ReplicaSet is keeping alive
 
 Delete one of those Pods and, unlike the standalone one above, it comes back within seconds — the ReplicaSet noticed the count drop below 3 and created a replacement. That's [the same reconcile loop](what-is-kubernetes-and-how-it-works.md) from the fundamentals entry, just watching a different object.
 
+Nothing above says *which node* any of those three Pods runs on, and nothing needs to: a Deployment names no node, and `kube-scheduler` decides. On the single-node lab there's only one answer, which is exactly why it's easy to never think about — [the scheduling entry](rke2-node-scheduling-labels-taints-tolerations.md) later in this series covers how that choice is actually made, and why on RKE2 the servers themselves are among the candidates.
+
 ## Service: a stable address for Pods whose IPs keep changing
 
 Every Pod created above got its own IP, and that IP is gone the moment the Pod is replaced. A Service is a stable ClusterIP address in front of a *set* of Pods, chosen entirely by a label selector — no direct reference to any Pod's name or IP.
