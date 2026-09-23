@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->57<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->58<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -18,6 +18,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://abdelhousni.github.io/til/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://abdelhousni.github.io/til/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://abdelhousni.github.io/til/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
+* [What Ansible Vault actually encrypts, and where that protection stops](https://abdelhousni.github.io/til/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-23
 
 ## github-pages
 
