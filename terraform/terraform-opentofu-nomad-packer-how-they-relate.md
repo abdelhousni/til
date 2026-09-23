@@ -35,3 +35,8 @@ A realistic order of operations: **Packer** builds a machine image with Nomad pr
 ## The pattern across all three (and Kubernetes)
 
 Packer's job is bounded: build, hand off an artifact, done. Terraform/OpenTofu's job is triggered: nothing happens until you run it, and nothing keeps happening after it exits. Nomad's job — like Kubernetes' — never really finishes: it's a live loop, continuously reconciling what should be running against what actually is. Knowing which category a tool falls into before touching it says a lot about what kind of surprises to expect: a stale Packer image doesn't drift on its own, an un-reapplied Terraform config can drift silently underneath you, and a misbehaving Nomad job gets rescheduled whether you asked it to or not.
+
+## Where this series goes next
+
+Back to Terraform/OpenTofu specifically, for the state file this series has so far only described from a distance: locking, inspecting, refactoring without a destroy, and a genuinely recent change to how the S3 backend claims a lock.
+
