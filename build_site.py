@@ -227,6 +227,11 @@ pre code { background: none; padding: 0; }
 a { color: #0969da; }
 pre.mermaid { background: none; padding: 0; text-align: center; }
 pre.mermaid svg { max-width: 100%; height: auto; }
+table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: .95rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid #d0d7de; padding: .5rem .75rem; text-align: left; vertical-align: top; }
+thead th { background: #f6f8fa; font-weight: 600; border-bottom-width: 2px; }
+tbody tr:nth-child(even) { background: #f6f8fa; }
+table code { white-space: nowrap; }
 nav.series { margin-top: 2.5rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
 nav.series .series-part { color: #57606a; font-size: .9rem; margin: 0 0 .5rem; }
 nav.series ul { list-style: none; padding: 0; margin: 0; }
