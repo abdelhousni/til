@@ -20,8 +20,8 @@ Download `nixos.wsl` from the [latest release](https://github.com/nix-community/
 On WSL 2.4.4 and later, the install starts the distro immediately and prints the NixOS-WSL welcome banner:
 
 <figure>
-<a href="nixos-wsl-install.png"><img src="nixos-wsl-install.png" alt="Windows Terminal: wsl --update --pre-release reports WSL 2.9.13; wsl --install --from-file nixos.wsl with --name NixOS and --location f:\wsl\nixos installs the distribution and launches it; the NixOS-WSL welcome banner asks to run sudo nix-channel --update and sudo nixos-rebuild switch, and the prompt is nixos@nixos in /mnt/c/Users/abdel." width="1115" height="457" loading="lazy"></a>
-<figcaption>Installing from <code>nixos.wsl</code> on WSL 2.9.13 with a custom <code>--name</code> and <code>--location</code>. The first shell opens in the Windows directory the command was run from, under <code>/mnt/c</code>. Select the image for full size.</figcaption>
+<a href="nixos-wsl-install.png"><img src="nixos-wsl-install.png" alt="PowerShell: wsl --install --from-file nixos.wsl with --name NixOS and --location f:\wsl\nixos installs the distribution and launches it; the NixOS-WSL welcome banner asks to run sudo nix-channel --update and sudo nixos-rebuild switch, and notes it disappears after the first rebuild; the prompt is nixos@nixos in /mnt/c/Users/abdel." width="1115" height="334" loading="lazy"></a>
+<figcaption>Installing from <code>nixos.wsl</code> with a custom <code>--name</code> and <code>--location</code>. The first shell opens in the Windows directory the command was run from, under <code>/mnt/c</code>. Select the image for full size.</figcaption>
 </figure>
 
 The banner asks for two commands, not just the channel update the install docs mention. Run both, and set a password first:
