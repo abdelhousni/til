@@ -36,6 +36,10 @@ LLMS_TXT_SUMMARY = (
 )
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
+# Image files sitting next to an entry are published beside it, so the
+# markdown can reference them by bare filename: `![...](screenshot.png)`
+# works both on the built site and in the markdown twin.
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
 SERIES_MANIFEST = root / "series.json"
 FEED_ENTRY_LIMIT = 50
 LLMS_TXT_EXCERPT_LIMIT = 200
@@ -202,12 +206,15 @@ FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 </feed>
 """
 
+# xml:base makes relative URLs inside an entry (cross-links, images)
+# resolve against the entry's own page, not against feed.atom at the site
+# root, where "nixos-wsl-install.png" would point at a file that isn't there.
 FEED_ENTRY_TEMPLATE = """<entry>
 <title>{title}</title>
 <link href="{url}"/>
 <id>{url}</id>
 <updated>{updated}</updated>
-<content type="html">{content}</content>
+<content type="html" xml:base="{url}">{content}</content>
 </entry>"""
 
 STYLE = """
@@ -232,6 +239,11 @@ th, td { border: 1px solid #d0d7de; padding: .5rem .75rem; text-align: left; ver
 thead th { background: #f6f8fa; font-weight: 600; border-bottom-width: 2px; }
 tbody tr:nth-child(even) { background: #f6f8fa; }
 table code { white-space: nowrap; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.5rem 0; }
+figure img { display: block; border: 1px solid #d0d7de; border-radius: 6px; box-shadow: 0 1px 3px rgba(31, 35, 40, .12); }
+figcaption { color: #57606a; font-size: .9rem; margin-top: .5rem; }
+figcaption code { font-size: .85em; }
 nav.series { margin-top: 2.5rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
 nav.series .series-part { color: #57606a; font-size: .9rem; margin: 0 0 .5rem; }
 nav.series ul { list-style: none; padding: 0; margin: 0; }
@@ -576,6 +588,10 @@ def main():
     for topic_dir in sorted(root.iterdir()):
         if not topic_dir.is_dir() or topic_dir.name in SKIP_DIRS or topic_dir.name.startswith("."):
             continue
+        for image in sorted(topic_dir.iterdir()):
+            if image.suffix.lower() in IMAGE_SUFFIXES:
+                (site / topic_dir.name).mkdir(parents=True, exist_ok=True)
+                shutil.copy2(image, site / topic_dir.name / image.name)
         for md in sorted(topic_dir.glob("*.md")):
             text = md.read_text()
             articles.append(
