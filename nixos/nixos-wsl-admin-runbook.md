@@ -17,16 +17,22 @@ Download `nixos.wsl` from the [latest release](https://github.com/nix-community/
 | 2.4.4 or later | `wsl --install --from-file nixos.wsl` (or double-click the file). Use `--name` and `--location` to change the defaults. |
 | Older | `wsl --import NixOS $env:USERPROFILE\NixOS nixos.wsl --version 2` |
 
-Then start it and do the two first-boot steps the docs require:
+On WSL 2.4.4 and later, the install starts the distro immediately and prints the NixOS-WSL welcome banner:
 
-```powershell
-wsl -d NixOS
-```
+<figure>
+<a href="nixos-wsl-install.png"><img src="nixos-wsl-install.png" alt="PowerShell: wsl --install --from-file nixos.wsl with --name NixOS and --location f:\wsl\nixos installs the distribution and launches it; the NixOS-WSL welcome banner asks to run sudo nix-channel --update and sudo nixos-rebuild switch, and notes it disappears after the first rebuild; the prompt is nixos@nixos in /mnt/c/Users/abdel." width="1115" height="334" loading="lazy"></a>
+<figcaption>Installing from <code>nixos.wsl</code> with a custom <code>--name</code> and <code>--location</code>. The first shell opens in the Windows directory the command was run from, under <code>/mnt/c</code>. Select the image for full size.</figcaption>
+</figure>
+
+The banner asks for two commands, not just the channel update the install docs mention. Run both, and set a password first:
 
 ```sh
-passwd                     # user "nixos", in wheel; sudo asks for a password by default
-sudo nix-channel --update  # needed once before the first nixos-rebuild
+passwd                       # user "nixos", in wheel; sudo asks for a password by default
+sudo nix-channel --update    # needed once before the first nixos-rebuild
+sudo nixos-rebuild switch    # picks up the latest NixOS and NixOS-WSL; also removes the banner
 ```
+
+The banner only comes from the configuration baked into the tarball, which is used until the first `nixos-rebuild`. After that, `nixos-wsl-welcome` shows it again on demand. Later, start the distro with `wsl -d NixOS`.
 
 Make it the default distro with `wsl -s NixOS`.
 

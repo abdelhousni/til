@@ -43,10 +43,16 @@ class HrefCollector(HTMLParser):
         self.link_hrefs = []
 
     def handle_starttag(self, tag, attrs):
-        if tag not in ("a", "link"):
+        if tag not in ("a", "link", "img"):
             return
         for name, value in attrs:
-            if name == "href" and value:
+            if tag == "img":
+                # An <img src> is ours to check the same way a relative
+                # <link> is: a typo in a screenshot's filename would
+                # otherwise publish a broken image without failing anything.
+                if name == "src" and value:
+                    self.link_hrefs.append(value)
+            elif name == "href" and value:
                 (self.hrefs if tag == "a" else self.link_hrefs).append(value)
 
 
