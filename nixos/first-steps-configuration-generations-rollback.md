@@ -2,6 +2,8 @@
 
 Coming to NixOS from RHEL or Ubuntu, the instinct is to install a package, edit something under `/etc`, and restart a service. NixOS supports a version of that, but it isn't the model. The model is one file describing the whole machine, a command that builds that description into a new system, and a boot menu that keeps every previous build around. This entry covers those first moves, checked against the [NixOS 26.05 manual](https://nixos.org/manual/nixos/stable/), plus the one setting the manual tells you never to touch.
 
+The configuration this entry walks through is also a working repo, [dar-nixos](https://github.com/abdelhousni/dar-nixos): one commented `configuration.nix` you can boot as a VM on any Linux machine with Nix, plus a NixOS VM test that boots it and checks it on every push.
+
 ## The machine is `/etc/nixos/configuration.nix`
 
 Per the manual: *"The file `/etc/nixos/configuration.nix` contains the current configuration of your machine."* Users, services, the firewall, the bootloader, the packages: all of it is declared there, in the Nix language. A minimal change looks like this:
