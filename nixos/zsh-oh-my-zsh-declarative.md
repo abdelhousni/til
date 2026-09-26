@@ -125,6 +125,10 @@ NixOS still accepts `programs.zsh.oh-my-zsh.*` as a renamed alias of `ohMyZsh`, 
 
 Even with Home Manager, keep `programs.zsh.enable = true` at system level. The shell check above requires it, and Home Manager's `enableCompletion` description asks for `environment.pathsToLink = [ "/share/zsh" ]` for system package completions, which the NixOS module already sets. But enable Oh My Zsh in one layer only. `/etc/zshrc` runs before `~/.zshrc`, so enabling it in both loads it twice.
 
+## Checked in CI
+
+The companion repo [dar-nixos](https://github.com/abdelhousni/dar-nixos) carries this setup as [`zsh.nix`](https://github.com/abdelhousni/dar-nixos/blob/main/zsh.nix) and checks it on every push. One job evaluates the generated `/etc/zshrc`. A second boots the machine and asks the shell itself. How that runs is covered in [the GitHub Actions entry](nixos-config-tests-github-actions.md) and [the GitLab CE entry](nixos-config-tests-gitlab-ce.md).
+
 ## Sources
 
 - nixpkgs `nixos-26.05`: `nixos/modules/programs/zsh/zsh.nix`, `oh-my-zsh.nix` and its [manual section](https://nixos.org/manual/nixos/stable/#module-programs-zsh-ohmyzsh), `zsh-syntax-highlighting.nix`, `programs/fzf.nix`, `programs/zoxide.nix`, and the shell assertion in `config/users-groups.nix`.
