@@ -170,4 +170,4 @@ Set `wsl.defaultUser`, then follow the [documented order](https://nix-community.
 
 ## Further reading
 
-Stéphane Robert's [NixOS dans WSL : environnement complet](https://blog.stephane-robert.info/docs/securiser/os-immuable/nixos/installation-wsl/) (in French) builds the same setup into a full workstation: a flake repository split into `hosts/` and `modules/`, Docker, Zsh with Oh My Zsh, and nix-ld for VS Code. The Docker, VS Code and "keep the configuration in Git" sections above follow its outline, checked against the NixOS-WSL and nixpkgs sources.
+Stéphane Robert's [NixOS dans WSL : environnement complet](https://blog.stephane-robert.info/docs/securiser/os-immuable/nixos/installation-wsl/) (in French) builds the same setup into a full workstation: a flake repository split into `hosts/` and `modules/`, Docker, Zsh with Oh My Zsh, and nix-ld for VS Code. The Docker, VS Code and "keep the configuration in Git" sections above follow its outline, checked against the NixOS-WSL and nixpkgs sources. Its Zsh part has [its own entry](zsh-oh-my-zsh-declarative.md).
