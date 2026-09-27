@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->66<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->68<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -77,6 +77,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 
 * [Installing git, gh, and glab, and the auth each one actually needs](https://abdelhousni.github.io/til/git/git-gh-glab-install-and-auth.html) - 2026-09-12
 * [Configuring a repository for coding agents: what the guidance actually says](https://abdelhousni.github.io/til/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
+* [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://abdelhousni.github.io/til/git/resync-clone-after-force-push.html) - 2026-09-27
 * [Syncing a diverged fork: take the pipeline fixes, not the content](https://abdelhousni.github.io/til/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 
 ## oauth2
@@ -137,6 +138,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Testing a NixOS configuration on GitHub Actions: evaluate on every push, boot it where KVM is](https://abdelhousni.github.io/til/nixos/nixos-config-tests-github-actions.html) - 2026-09-26
 * [Testing a NixOS configuration on self-managed GitLab CE: the eval job runs anywhere, the VM test needs a runner you prepare](https://abdelhousni.github.io/til/nixos/nixos-config-tests-gitlab-ce.html) - 2026-09-26
 * [Oh My Zsh on NixOS: the plugin list installs nothing, and NixOS aliases win](https://abdelhousni.github.io/til/nixos/zsh-oh-my-zsh-declarative.html) - 2026-09-26
+* [Home Manager as a NixOS module: dotfiles in the same rebuild, and the file that's in the way](https://abdelhousni.github.io/til/nixos/home-manager-nixos-module.html) - 2026-09-27
 <!-- index ends -->
 
 ---
