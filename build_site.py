@@ -228,7 +228,7 @@ h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
 li { margin: .25rem 0; }
 .meta { color: #57606a; font-size: .9rem; }
-.created { color: #57606a; font-size: .85rem; margin-top: 2rem; }
+.created { color: #57606a; border-top: 1px solid #ccc; padding-top: 1em; margin-top: 2rem; font-size: 0.8em; }
 .topic { color: #57606a; font-size: .85rem; font-weight: normal; }
 .topic a { color: inherit; }
 pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; border-radius: 6px; }
