@@ -87,6 +87,23 @@ warning: the following units failed: home-manager-demo.service
 
 It exits with status 4. The new generation is running and is the boot default. Only that user's files are still the old ones. The VM test reproduces both collisions and checks the journal for the second message.
 
+The whole path, for a file in the way when only `backupFileExtension` is set (`backupCommand` and `force` are left out):
+
+```mermaid
+flowchart TD
+    REBUILD["sudo nixos-rebuild switch"] --> SYSTEM["New system generation active,<br/>boot default"]
+    SYSTEM --> UNIT["home-manager-demo.service restarted,<br/>runs as demo"]
+    UNIT --> INWAY{"A file in the way<br/>of a managed one?"}
+    INWAY -->|"no"| LINK["Symlinks into /nix/store updated"]
+    INWAY -->|"yes"| EXT{"backupFileExtension set?"}
+    EXT -->|"no"| FAIL["Unit fails:<br/>'would be clobbered'"]
+    EXT -->|"yes"| EXISTS{"file.backup<br/>already there?"}
+    EXISTS -->|"no"| MOVE["file renamed to file.backup"] --> LINK
+    EXISTS -->|"yes, overwriteBackup = true"| REPLACE["old backup replaced"] --> LINK
+    EXISTS -->|"yes, overwriteBackup = false"| FAIL
+    FAIL --> EXIT["nixos-rebuild: 'units failed', exit 4<br/>the user's files stay as they were"]
+```
+
 ## Keep the two releases together
 
 The channel name carries the release: `release-26.05` for `nixos-26.05`. When NixOS moves to the next release, move the `home-manager` channel with it. A mismatch fails in one of two ways.

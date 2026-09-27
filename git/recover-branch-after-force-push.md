@@ -2,6 +2,23 @@
 
 A coding agent working on my branch pushed a commit (`2913eb4`), and I fetched it. It then noticed a typo in the commit message and fixed it with `--amend` and a force-push. That gave a new commit, `504a439`, with the same code. Then it pushed its next step, `d23665b`, on top. My clone still had `2913eb4`, which GitHub no longer had.
 
+```mermaid
+sequenceDiagram
+    participant Agent as Agent's clone
+    participant GH as GitHub (origin/feature)
+    participant Me as My clone
+
+    Agent->>GH: git push: 2913eb4
+    Me->>GH: git fetch
+    GH-->>Me: 2913eb4
+    Agent->>Agent: git commit --amend: 504a439, same code, new message
+    Agent->>GH: git push --force: 504a439 replaces 2913eb4
+    Agent->>GH: git push: d23665b (step 2)
+    Me->>GH: git fetch
+    GH-->>Me: (forced update) 504a439, d23665b
+    Note over Me: feature still ends in 2913eb4
+```
+
 The same happens with any history rewrite on a shared branch: an amend, a squash, or an interactive rebase followed by `git push --force`. Everything below was reproduced with Git 2.43, using two clones of a scratch bare repository. One clone did the force-push; the other had fetched before it.
 
 ## What it looks like
@@ -21,6 +38,29 @@ and have 1 and 2 different commits each, respectively.
 ```
 
 The "1" is the old version of the rewritten commit. If you also committed something yourself since fetching, it counts those too. The hint to use `git pull` is the one thing not to follow blindly; see below.
+
+Drawn as branches, both sides start from the same commit. Yours has the old version, and GitHub's has the new version plus the next step:
+
+```mermaid
+flowchart LR
+    BASE["base"] --> OLD["2913eb4<br/>old version"] -.- LOCAL(["feature<br/>my clone"])
+    BASE --> NEW["504a439<br/>new version"] --> STEP2["d23665b<br/>step 2"] -.- REMOTE(["origin/feature<br/>GitHub"])
+```
+
+`2913eb4` and `504a439` hold the same change. Git doesn't know that: they are different commits, with different messages, so different hashes.
+
+## Which way out
+
+```mermaid
+flowchart TD
+    START["git fetch: '(forced update)'<br/>git status: 'have diverged'"] --> LOG["git log --oneline origin/feature..feature"]
+    LOG --> Q{"Anything besides the<br/>old rewritten commit?"}
+    Q -->|no| RESET["git reset --hard origin/feature<br/>(step 2a)"]
+    Q -->|"yes, commits of mine"| FETCHED{"Had I fetched the old commit<br/>into origin/feature?"}
+    FETCHED -->|yes| PULL["git pull --rebase<br/>(step 2b)"]
+    FETCHED -->|not sure| ONTO["git rebase --onto origin/feature #lt;old#gt;"]
+    LOG -.->|not this| MERGE["git pull --no-rebase:<br/>conflict, or both versions kept"]
+```
 
 ## 1. Find out what exists only on your side
 
@@ -61,6 +101,24 @@ If step 1 shows a commit you made after fetching, don't reset. Replay your commi
 git pull --rebase
 ```
 
+With one commit of mine on top of the old version:
+
+```mermaid
+flowchart TB
+    subgraph before["Before"]
+        direction LR
+        B1["base"] --> O1["2913eb4<br/>old version"] --> M1["my commit"] -.- F1(["feature"])
+        B1 --> N1["504a439<br/>new version"] --> S1["d23665b<br/>step 2"] -.- R1(["origin/feature"])
+    end
+    subgraph after["After git pull --rebase"]
+        direction LR
+        B2["base"] --> N2["504a439<br/>new version"] --> S2["d23665b<br/>step 2"] --> M2["my commit,<br/>new hash"] -.- F2(["feature"])
+    end
+    before --> after
+```
+
+The old version is gone from the branch, and my commit gets a new hash because its parent changed.
+
 In the test, with the rewritten commit's code changed too, not only its message, this gave `base`, then the new commit, then mine, without a conflict. It works because `git pull --rebase`, like `git rebase` without an argument, uses the remote-tracking branch's **reflog**. `origin/feature` once pointed at `2913eb4`, so Git treats that commit as upstream's and doesn't replay it. The rebase documentation calls this `--fork-point`.
 
 **Naming the upstream explicitly changes the result.** `git rebase origin/feature` doesn't consult the reflog, so it tries to replay the old commit as well:
@@ -76,7 +134,13 @@ git rebase --onto origin/feature 2913eb4
 
 ## Don't merge
 
-`git pull --no-rebase` merges the old and new histories. In the test, the next commit on the remote changed the same line as the rewritten one, so the merge stopped with `CONFLICT (content): Merge conflict in s.sh`. Without that overlap, you'd get a merge commit keeping both versions of the rewritten commit in the history for good.
+`git pull --no-rebase` merges the old and new histories. In the test, the next commit on the remote changed the same line as the rewritten one, so the merge stopped with `CONFLICT (content): Merge conflict in s.sh`. Without that overlap, you'd get a merge commit keeping both versions of the rewritten commit in the history for good:
+
+```mermaid
+flowchart LR
+    BASE["base"] --> OLD["2913eb4<br/>old version"] --> MERGE["merge commit"] -.- LOCAL(["feature"])
+    BASE --> NEW["504a439<br/>new version"] --> STEP2["d23665b<br/>step 2"] --> MERGE
+```
 
 ## `git pull` already refuses, unless you configured it not to
 
