@@ -23,6 +23,7 @@ site = root / "_site"
 SITE_TITLE = "Abdellatif Housni: TIL"
 SITE_URL = "https://abdelhousni.github.io/til"
 SITE_AUTHOR = "Abdellatif Housni"
+REPO_URL = "https://github.com/abdelhousni/til"
 AUTHOR_SAME_AS = [
     "https://github.com/abdelhousni",
     "https://www.linkedin.com/in/abdelhousni/",
@@ -95,6 +96,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
 {body}
+<p class="created">{created_line} &middot; <a href="{repo_url}/commits/main/{topic}/{slug}.md">History</a> &middot; <a href="{repo_url}/blob/main/{topic}/{slug}.md">Edit</a></p>
 {series_nav}</main>
 {mermaid_script}</body>
 </html>
@@ -226,6 +228,7 @@ h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
 li { margin: .25rem 0; }
 .meta { color: #57606a; font-size: .9rem; }
+.created { color: #57606a; font-size: .85rem; margin-top: 2rem; }
 .topic { color: #57606a; font-size: .85rem; font-weight: normal; }
 .topic a { color: inherit; }
 pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; border-radius: 6px; }
@@ -269,7 +272,7 @@ MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTAL
 
 
 def created_date_and_timestamp(path):
-    """(YYYY-MM-DD, unix seconds) of the commit that first added this file.
+    """(YYYY-MM-DD, unix seconds, ISO-8601) of the commit that first added this file.
 
     The date is what a reader sees; the timestamp is only ever a sort key.
     Both come out of one `git log` call so the two can never disagree.
@@ -287,15 +290,15 @@ def created_date_and_timestamp(path):
     wants, and matches what the "unknown" string happened to do before.
     """
     for args in (
-        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad\t%at", "--date=short", "--", str(path)],
-        ["git", "log", "--follow", "--format=%ad\t%at", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad\t%at\t%aI", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--format=%ad\t%at\t%aI", "--date=short", "--", str(path)],
     ):
         result = subprocess.run(args, cwd=root, capture_output=True, text=True, check=True)
         lines = result.stdout.strip().splitlines()
         if lines:
-            date, _, stamp = lines[-1].partition("\t")
-            return date, int(stamp)
-    return "unknown", float("inf")
+            date, stamp, iso = lines[-1].split("\t")
+            return date, int(stamp), iso
+    return "unknown", float("inf"), None
 
 
 def last_modified_datetime(path):
@@ -312,6 +315,19 @@ def last_modified_datetime(path):
     )
     timestamp = result.stdout.strip()
     return timestamp if timestamp else "1970-01-01T00:00:00Z"
+
+
+def created_line(created_iso, last_modified):
+    """The "Created X, updated Y" line under each entry, as on til.simonwillison.net.
+
+    "updated" only appears when a later commit touched the file. A draft
+    with no commit yet says so, instead of printing the 1970 fallback.
+    """
+    if created_iso is None:
+        return "Not committed yet"
+    if last_modified == created_iso:
+        return f"Created {created_iso}"
+    return f"Created {created_iso}, updated {last_modified}"
 
 
 def title_for(path, text):
@@ -611,7 +627,7 @@ def main():
     for article in articles:
         md, text, title = article["path"], article["text"], article["title"]
         topic, slug = article["topic"], article["slug"]
-        date, created_ts = created_date_and_timestamp(md)
+        date, created_ts, created_iso = created_date_and_timestamp(md)
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
@@ -637,6 +653,8 @@ def main():
                 slug=slug,
                 date=date,
                 body=html_body,
+                created_line=created_line(created_iso, last_modified),
+                repo_url=REPO_URL,
                 series_nav=render_series_nav(series_nav.get(f"{topic}/{slug}")),
                 site_title=SITE_TITLE,
                 description=description,
