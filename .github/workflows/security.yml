@@ -1,0 +1,48 @@
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Weekly as well: new gitleaks rules and zizmor audits apply to old commits
+  # and unchanged workflows too.
+  schedule:
+    - cron: "23 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  # Credentials anywhere in the Git history, not just the current tree.
+  # Accepted findings are listed, by exact fingerprint, in .gitleaksignore.
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          nix_path: nixpkgs=channel:nixos-26.05
+          enable_kvm: false
+      - name: gitleaks, whole history
+        run: nix-shell -p gitleaks --run 'gitleaks git --redact --no-banner --verbose .'
+
+  # The workflows themselves: actionlint for correctness, zizmor for security.
+  workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          nix_path: nixpkgs=channel:nixos-26.05
+          enable_kvm: false
+      - name: actionlint
+        run: nix-shell -p actionlint --run actionlint
+      - name: zizmor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: nix-shell -p zizmor --run 'zizmor .github/workflows'
