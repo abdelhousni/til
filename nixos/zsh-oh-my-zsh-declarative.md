@@ -112,7 +112,7 @@ Oh My Zsh's automatic update check returns early when `$ZSH` isn't writable or i
 
 ## System module or Home Manager
 
-The same setup exists per user in [Home Manager](https://nix-community.github.io/home-manager/), with a different option name:
+The same setup exists per user in [Home Manager](https://nix-community.github.io/home-manager/) (set up as a NixOS module in [its own entry](home-manager-nixos-module.md)), with a different option name:
 
 | | NixOS | Home Manager |
 |---|---|---|
