@@ -1,0 +1,16 @@
+# gitleaks findings reviewed and accepted, one exact fingerprint each
+# (commit:file:rule:line). All five come from Simon Willison's public
+# simonw/til history this repository was started from; the files were
+# later removed. None is a secret: the real secrets were elided with "..."
+# in the original text. Anything new is still reported.
+
+# auth0/oauth-with-auth0.md: Auth0 client ID, public by design; the client secret is elided
+b902bdc713b7921c5cda6497834b5becfed0cb42:auth0/oauth-with-auth0.md:generic-api-key:18
+# aws/ocr-pdf-textract.md: AWS access key ID only, the secret key is elided
+b076513b573735d88cc5f799d01ff7edebfef814:aws/ocr-pdf-textract.md:aws-access-token:27
+# fly/fly-logs-to-s3.md: AWS access key ID only, the secret key is elided
+4a280869992a1447444e359a15ee67b0e97f9fd6:fly/fly-logs-to-s3.md:aws-access-token:53
+# github-actions/s3-bucket-github-actions.md: AWS access key ID only, the secret key is elided
+04abb10aad46269e6c3ad68e2c27bc2af457d2e6:github-actions/s3-bucket-github-actions.md:aws-access-token:18
+# postgresql/constructing-geojson-in-postgresql.md: false positive: an Airtable record ID (rec...)
+698e888a156882453714e40c7f4a3680f0b3df55:postgresql/constructing-geojson-in-postgresql.md:airtable-api-key:75
