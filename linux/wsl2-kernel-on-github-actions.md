@@ -48,6 +48,8 @@ jobs:
           path: arch/x86/boot/bzImage
 ```
 
+A longer version runs in [abdelhousni/WSL2-Linux-Kernel](https://github.com/abdelhousni/WSL2-Linux-Kernel/blob/linux-msft-wsl-6.18.y/.github/workflows/build-wsl2-kernel.yml). It's a fork of Microsoft's repository that carries the workflow, which builds from a tag push as well as by hand.
+
 To use it:
 1. Run the workflow from the *Actions* tab.
 2. Download the `bzImage` artifact and unzip it on Windows.
