@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->70<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->72<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -122,10 +122,12 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## linux
 
 * [What cgroups v2 actually is, and how Podman and Kubernetes use it](https://abdelhousni.github.io/til/linux/cgroups-v2-podman-kubernetes.html) - 2026-09-18
+* [Building a custom WSL2 kernel on GitHub Actions: `KCFLAGS`, not `CFLAGS`](https://abdelhousni.github.io/til/linux/wsl2-kernel-on-github-actions.html) - 2026-09-28
 
 ## windows
 
 * [Finding and force-closing a locked file on a Windows SMB share](https://abdelhousni.github.io/til/windows/close-open-smb-files-powershell.html) - 2026-09-18
+* [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://abdelhousni.github.io/til/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://abdelhousni.github.io/til/windows/rdp-microsoft-account-login.html) - 2026-09-28
 
 ## vscode
