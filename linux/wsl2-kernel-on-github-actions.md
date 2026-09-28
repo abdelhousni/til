@@ -53,7 +53,7 @@ A longer version runs in [abdelhousni/WSL2-Linux-Kernel](https://github.com/abde
 To use it:
 1. Run the workflow from the *Actions* tab.
 2. Download the `bzImage` artifact and unzip it on Windows.
-3. Point `%UserProfile%\.wslconfig` at it:
+3. Point WSL at it. Either open **WSL Settings** from the Start menu, go to *Developer → Custom kernel*, and use **Browse kernels**. Or edit `%UserProfile%\.wslconfig` by hand; the app writes the same setting:
 
    ```ini
    [wsl2]
@@ -101,4 +101,5 @@ A v3 kernel also won't boot on a CPU without those instructions. `/lib64/ld-linu
   - `arch/x86/Makefile` (`-mno-avx`, `-march`);
   - `arch/x86/Kconfig.cpu` (`X86_NATIVE_CPU`).
 - Microsoft Learn: [the `kernel` setting in .wslconfig](https://learn.microsoft.com/en-us/windows/wsl/wsl-config).
+- [microsoft/WSL](https://github.com/microsoft/WSL): the WSL Settings app, `src/windows/wslsettings/Views/Settings/DeveloperPage.xaml` and its strings in `localization/strings/en-US/Resources.resw`.
 - The build and both failures above were reproduced locally with GCC 15.3.
