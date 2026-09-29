@@ -21,7 +21,14 @@ Plan output shows `(sensitive value)` instead of the string, and any expression 
 
 ## Ephemeral values: the thing that actually keeps a value out of state
 
-Terraform 1.10 added a property that does what `sensitive` never did — keep the value out of the artifact entirely:
+An **ephemeral value** exists only for the duration of one `plan` or `apply`. Terraform holds it in memory, passes it where it's needed, and never writes it to the state file or to a saved plan. When the run ends, the value is gone. It can come from three places:
+- **ephemeral input variables**, set by whoever runs the command;
+- **ephemeral resources**, which fetch or create something only for the run, such as reading a secret from Vault or generating a password;
+- **ephemeral outputs**, which pass such a value out of a module.
+
+The two earlier Terraform entries on this site name the feature as a coming topic; this is where it's covered.
+
+Terraform 1.10 added this property, which does what `sensitive` never did: it keeps the value out of the artifact entirely.
 
 ```hcl
 variable "session_token" {
