@@ -41,3 +41,13 @@ Open pull requests, but do not merge them unless explicitly asked to in the
 current conversation. When asked, keep the merge method the PR needs: a merge
 commit for an upstream sync (a squash would drop the `-s ours` merge that
 records it), squash otherwise.
+
+## Writing TIL entries
+
+Explain every term the first time an entry relies on it. If another entry on
+this site already explains it, link there (a relative link such as
+`../terraform/what-is-terraform-opentofu-and-how-it-works.md`) instead of
+repeating it. If no entry does, define it in a sentence or a short list where
+it first appears. Don't leave a term that a reader new to the topic would
+have to look up elsewhere, and don't point to a later entry for a definition
+the current one needs.
