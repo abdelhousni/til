@@ -1,6 +1,6 @@
 # Pinning ansible-core with pip-tools, uv and Poetry
 
-pip-tools, uv and Poetry all do the same job for an Ansible project. They record the exact `ansible-core` a project runs, plus everything it pulls in, so every laptop and CI job installs the same thing. They differ in file format and in the version syntax they accept. Everything below was run on 2026-09-29 with ansible-core 2.21.4, pip-tools 7.6.1, uv 0.12.20 and Poetry 2.5.1.
+Second entry in the Ansible development environment series; [the first](locking-an-ansible-dev-environment-pip-to-ee.md) ranks all the options. pip-tools, uv and Poetry all do the same job for an Ansible project. They record the exact `ansible-core` a project runs, plus everything it pulls in, so every laptop and CI job installs the same thing. They differ in file format and in the version syntax they accept. Everything below was run on 2026-09-29 with ansible-core 2.21.4, pip-tools 7.6.1, uv 0.12.20 and Poetry 2.5.1.
 
 The vocabulary:
 - **ansible-core** is the engine: `ansible-playbook` and the `ansible.builtin` modules. The **`ansible`** package on PyPI is ansible-core plus more than 85 [collections](block-rescue-always-error-handling.md), the bundles that ship extra modules. This entry pins ansible-core.
