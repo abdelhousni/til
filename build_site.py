@@ -22,7 +22,11 @@ from pygments.formatters import HtmlFormatter  # noqa: E402
 
 site = root / "_site"
 SITE_TITLE = "Abdellatif Housni: TIL"
-SITE_URL = "https://abdelhousni.github.io/til"
+SITE_URL = "https://til.housni.eu"
+# Atom ids must never change once published (RFC 4287, 4.2.6), so feed and
+# entry ids keep the URL the site first lived at. Readers would otherwise
+# see every entry as new after the move to the custom domain.
+FEED_ID_BASE = "https://abdelhousni.github.io/til"
 SITE_AUTHOR = "Abdellatif Housni"
 REPO_URL = "https://github.com/abdelhousni/til"
 AUTHOR_SAME_AS = [
@@ -99,7 +103,7 @@ PAGE_TEMPLATE = """<!doctype html>
 {body}
 <p class="created">{created_line}</p>
 {series_nav}</main>
-{mermaid_script}</body>
+{mermaid_script}{analytics_script}</body>
 </html>
 """
 
@@ -134,7 +138,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <main>
 {body}
 </main>
-</body>
+{analytics_script}</body>
 </html>
 """
 
@@ -162,7 +166,7 @@ TOPIC_TEMPLATE = """<!doctype html>
 <p class="meta">{count} TIL{plural} filed under {topic}.</p>
 {body}
 </main>
-</body>
+{analytics_script}</body>
 </html>
 """
 
@@ -199,7 +203,7 @@ FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 <title>{title}</title>
 <link href="{site_url}/feed.atom" rel="self"/>
 <link href="{site_url}/"/>
-<id>{site_url}/</id>
+<id>{feed_id}/</id>
 <updated>{updated}</updated>
 <author>
 <name>{author}</name>
@@ -215,7 +219,7 @@ FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 FEED_ENTRY_TEMPLATE = """<entry>
 <title>{title}</title>
 <link href="{url}"/>
-<id>{url}</id>
+<id>{id}</id>
 <updated>{updated}</updated>
 <content type="html" xml:base="{url}">{content}</content>
 </entry>"""
@@ -259,6 +263,11 @@ nav.series li { margin: .35rem 0; }
 ol.reading-order { padding-left: 1.4rem; }
 ol.reading-order li { margin: .25rem 0; }
 .elsewhere { color: #57606a; font-size: .85rem; }
+"""
+
+# GoatCounter page views: no cookies, the snippet as GoatCounter documents it.
+ANALYTICS_SCRIPT = """<script data-goatcounter="https://abdel.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 """
 
 MERMAID_SCRIPT = """<script type="module">
@@ -467,12 +476,13 @@ def build_feed(entries):
         FEED_ENTRY_TEMPLATE.format(
             title=escape(e["title"]),
             url=e["url"],
+            id=FEED_ID_BASE + e["url"].removeprefix(SITE_URL),
             updated=e["last_modified"],
             content=escape(e["html_body"]),
         )
         for e in entries
     )
-    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, author=SITE_AUTHOR, updated=updated, entries=entry_xml)
+    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, feed_id=FEED_ID_BASE, author=SITE_AUTHOR, updated=updated, entries=entry_xml)
 
 
 ORDINALS = [
@@ -692,6 +702,7 @@ def main():
                 author=SITE_AUTHOR,
                 url=url,
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
+                analytics_script=ANALYTICS_SCRIPT,
             )
         )
         row = {"title": title, "date": date, "created_ts": created_ts, "slug": slug}
@@ -760,6 +771,7 @@ def main():
             url=SITE_URL,
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
+            analytics_script=ANALYTICS_SCRIPT,
         )
     )
     entries_by_key = {f"{e['topic']}/{e['slug']}": e for e in all_entries}
@@ -776,6 +788,7 @@ def main():
                 description=attr_escape(f"{len(rows)} TIL{plural} filed under {topic} on {SITE_TITLE}."),
                 author=SITE_AUTHOR,
                 url=topic_url,
+                analytics_script=ANALYTICS_SCRIPT,
             )
         )
 

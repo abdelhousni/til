@@ -20,7 +20,7 @@ producing:
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://abdelhousni.github.io/til/proxmox/ripe-atlas-software-probe-lxc.html</loc>
+<loc>https://til.housni.eu/proxmox/ripe-atlas-software-probe-lxc.html</loc>
 <lastmod>2026-09-05</lastmod>
 </url>
 </urlset>

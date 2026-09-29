@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 root = pathlib.Path(__file__).parent.resolve()
-SITE_URL = "https://abdelhousni.github.io/til"
+SITE_URL = "https://til.housni.eu"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
 
 index_re = re.compile(r"<!\-\- index starts \-\->.*<!\-\- index ends \-\->", re.DOTALL)

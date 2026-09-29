@@ -46,4 +46,4 @@ Enabling Pages with "build from GitHub Actions" as the source (rather than a bra
 gh api -X POST repos/OWNER/REPO/pages -f 'build_type=workflow'
 ```
 
-The site now lives at <https://abdelhousni.github.io/til/>, with no Fly, S3, or Datasette involved.
+The site now lives at <https://til.housni.eu/>, with no Fly, S3, or Datasette involved. It started at `abdelhousni.github.io/til/`; with a custom domain set in the repository's Pages settings, GitHub redirects that address to the new one.

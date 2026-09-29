@@ -10,7 +10,7 @@ The relevant piece is a [schema.org](https://schema.org/Person) `Person` block, 
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Abdellatif Housni",
-  "url": "https://abdelhousni.github.io/til/",
+  "url": "https://til.housni.eu/",
   "sameAs": [
     "https://github.com/abdelhousni",
     "https://www.linkedin.com/in/abdelhousni/"
