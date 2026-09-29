@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->82<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->83<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -19,6 +19,7 @@ Browse these TILs at https://til.housni.eu/
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://til.housni.eu/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://til.housni.eu/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
 * [What Ansible Vault actually encrypts, and where that protection stops](https://til.housni.eu/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-24
+* [Ansible Development Tools (ADT): one install, and the Python version decides what you get](https://til.housni.eu/ansible/ansible-development-tools-adt.html) - 2026-09-29
 * [Handling deployment failures with Ansible's block/rescue/always](https://til.housni.eu/ansible/block-rescue-always-error-handling.html) - 2026-09-29
 * [Building an Ansible execution environment from a locked requirements file](https://til.housni.eu/ansible/execution-environment-from-a-locked-requirements-file.html) - 2026-09-29
 * [Locking an Ansible development environment: pip, venv, pip-tools, uv or an execution environment](https://til.housni.eu/ansible/locking-an-ansible-dev-environment-pip-to-ee.html) - 2026-09-29
