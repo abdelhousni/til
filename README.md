@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->74<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->75<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -130,6 +130,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Finding and force-closing a locked file on a Windows SMB share](https://abdelhousni.github.io/til/windows/close-open-smb-files-powershell.html) - 2026-09-18
 * [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://abdelhousni.github.io/til/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://abdelhousni.github.io/til/windows/rdp-microsoft-account-login.html) - 2026-09-28
+* [Installing PowerShell 7 on Windows, Debian and RHEL, the way Microsoft documents it](https://abdelhousni.github.io/til/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 
 ## vscode
 
