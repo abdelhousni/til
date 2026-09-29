@@ -6,6 +6,7 @@ import pathlib
 import re
 import shutil
 import subprocess
+from datetime import datetime, timezone
 import sys
 from xml.sax.saxutils import escape
 
@@ -23,6 +24,7 @@ site = root / "_site"
 SITE_TITLE = "Abdellatif Housni: TIL"
 SITE_URL = "https://abdelhousni.github.io/til"
 SITE_AUTHOR = "Abdellatif Housni"
+REPO_URL = "https://github.com/abdelhousni/til"
 AUTHOR_SAME_AS = [
     "https://github.com/abdelhousni",
     "https://www.linkedin.com/in/abdelhousni/",
@@ -36,6 +38,10 @@ LLMS_TXT_SUMMARY = (
 )
 BING_VERIFICATION_CODE = "B109FF34ED264CD7CDA115D1B13A4C7F"
 SKIP_DIRS = {".git", ".github", "__pycache__"}
+# Image files sitting next to an entry are published beside it, so the
+# markdown can reference them by bare filename: `![...](screenshot.png)`
+# works both on the built site and in the markdown twin.
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
 SERIES_MANIFEST = root / "series.json"
 FEED_ENTRY_LIMIT = 50
 LLMS_TXT_EXCERPT_LIMIT = 200
@@ -91,6 +97,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
 {body}
+<p class="created">{created_line}</p>
 {series_nav}</main>
 {mermaid_script}</body>
 </html>
@@ -202,12 +209,15 @@ FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 </feed>
 """
 
+# xml:base makes relative URLs inside an entry (cross-links, images)
+# resolve against the entry's own page, not against feed.atom at the site
+# root, where "nixos-wsl-install.png" would point at a file that isn't there.
 FEED_ENTRY_TEMPLATE = """<entry>
 <title>{title}</title>
 <link href="{url}"/>
 <id>{url}</id>
 <updated>{updated}</updated>
-<content type="html">{content}</content>
+<content type="html" xml:base="{url}">{content}</content>
 </entry>"""
 
 STYLE = """
@@ -219,6 +229,11 @@ h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
 li { margin: .25rem 0; }
 .meta { color: #57606a; font-size: .9rem; }
+.created {
+    border-top: 1px solid #ccc;
+    padding-top: 1em;
+    font-size: 0.8em;
+}
 .topic { color: #57606a; font-size: .85rem; font-weight: normal; }
 .topic a { color: inherit; }
 pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; border-radius: 6px; }
@@ -227,6 +242,16 @@ pre code { background: none; padding: 0; }
 a { color: #0969da; }
 pre.mermaid { background: none; padding: 0; text-align: center; }
 pre.mermaid svg { max-width: 100%; height: auto; }
+table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: .95rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid #d0d7de; padding: .5rem .75rem; text-align: left; vertical-align: top; }
+thead th { background: #f6f8fa; font-weight: 600; border-bottom-width: 2px; }
+tbody tr:nth-child(even) { background: #f6f8fa; }
+table code { white-space: nowrap; }
+img { max-width: 100%; height: auto; }
+figure { margin: 1.5rem 0; }
+figure img { display: block; border: 1px solid #d0d7de; border-radius: 6px; box-shadow: 0 1px 3px rgba(31, 35, 40, .12); }
+figcaption { color: #57606a; font-size: .9rem; margin-top: .5rem; }
+figcaption code { font-size: .85em; }
 nav.series { margin-top: 2.5rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
 nav.series .series-part { color: #57606a; font-size: .9rem; margin: 0 0 .5rem; }
 nav.series ul { list-style: none; padding: 0; margin: 0; }
@@ -295,6 +320,46 @@ def last_modified_datetime(path):
     )
     timestamp = result.stdout.strip()
     return timestamp if timestamp else "1970-01-01T00:00:00Z"
+
+
+def get_file_times(repo_path, filepath):
+    """Get created and updated times for a file, following renames."""
+    # Ported verbatim from simonw/til's build_database.py so the "Created ...,
+    # updated ..." line means exactly what it does on til.simonwillison.net.
+    # Get all commit dates for this file, following renames
+    # First line is most recent (updated), last line is oldest (created)
+    result = subprocess.run(
+        ["git", "log", "--follow", "--format=%cI", "--", filepath],
+        cwd=repo_path,
+        capture_output=True,
+        text=True,
+    )
+    output = result.stdout.strip()
+    if not output:
+        return None
+    dates = output.split("\n")
+    updated_dt = datetime.fromisoformat(dates[0])
+    created_dt = datetime.fromisoformat(dates[-1])
+    return {
+        "created": created_dt.isoformat(),
+        "created_utc": created_dt.astimezone(timezone.utc).isoformat(),
+        "updated": updated_dt.isoformat(),
+        "updated_utc": updated_dt.astimezone(timezone.utc).isoformat(),
+    }
+
+
+def created_line(til, url):
+    """The inside of <p class="created">, following simonw/til's
+    templates/pages/{topic}/{slug}.html line for line: "updated" and the
+    History link only appear once the file has changed since it was created.
+    """
+    if til is None:
+        return f'Not committed yet &middot; <a href="{url}">Edit</a>'
+    line = f"Created {til['created']}"
+    if til["created"] != til["updated"]:
+        history = url.replace(f"{REPO_URL}/blob/", f"{REPO_URL}/commits/")
+        line += f""", updated {til['updated']} &middot; <a href="{history}">History</a>"""
+    return line + f' &middot; <a href="{url}">Edit</a>'
 
 
 def title_for(path, text):
@@ -571,6 +636,10 @@ def main():
     for topic_dir in sorted(root.iterdir()):
         if not topic_dir.is_dir() or topic_dir.name in SKIP_DIRS or topic_dir.name.startswith("."):
             continue
+        for image in sorted(topic_dir.iterdir()):
+            if image.suffix.lower() in IMAGE_SUFFIXES:
+                (site / topic_dir.name).mkdir(parents=True, exist_ok=True)
+                shutil.copy2(image, site / topic_dir.name / image.name)
         for md in sorted(topic_dir.glob("*.md")):
             text = md.read_text()
             articles.append(
@@ -616,6 +685,7 @@ def main():
                 slug=slug,
                 date=date,
                 body=html_body,
+                created_line=created_line(get_file_times(root, md), f"{REPO_URL}/blob/main/{topic}/{slug}.md"),
                 series_nav=render_series_nav(series_nav.get(f"{topic}/{slug}")),
                 site_title=SITE_TITLE,
                 description=description,

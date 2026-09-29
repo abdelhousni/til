@@ -19,3 +19,25 @@ One thing to watch: the GitHub pull-request-creation tooling may append its own
 server-side, with the session ID substituted in, even when the body you wrote
 did not contain one. When that happens, edit the description afterwards to
 remove it — editing the body does not re-append it.
+
+## Commit authorship
+
+Commits are authored by the repository owner, with Claude credited only in the
+`Co-Authored-By` trailer. Before the first commit in a session, check
+`git config user.email`; if it is `noreply@anthropic.com` (the default in cloud
+sessions), set the repository-local identity first:
+
+```bash
+git config user.name "abdel.h"
+git config user.email "23284113+abdelhousni@users.noreply.github.com"
+```
+
+Rewriting history afterwards to fix authorship means a force push, so get it
+right before committing.
+
+## Merging
+
+Open pull requests, but do not merge them unless explicitly asked to in the
+current conversation. When asked, keep the merge method the PR needs: a merge
+commit for an upstream sync (a squash would drop the `-s ours` merge that
+records it), squash otherwise.

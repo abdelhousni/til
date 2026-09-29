@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->58<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->73<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -18,6 +18,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://abdelhousni.github.io/til/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://abdelhousni.github.io/til/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://abdelhousni.github.io/til/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
+* [What Ansible Vault actually encrypts, and where that protection stops](https://abdelhousni.github.io/til/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-24
 
 ## github-pages
 
@@ -49,6 +50,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://abdelhousni.github.io/til/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
 * [Debugging a Proxmox VM whose cloud-init config didn't apply](https://abdelhousni.github.io/til/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://abdelhousni.github.io/til/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
+* [A Proxmox VM on demand, NixOS from Git: OpenTofu builds a skeleton, nixos-anywhere replaces it, and the host key exists before the VM](https://abdelhousni.github.io/til/proxmox/nixos-on-demand-opentofu-nixos-anywhere-sops.html) - 2026-09-27
 
 ## python
 
@@ -74,6 +76,9 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## git
 
 * [Installing git, gh, and glab, and the auth each one actually needs](https://abdelhousni.github.io/til/git/git-gh-glab-install-and-auth.html) - 2026-09-12
+* [Configuring a repository for coding agents: what the guidance actually says](https://abdelhousni.github.io/til/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
+* [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://abdelhousni.github.io/til/git/resync-clone-after-force-push.html) - 2026-09-27
+* [Syncing a diverged fork: take the pipeline fixes, not the content](https://abdelhousni.github.io/til/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 
 ## oauth2
 
@@ -109,7 +114,6 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://abdelhousni.github.io/til/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [What Terraform/OpenTofu actually is, and how it works](https://abdelhousni.github.io/til/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
 * [Terraform state locking just dropped its DynamoDB requirement](https://abdelhousni.github.io/til/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-23
-* [What Terraform, OpenTofu, and Packer promise about secrets, and where each promise stops](https://abdelhousni.github.io/til/terraform/what-terraform-opentofu-and-packer-promise-about-secrets.html) - 2026-09-23
 
 ## apache
 
@@ -118,14 +122,31 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## linux
 
 * [What cgroups v2 actually is, and how Podman and Kubernetes use it](https://abdelhousni.github.io/til/linux/cgroups-v2-podman-kubernetes.html) - 2026-09-18
+* [Building a custom WSL2 kernel on GitHub Actions: `KCFLAGS`, not `CFLAGS`](https://abdelhousni.github.io/til/linux/wsl2-kernel-on-github-actions.html) - 2026-09-28
 
 ## windows
 
 * [Finding and force-closing a locked file on a Windows SMB share](https://abdelhousni.github.io/til/windows/close-open-smb-files-powershell.html) - 2026-09-18
+* [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://abdelhousni.github.io/til/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
+* [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://abdelhousni.github.io/til/windows/rdp-microsoft-account-login.html) - 2026-09-28
 
 ## vscode
 
 * [Pointing VS Code's Dev Containers extension at Podman](https://abdelhousni.github.io/til/vscode/dev-containers-podman-instead-of-docker.html) - 2026-09-19
+
+## nixos
+
+* [First steps on NixOS: the whole system is one file, and every change is a boot entry](https://abdelhousni.github.io/til/nixos/first-steps-configuration-generations-rollback.html) - 2026-09-25
+* [NixOS on WSL2: a short admin runbook, and the files WSL manages instead of NixOS](https://abdelhousni.github.io/til/nixos/nixos-wsl-admin-runbook.html) - 2026-09-25
+* [Testing a NixOS configuration on GitHub Actions: evaluate on every push, boot it where KVM is](https://abdelhousni.github.io/til/nixos/nixos-config-tests-github-actions.html) - 2026-09-26
+* [Testing a NixOS configuration on self-managed GitLab CE: the eval job runs anywhere, the VM test needs a runner you prepare](https://abdelhousni.github.io/til/nixos/nixos-config-tests-gitlab-ce.html) - 2026-09-26
+* [Oh My Zsh on NixOS: the plugin list installs nothing, and NixOS aliases win](https://abdelhousni.github.io/til/nixos/zsh-oh-my-zsh-declarative.html) - 2026-09-26
+* [Home Manager as a NixOS module: dotfiles in the same rebuild, and the file that's in the way](https://abdelhousni.github.io/til/nixos/home-manager-nixos-module.html) - 2026-09-27
+* [A user's PATH on NixOS: declare packages, and know which settings reach services](https://abdelhousni.github.io/til/nixos/user-path-packages-shells-services.html) - 2026-09-28
+
+## claude-code
+
+* [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://abdelhousni.github.io/til/claude-code/typesafe-jev-plugin.html) - 2026-09-29
 <!-- index ends -->
 
 ---

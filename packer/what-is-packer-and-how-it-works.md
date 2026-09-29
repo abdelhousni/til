@@ -11,6 +11,18 @@ Per [Packer's own HCL2 template docs](https://developer.hashicorp.com/packer/doc
 - **`provisioner`** blocks, nested inside `build`, are the steps that configure the machine while it's temporarily running — shell scripts, Ansible, file uploads.
 - **`post-processor`** blocks, also nested inside `build`, run after provisioning — compress the result, upload it somewhere, write a manifest.
 
+```mermaid
+graph TD
+    S[source: builder config<br/>AMI, qcow2, Proxmox template...] --> B[build: ties sources<br/>to provisioners/post-processors]
+    B --> P1[provisioner: shell]
+    B --> P2[provisioner: Ansible]
+    B --> P3[provisioner: file upload]
+    P1 --> PP1[post-processor: compress]
+    P2 --> PP1
+    P3 --> PP1
+    PP1 --> PP2[post-processor: upload / manifest]
+```
+
 This is the same HCL2 language Terraform/OpenTofu uses — same variable/local syntax, same `.pkrvars.hcl` convention mirroring `.tfvars`. If the syntax from the previous entry in this series looked familiar, that's why.
 
 ## What actually happens during a build
