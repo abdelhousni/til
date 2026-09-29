@@ -32,7 +32,8 @@
       "ansible/execution-environment-from-a-locked-requirements-file.md",
       "ansible/where-to-run-an-ansible-dev-environment.md",
       "ansible/ansible-development-tools-adt.md",
-      "ansible/vscode-ansible-settings-per-repository.md"
+      "ansible/vscode-ansible-settings-per-repository.md",
+      "ansible/develop-against-the-production-execution-environment.md"
     ]
   }
 }
