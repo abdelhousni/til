@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->78<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->81<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -20,6 +20,9 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://abdelhousni.github.io/til/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
 * [What Ansible Vault actually encrypts, and where that protection stops](https://abdelhousni.github.io/til/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-24
 * [Handling deployment failures with Ansible's block/rescue/always](https://abdelhousni.github.io/til/ansible/block-rescue-always-error-handling.html) - 2026-09-29
+* [Building an Ansible execution environment from a locked requirements file](https://abdelhousni.github.io/til/ansible/execution-environment-from-a-locked-requirements-file.html) - 2026-09-29
+* [Locking an Ansible development environment: pip, venv, pip-tools, uv or an execution environment](https://abdelhousni.github.io/til/ansible/locking-an-ansible-dev-environment-pip-to-ee.html) - 2026-09-29
+* [Pinning ansible-core with pip-tools, uv and Poetry](https://abdelhousni.github.io/til/ansible/pinning-ansible-core-pip-tools-uv-poetry.html) - 2026-09-29
 
 ## github-pages
 
