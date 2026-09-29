@@ -51,4 +51,4 @@ That gets appended straight into `style.css` alongside my hand-written layout ru
 
 ## Result
 
-Both are live at <https://abdelhousni.github.io/til/> — the feed at `/feed.atom`, discoverable via `<link rel="alternate" type="application/atom+xml">` in every page's `<head>`.
+Both are live at <https://til.housni.eu/> — the feed at `/feed.atom`, discoverable via `<link rel="alternate" type="application/atom+xml">` in every page's `<head>`.
