@@ -30,7 +30,8 @@
       "ansible/locking-an-ansible-dev-environment-pip-to-ee.md",
       "ansible/pinning-ansible-core-pip-tools-uv-poetry.md",
       "ansible/execution-environment-from-a-locked-requirements-file.md",
-      "ansible/where-to-run-an-ansible-dev-environment.md"
+      "ansible/where-to-run-an-ansible-dev-environment.md",
+      "ansible/ansible-development-tools-adt.md"
     ]
   }
 }
