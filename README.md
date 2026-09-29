@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->72<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->73<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -143,6 +143,10 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Oh My Zsh on NixOS: the plugin list installs nothing, and NixOS aliases win](https://abdelhousni.github.io/til/nixos/zsh-oh-my-zsh-declarative.html) - 2026-09-26
 * [Home Manager as a NixOS module: dotfiles in the same rebuild, and the file that's in the way](https://abdelhousni.github.io/til/nixos/home-manager-nixos-module.html) - 2026-09-27
 * [A user's PATH on NixOS: declare packages, and know which settings reach services](https://abdelhousni.github.io/til/nixos/user-path-packages-shells-services.html) - 2026-09-28
+
+## claude-code
+
+* [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://abdelhousni.github.io/til/claude-code/typesafe-jev-plugin.html) - 2026-09-29
 <!-- index ends -->
 
 ---
