@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->76<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->77<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -55,6 +55,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 ## python
 
 * [A regex link checker breaks on the exact HTML it was meant to check](https://abdelhousni.github.io/til/python/regex-vs-htmlparser-for-dead-links.html) - 2026-09-05
+* [Getting a newer Python on RHEL without touching the system python3](https://abdelhousni.github.io/til/python/newer-python-with-uv-without-touching-system-python-rhel.html) - 2026-09-29
 
 ## seo
 
