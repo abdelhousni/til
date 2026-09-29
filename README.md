@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://abdelhousni.github.io/til/
 
-<!-- count starts -->77<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
+<!-- count starts -->78<!-- count ends --> TILs so far. <a href="https://abdelhousni.github.io/til/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -19,6 +19,7 @@ Browse these TILs at https://abdelhousni.github.io/til/
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://abdelhousni.github.io/til/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://abdelhousni.github.io/til/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
 * [What Ansible Vault actually encrypts, and where that protection stops](https://abdelhousni.github.io/til/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-24
+* [Handling deployment failures with Ansible's block/rescue/always](https://abdelhousni.github.io/til/ansible/block-rescue-always-error-handling.html) - 2026-09-29
 
 ## github-pages
 
