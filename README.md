@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->84<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->85<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -26,6 +26,7 @@ Browse these TILs at https://til.housni.eu/
 * [Pinning ansible-core with pip-tools, uv and Poetry](https://til.housni.eu/ansible/pinning-ansible-core-pip-tools-uv-poetry.html) - 2026-09-29
 * [Committing the VS Code Ansible settings with the repository](https://til.housni.eu/ansible/vscode-ansible-settings-per-repository.html) - 2026-09-29
 * [Where to run an Ansible development environment: venv, Dev Container, Remote-SSH, code-server or Dev Spaces](https://til.housni.eu/ansible/where-to-run-an-ansible-dev-environment.html) - 2026-09-29
+* [Running playbooks locally in the execution environment production uses](https://til.housni.eu/ansible/develop-against-the-production-execution-environment.html) - 2026-09-30
 
 ## github-pages
 
