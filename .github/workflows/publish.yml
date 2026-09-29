@@ -6,10 +6,8 @@ on:
     - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+# Nothing at workflow level; each job asks for what it needs.
+permissions: {}
 
 concurrency:
   group: "pages"
@@ -18,33 +16,56 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # the README bot pushes to main
     steps:
-    - uses: actions/checkout@v4
-      with:
+    # The token stays in .git/config on purpose: the next step pushes with it.
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with: # zizmor: ignore[artipacked]
         fetch-depth: 0
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
       with:
-        python-version: "3.12"
+        python-version: "3.14"
     - name: Install dependencies
       run: pip install -r requirements.txt
-    - name: Update README index
-      run: python update_readme.py --rewrite
-    - name: Commit README if changed
+    - name: Regenerate the README index and push it if it changed
       run: |
         git config --global user.email "actions@users.noreply.github.com"
         git config --global user.name "README-bot"
-        git diff --quiet -- README.md || (git add README.md && git commit -m "Updated README")
-        git push
+        # The index is generated, so a race with another run has nothing to
+        # merge: throw our commit away, regenerate on top of whatever landed,
+        # and try again.
+        for attempt in 1 2 3; do
+          python update_readme.py --rewrite
+          if git diff --quiet -- README.md; then
+            echo "README index already in sync; nothing to push."
+            exit 0
+          fi
+          git add README.md
+          git commit -m "Updated README"
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          echo "push rejected on attempt $attempt; refreshing from origin/main"
+          git fetch origin main
+          git reset --hard FETCH_HEAD
+        done
+        # The README is repo bookkeeping and is not part of _site, so it must
+        # never block publishing. The next run regenerates it anyway.
+        echo "::warning::README index could not be pushed after 3 attempts; the next run will regenerate it."
     - name: Build site
       run: python build_site.py
     - name: Check for dead links
       run: python check_links.py --external
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
       with:
         path: _site
 
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,4 +74,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
