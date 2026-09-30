@@ -34,7 +34,8 @@
       "ansible/ansible-development-tools-adt.md",
       "ansible/vscode-ansible-settings-per-repository.md",
       "ansible/develop-against-the-production-execution-environment.md",
-      "ansible/ansible-dev-container-with-adt.md"
+      "ansible/ansible-dev-container-with-adt.md",
+      "ansible/shared-dev-server-for-vscode-remote-ssh.md"
     ]
   }
 }

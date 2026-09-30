@@ -69,7 +69,7 @@ What the laptop needs:
 
 ## VS Code Remote-SSH
 
-VS Code stays on the laptop; the code, Podman, navigator and EEs live on a Linux server. The Remote-SSH extension connects over SSH and installs VS Code's server component on the host. The laptop needs only *"a supported OpenSSH compatible SSH client"*. The host can be x86_64 Debian 8+, Ubuntu 16.04+ or RHEL 7+, with at least 1 GB of RAM (2 GB recommended).
+VS Code stays on the laptop; the code, Podman, navigator and EEs live on a Linux server. The Remote-SSH extension connects over SSH and installs VS Code's server component on the host. The laptop needs only *"a supported OpenSSH compatible SSH client"*. The host needs at least 1 GB of RAM (2 GB recommended) and, since VS Code 1.99 (March 2025), glibc 2.28 or later: RHEL 8+, Debian 10+ or Ubuntu 20.04+. The Remote-SSH page's own list still says RHEL 7+, but the Remote Development FAQ rules it out. [Part 9](shared-dev-server-for-vscode-remote-ssh.md) builds such a server with a playbook.
 
 Because it's plain SSH, users log in with whatever SSH already allows: keys, LDAP accounts, and password rotation from a privileged-access tool. No port opens beyond 22. Dworjan's [Ansible-Development](https://github.com/shadowman-lab/Ansible-Development) repository provisions such a server with Ansible, including a shared image store, so users on one server don't each keep their own copy of the same EE.
 
@@ -90,6 +90,6 @@ The EE used to be the catch. Before OpenShift 4.20, workspaces couldn't run cont
 ## Sources
 
 - Alex Dworjan, [Ansible Development Environment Options](https://www.youtube.com/watch?v=SWa8bPLteAA) (2024-02), [Dev Containers](https://www.youtube.com/watch?v=kOGs6Ntt8JY) (2024-10) and [Dev Spaces with Execution Environments](https://www.youtube.com/watch?v=Kej_7MeoxmE) (2026-03). His [shadowman-lab/Ansible-Development](https://github.com/shadowman-lab/Ansible-Development) repository holds the server roles and the Dev Spaces setup.
-- VS Code docs: [Remote-SSH](https://code.visualstudio.com/docs/remote/ssh) and [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), system requirements.
+- VS Code docs: [Remote-SSH](https://code.visualstudio.com/docs/remote/ssh) and [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), system requirements, and the [Remote Development FAQ](https://code.visualstudio.com/docs/remote/faq) (glibc 2.28 since 1.99).
 - code-server's `docs/guide.md` (external authentication) and `docs/FAQ.md` (multi-tenancy), in [coder/code-server](https://github.com/coder/code-server).
 - The `devcontainer.json` variants and `devfile.yaml` come from `ansible-creator init playbook` 26.9.0. The Dev Container test used `ghcr.io/ansible/community-ansible-dev-tools` (digest `sha256:775c81d5…`, built 2026-09-23) under Docker 29.3.1. This sandbox's kernel refused `--cap-add=SYS_RESOURCE`, so that one flag was dropped for the test; nested Podman still ran the EE.
