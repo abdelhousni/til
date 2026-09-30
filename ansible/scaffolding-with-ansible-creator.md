@@ -69,6 +69,17 @@ Pinning it by SHA wouldn't pin the linter, for two reasons found in that workflo
 - **`init collection myorg.platform`** is for a collection you publish on its own. It adds sample plugins, Molecule scenarios, unit and integration tests, `tox-ansible.ini`, changelog configuration and a release workflow.
 - **`init execution_env`** writes an `execution-environment.yml` based on `quay.io/fedora/fedora:41`, a release that reached end of life on 2025-12-15, with ansible-core unpinned. [Part 3](execution-environment-from-a-locked-requirements-file.md) builds the same kind of file from a lock file and a base image pinned by digest.
 
+## The example repository
+
+The scaffold and every change above are in the series' companion repository, [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/11-scaffolding-with-ansible-creator). There are two commits: the untouched output of ansible-creator, then the changes, which `git show` on the second one lists.
+
+One more change was needed there:
+- **The symptom:** inside a larger repository, ansible-lint failed with `syntax-check[unknown-module]` on `cisco.ios.ios_facts`.
+- **The cause:** ansible-lint took the repository root as its project directory, so it never installed the example's `collections/requirements.yml`. The same scaffold had passed as a repository of its own.
+- **The fix:** an `.ansible-lint` file in the example directory, with `profile: production`. ansible-lint places its project directory at the nearest one.
+
+The repository's CI, the pinned workflow from part 10, lints the example on every push.
+
 ## Sources
 
 - `ansible-creator` 26.9.0: `--help` for `init`, `add resource` and `add plugin`, and the generated files.
