@@ -85,7 +85,7 @@ Dworjan's role for it runs one code-server per user, each on its own port. He li
 
 *Dev Spaces* is Red Hat's product built on Eclipse Che, the upstream project. It starts a browser VS Code per user, on demand, from a repository. Each repository carries a *devfile* (`devfile.yaml`), a YAML description of the workspace container. ansible-creator's playbook scaffold generates one pointing at `ghcr.io/ansible/ansible-devspaces:latest`. Login is the cluster's single sign-on (SSO), and git credentials and registry logins can be injected per user.
 
-The EE used to be the catch. Before OpenShift 4.20, workspaces couldn't run containers, so each EE had to be rebuilt as a Dev Spaces image. In his March 2026 video, Dworjan shows OpenShift 4.20.5 and later running *nested containers* (Podman inside the workspace container) on new and upgraded clusters. One ADT image then runs every team's existing EE. Enabling it takes a SecurityContextConstraint and changes to Dev Spaces and the DevWorkspace operator, documented in his repository's `devspaces/README.md`.
+The EE used to be the catch. Before OpenShift 4.20, workspaces couldn't run containers, so each EE had to be rebuilt as a Dev Spaces image. In his March 2026 video, Dworjan shows OpenShift 4.20.5 and later running *nested containers* (Podman inside the workspace container) on new and upgraded clusters. One ADT image then runs every team's existing EE. Enabling it once took a hand-written SecurityContextConstraint and operator changes. Since Dev Spaces 3.25, per his README, it's one field in the `CheCluster` resource; [part 10](ansible-in-openshift-dev-spaces-with-nested-ees.md) covers it.
 
 ## Sources
 
