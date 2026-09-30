@@ -706,6 +706,10 @@ def main():
             )
         )
         row = {"title": title, "date": date, "created_ts": created_ts, "slug": slug}
+        # Tie-breaker for entries added in the same commit, as a series often
+        # is: its reading order, rather than the filename order they'd
+        # otherwise keep (which put part 3 of the Ansible series before 1 and 2).
+        row["series_pos"] = series_nav.get(f"{topic}/{slug}", {}).get("position", 0)
         rows_by_topic.setdefault(topic, []).append(row)
         all_entries.append(
             {**row, "topic": topic, "html_body": html_body, "url": url, "last_modified": last_modified}
@@ -713,7 +717,7 @@ def main():
 
     topics = []
     for topic, rows in rows_by_topic.items():
-        rows.sort(key=lambda r: r["created_ts"])
+        rows.sort(key=lambda r: (r["created_ts"], r["series_pos"]))
         # Topics stay ordered by first-entry *date*, deliberately: several
         # topics were seeded on the same day, so switching this key to the
         # timestamp too would reshuffle every section on the homepage to fix
@@ -740,7 +744,7 @@ def main():
     # "Recent TILs" -- same section til.simonwillison.net's own homepage
     # leads with: a reverse-chronological feed of the latest entries with a
     # short excerpt each, distinct from the exhaustive per-topic lists below.
-    recent = sorted(all_entries, key=lambda e: e["created_ts"], reverse=True)[:RECENT_TILS_LIMIT]
+    recent = sorted(all_entries, key=lambda e: (e["created_ts"], e["series_pos"]), reverse=True)[:RECENT_TILS_LIMIT]
     if recent:
         body_parts.append("<h2>Recent TILs</h2>")
         for e in recent:

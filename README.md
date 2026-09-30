@@ -11,28 +11,28 @@ Browse these TILs at https://til.housni.eu/
 <!-- index starts -->
 ## ansible
 
-* [Using the Foreman/Satellite dynamic inventory plugin](https://til.housni.eu/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
-* [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://til.housni.eu/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [Starting an Ansible role project with uv for the venv](https://til.housni.eu/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
+* [Using the Foreman/Satellite dynamic inventory plugin](https://til.housni.eu/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
 * [Targeting hosts the same way, whether the inventory is static or dynamic](https://til.housni.eu/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
+* [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://til.housni.eu/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://til.housni.eu/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://til.housni.eu/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
 * [Ansible Vault encrypts the secret in git; Podman's default driver stores it in plaintext](https://til.housni.eu/ansible/ansible-vault-podman-secrets.html) - 2026-09-20
 * [What Ansible Vault actually encrypts, and where that protection stops](https://til.housni.eu/ansible/what-ansible-vault-actually-encrypts.html) - 2026-09-24
-* [Ansible Development Tools (ADT): one install, and the Python version decides what you get](https://til.housni.eu/ansible/ansible-development-tools-adt.html) - 2026-09-29
 * [Handling deployment failures with Ansible's block/rescue/always](https://til.housni.eu/ansible/block-rescue-always-error-handling.html) - 2026-09-29
-* [Building an Ansible execution environment from a locked requirements file](https://til.housni.eu/ansible/execution-environment-from-a-locked-requirements-file.html) - 2026-09-29
 * [Locking an Ansible development environment: pip, venv, pip-tools, uv or an execution environment](https://til.housni.eu/ansible/locking-an-ansible-dev-environment-pip-to-ee.html) - 2026-09-29
 * [Pinning ansible-core with pip-tools, uv and Poetry](https://til.housni.eu/ansible/pinning-ansible-core-pip-tools-uv-poetry.html) - 2026-09-29
-* [Committing the VS Code Ansible settings with the repository](https://til.housni.eu/ansible/vscode-ansible-settings-per-repository.html) - 2026-09-29
+* [Building an Ansible execution environment from a locked requirements file](https://til.housni.eu/ansible/execution-environment-from-a-locked-requirements-file.html) - 2026-09-29
 * [Where to run an Ansible development environment: venv, Dev Container, Remote-SSH, code-server or Dev Spaces](https://til.housni.eu/ansible/where-to-run-an-ansible-dev-environment.html) - 2026-09-29
-* [An Ansible Dev Container: choosing the scaffolded config, Podman, and the EE navigator falls back to](https://til.housni.eu/ansible/ansible-dev-container-with-adt.html) - 2026-09-30
+* [Ansible Development Tools (ADT): one install, and the Python version decides what you get](https://til.housni.eu/ansible/ansible-development-tools-adt.html) - 2026-09-29
+* [Committing the VS Code Ansible settings with the repository](https://til.housni.eu/ansible/vscode-ansible-settings-per-repository.html) - 2026-09-29
 * [Running playbooks locally in the execution environment production uses](https://til.housni.eu/ansible/develop-against-the-production-execution-environment.html) - 2026-09-30
+* [An Ansible Dev Container: choosing the scaffolded config, Podman, and the EE navigator falls back to](https://til.housni.eu/ansible/ansible-dev-container-with-adt.html) - 2026-09-30
 
 ## github-pages
 
-* [Adding an Atom feed and syntax highlighting to a static site build script](https://til.housni.eu/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
 * [Publishing a TIL collection as a static GitHub Pages site](https://til.housni.eu/github-pages/static-site-instead-of-datasette.html) - 2026-09-05
+* [Adding an Atom feed and syntax highlighting to a static site build script](https://til.housni.eu/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
 * [Rendering Mermaid diagrams in a Python-Markdown static site](https://til.housni.eu/github-pages/mermaid-diagrams-in-markdown.html) - 2026-09-12
 
 ## gitlab-ci
@@ -50,15 +50,15 @@ Browse these TILs at https://til.housni.eu/
 * [Sanity-checking a fresh Docker or Podman install with each engine's own hello-world](https://til.housni.eu/podman/docker-and-podman-hello-world.html) - 2026-09-06
 * [Podman equivalents to Docker's Dive image-layer explorer](https://til.housni.eu/podman/podman-equivalent-to-docker-dive.html) - 2026-09-12
 * [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://til.housni.eu/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
-* [Pointing Podman at an Artifactory mirror without editing a single image name](https://til.housni.eu/podman/artifactory-as-a-pull-through-mirror.html) - 2026-09-21
 * [Auto-updating the Caddy/Adminer/PHP Quadlet stack needs more than one AutoUpdate key](https://til.housni.eu/podman/quadlet-autoupdate-caddy-adminer-php.html) - 2026-09-21
+* [Pointing Podman at an Artifactory mirror without editing a single image name](https://til.housni.eu/podman/artifactory-as-a-pull-through-mirror.html) - 2026-09-21
 
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://til.housni.eu/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
 * [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://til.housni.eu/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
-* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://til.housni.eu/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://til.housni.eu/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
+* [Debugging a Proxmox VM whose cloud-init config didn't apply](https://til.housni.eu/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A Proxmox VM on demand, NixOS from Git: OpenTofu builds a skeleton, nixos-anywhere replaces it, and the host key exists before the VM](https://til.housni.eu/proxmox/nixos-on-demand-opentofu-nixos-anywhere-sops.html) - 2026-09-27
 
 ## python
@@ -75,9 +75,9 @@ Browse these TILs at https://til.housni.eu/
 
 ## tls
 
-* [Adding a certificate to a Java keystore/truststore with keytool](https://til.housni.eu/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 * [Checking a TLS certificate's dates, issuer, and SANs with openssl](https://til.housni.eu/tls/openssl-checking-cert-dates-and-details.html) - 2026-09-05
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://til.housni.eu/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
+* [Adding a certificate to a Java keystore/truststore with keytool](https://til.housni.eu/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 
 ## cloud-init
 
@@ -86,9 +86,9 @@ Browse these TILs at https://til.housni.eu/
 ## git
 
 * [Installing git, gh, and glab, and the auth each one actually needs](https://til.housni.eu/git/git-gh-glab-install-and-auth.html) - 2026-09-12
+* [Syncing a diverged fork: take the pipeline fixes, not the content](https://til.housni.eu/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 * [Configuring a repository for coding agents: what the guidance actually says](https://til.housni.eu/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
 * [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://til.housni.eu/git/resync-clone-after-force-push.html) - 2026-09-27
-* [Syncing a diverged fork: take the pipeline fixes, not the content](https://til.housni.eu/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 
 ## oauth2
 
@@ -96,16 +96,16 @@ Browse these TILs at https://til.housni.eu/
 
 ## kubernetes
 
-* [Cleanly stopping an RKE2 node for planned maintenance](https://til.housni.eu/kubernetes/rke2-node-maintenance-drain-reboot.html) - 2026-09-17
 * [What Kubernetes actually is, and how it works](https://til.housni.eu/kubernetes/what-is-kubernetes-and-how-it-works.html) - 2026-09-17
+* [Cleanly stopping an RKE2 node for planned maintenance](https://til.housni.eu/kubernetes/rke2-node-maintenance-drain-reboot.html) - 2026-09-17
+* [Installing a single-node RKE2 server for a lab](https://til.housni.eu/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
 * [Getting kubectl to work against RKE2 from off the node](https://til.housni.eu/kubernetes/kubectl-off-node-rke2-tls-san.html) - 2026-09-18
+* [What RKE2 actually is, and how its pieces fit together](https://til.housni.eu/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
 * [Pods, Deployments, Services — the minimum object model](https://til.housni.eu/kubernetes/pods-deployments-services-object-model.html) - 2026-09-18
 * [RKE2's default CNI is Canal, and you pick it before the first start](https://til.housni.eu/kubernetes/rke2-cni-canal-and-alternatives.html) - 2026-09-18
-* [Going HA with RKE2: three servers, one address, and the datastore choice](https://til.housni.eu/kubernetes/rke2-ha-embedded-etcd-external-datastore.html) - 2026-09-18
-* [RKE2's ingress default moved to Traefik, because ingress-nginx is ending](https://til.housni.eu/kubernetes/rke2-ingress-traefik-nginx-retirement.html) - 2026-09-18
 * [RKE2 ships no default StorageClass, and a PVC will sit Pending forever](https://til.housni.eu/kubernetes/rke2-no-default-storageclass.html) - 2026-09-18
-* [Installing a single-node RKE2 server for a lab](https://til.housni.eu/kubernetes/rke2-single-node-lab-install.html) - 2026-09-18
-* [What RKE2 actually is, and how its pieces fit together](https://til.housni.eu/kubernetes/what-is-rke2-and-how-it-works.html) - 2026-09-18
+* [RKE2's ingress default moved to Traefik, because ingress-nginx is ending](https://til.housni.eu/kubernetes/rke2-ingress-traefik-nginx-retirement.html) - 2026-09-18
+* [Going HA with RKE2: three servers, one address, and the datastore choice](https://til.housni.eu/kubernetes/rke2-ha-embedded-etcd-external-datastore.html) - 2026-09-18
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://til.housni.eu/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
 * [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://til.housni.eu/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
 * [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://til.housni.eu/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
@@ -121,8 +121,8 @@ Browse these TILs at https://til.housni.eu/
 
 ## terraform
 
-* [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://til.housni.eu/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [What Terraform/OpenTofu actually is, and how it works](https://til.housni.eu/terraform/what-is-terraform-opentofu-and-how-it-works.html) - 2026-09-17
+* [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://til.housni.eu/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [Terraform state locking just dropped its DynamoDB requirement](https://til.housni.eu/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-23
 * [What Terraform, OpenTofu, and Packer promise about secrets, and where each promise stops](https://til.housni.eu/terraform/what-terraform-opentofu-and-packer-promise-about-secrets.html) - 2026-09-29
 
@@ -139,8 +139,8 @@ Browse these TILs at https://til.housni.eu/
 ## windows
 
 * [Finding and force-closing a locked file on a Windows SMB share](https://til.housni.eu/windows/close-open-smb-files-powershell.html) - 2026-09-18
-* [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://til.housni.eu/windows/rdp-microsoft-account-login.html) - 2026-09-28
+* [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [Installing PowerShell 7 on Windows, Debian and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 
 ## vscode
@@ -151,9 +151,9 @@ Browse these TILs at https://til.housni.eu/
 
 * [First steps on NixOS: the whole system is one file, and every change is a boot entry](https://til.housni.eu/nixos/first-steps-configuration-generations-rollback.html) - 2026-09-25
 * [NixOS on WSL2: a short admin runbook, and the files WSL manages instead of NixOS](https://til.housni.eu/nixos/nixos-wsl-admin-runbook.html) - 2026-09-25
+* [Oh My Zsh on NixOS: the plugin list installs nothing, and NixOS aliases win](https://til.housni.eu/nixos/zsh-oh-my-zsh-declarative.html) - 2026-09-26
 * [Testing a NixOS configuration on GitHub Actions: evaluate on every push, boot it where KVM is](https://til.housni.eu/nixos/nixos-config-tests-github-actions.html) - 2026-09-26
 * [Testing a NixOS configuration on self-managed GitLab CE: the eval job runs anywhere, the VM test needs a runner you prepare](https://til.housni.eu/nixos/nixos-config-tests-gitlab-ce.html) - 2026-09-26
-* [Oh My Zsh on NixOS: the plugin list installs nothing, and NixOS aliases win](https://til.housni.eu/nixos/zsh-oh-my-zsh-declarative.html) - 2026-09-26
 * [Home Manager as a NixOS module: dotfiles in the same rebuild, and the file that's in the way](https://til.housni.eu/nixos/home-manager-nixos-module.html) - 2026-09-27
 * [A user's PATH on NixOS: declare packages, and know which settings reach services](https://til.housni.eu/nixos/user-path-packages-shells-services.html) - 2026-09-28
 
