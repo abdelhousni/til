@@ -44,6 +44,28 @@ These aren't alternatives so much as layers:
 - **For what runs in production**, build an EE from that same locked `requirements.txt`, with collections and the base image pinned too. On Ansible Automation Platform, an EE is how jobs run anyway.
 - **Plain pip plus a venv** is fine for trying things out, but it isn't a lock. Neither is an unpinned EE.
 
+## The example repository
+
+The series' companion repository, [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/01-locking-an-ansible-dev-environment), locks the same two constraints with each tool above that writes a lock file:
+
+```text
+ansible-core~=2.21.0
+ansible-runner>=2.3.0,<3.0.0
+```
+
+| Tool | You edit | The tool writes | Python versions the lock covers |
+|---|---|---|---|
+| pip-tools 7.6.1 | `requirements.in` | `requirements.txt`, with hashes | 3.12 only, the one it ran under |
+| uv 0.12.20 | `pyproject.toml` | `uv.lock` | 3.12 to 3.14 |
+| Poetry 2.5.1 | `pyproject.toml` | `poetry.lock` | 3.12 to 3.14 |
+| pip 26.2.1, `pip lock` | `requirements.in` | `pylock.toml` | 3.12 only, the one it ran under |
+
+All four picked ansible-core 2.21.4 and ansible-runner 2.4.3, 14 packages in all. The pip-tools lock also records *hashes*, a checksum of each package file, which pip compares before it installs anything.
+
+The repository's CI (continuous integration, checks that run on every push) tests each lock:
+- **Does it still match the file you edit?** It reruns `pip-compile` and fails on any change, and runs `uv lock --check` and `poetry check --lock`. `pip lock` has no check mode.
+- **Does it install?** Each lock goes into a fresh venv, then `ansible --version` must report `ansible [core 2.21.4]`.
+
 ## Sources
 
 - Ansible docs, from [ansible/ansible-documentation](https://github.com/ansible/ansible-documentation): [installation guide](https://docs.ansible.com/projects/ansible/latest/installation_guide/intro_installation.html) (pip, pipx) and [introduction to execution environments](https://docs.ansible.com/projects/ansible/latest/getting_started_ee/introduction.html) (venv limitations, EE tooling).
