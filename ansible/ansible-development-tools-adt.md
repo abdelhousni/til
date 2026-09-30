@@ -70,6 +70,19 @@ Every dependency of ADT is a lower bound: `ansible-lint>=26.4.0`, `ansible-navig
 
 The `adt` command itself has one subcommand, `adt server`, which its help describes as starting "the Ansible Devtools server" on port 8000.
 
+## The example repository
+
+The series' companion repository reproduces this entry, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/05-ansible-development-tools-adt):
+- **`resolve-by-python.sh`** prints the per-Python table above. It passes uv's `--exclude-newer 2026-09-30T00:00:00Z`, which makes uv ignore anything uploaded to PyPI after that moment. So the table comes out the same after new releases.
+- **`requirements.txt`** is the lock: `ansible-dev-tools==26.9.0` compiled for Python 3.13 into 69 pinned packages. Each carries hashes, as in [part 1](locking-an-ansible-dev-environment-pip-to-ee.md).
+- **`site.yml`** is run with `ansible-navigator --ee false`, which shows the `PATH` requirement above.
+
+Its CI checks all three on every push:
+- the script's output must match the table;
+- rerunning `uv pip compile` must leave the lock unchanged;
+- after installing the lock, `adt --version` must show ansible-core 2.21.4 and ansible-lint 26.9.0;
+- navigator must fail with `ansible: not found` when `PATH` has no `ansible`, and print `ansible-core 2.21.4` when `PATH` holds the venv's `bin/`.
+
 ## Sources
 
 - Alex Dworjan, [Ansible Developer Environment Updates](https://www.youtube.com/watch?v=qzi-oQ1dQL0) (2024-05), and his [Dev Spaces Containerfile](https://github.com/shadowman-lab/Ansible-Development/blob/main/devspaces/Containerfile).
