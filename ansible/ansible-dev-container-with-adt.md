@@ -74,6 +74,17 @@ Set your own EE in `ansible-navigator.yml`, by digest, with `pull: policy: missi
 
 Moving to a newer one is then a reviewed one-line change. AAP subscribers can use Red Hat's supported ADT image from `registry.redhat.io` instead, after a `podman login` with their Red Hat account, as Dworjan does.
 
+## The example repository
+
+The series' companion repository has these files, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/08-ansible-dev-container-with-adt). There are two commits:
+- **the first** holds the three `devcontainer.json` files and `ansible-navigator.yml` exactly as ansible-creator generates them;
+- **the second** pins the ADT image by digest, names the EE from part 7 by digest with `pull: policy: missing`, and adds a playbook. `git show` on it lists those changes.
+
+VS Code looks for `.devcontainer/` at the root of the folder it opens, so open that directory rather than the whole repository. Its CI starts the Docker configuration with `@devcontainers/cli` 0.89.0, installed from a committed lock file, on every push. It then checks three things:
+- `adt --version` inside reports ansible-core 2.21.4;
+- navigator's effective EE is the pinned image;
+- the playbook, run in that EE nested inside the Dev Container, reports ansible-core 2.21.3.
+
 ## Sources
 
 - The Dev Container spec, [devcontainer.json locations](https://containers.dev/implementors/spec/), and [`@devcontainers/cli`](https://github.com/devcontainers/cli) 0.89.0.
