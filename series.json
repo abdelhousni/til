@@ -33,7 +33,8 @@
       "ansible/where-to-run-an-ansible-dev-environment.md",
       "ansible/ansible-development-tools-adt.md",
       "ansible/vscode-ansible-settings-per-repository.md",
-      "ansible/develop-against-the-production-execution-environment.md"
+      "ansible/develop-against-the-production-execution-environment.md",
+      "ansible/ansible-dev-container-with-adt.md"
     ]
   }
 }
