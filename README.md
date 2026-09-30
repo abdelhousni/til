@@ -28,7 +28,7 @@ Browse these TILs at https://til.housni.eu/
 * [Committing the VS Code Ansible settings with the repository](https://til.housni.eu/ansible/vscode-ansible-settings-per-repository.html) - 2026-09-29
 * [Running playbooks locally in the execution environment production uses](https://til.housni.eu/ansible/develop-against-the-production-execution-environment.html) - 2026-09-30
 * [An Ansible Dev Container: choosing the scaffolded config, Podman, and the EE navigator falls back to](https://til.housni.eu/ansible/ansible-dev-container-with-adt.html) - 2026-09-30
-* [A shared Ansible dev server for VS Code Remote-SSH, built with Ansible](https://til.housni.eu/ansible/shared-dev-server-for-vscode-remote-ssh.html) - unknown
+* [A shared Ansible dev server for VS Code Remote-SSH, built with Ansible](https://til.housni.eu/ansible/shared-dev-server-for-vscode-remote-ssh.html) - 2026-09-30
 
 ## github-pages
 
