@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Regenerate the README.md TIL index by scanning topic directories directly."""
+import json
 import pathlib
 import re
 import subprocess
@@ -14,16 +15,39 @@ count_re = re.compile(r"<!\-\- count starts \-\->.*<!\-\- count ends \-\->", re.
 COUNT_TEMPLATE = "<!-- count starts -->{}<!-- count ends -->"
 
 
-def created_date(path):
+def created_date_and_timestamp(path):
+    """(YYYY-MM-DD, unix seconds) of the commit that first added this file.
+
+    Same rule as build_site.py, so the README and the site list entries in
+    the same order: the short date alone can't order two entries added on
+    the same day.
+    """
     for args in (
-        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad", "--date=short", "--", str(path)],
-        ["git", "log", "--follow", "--format=%ad", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--diff-filter=A", "--format=%ad\t%at", "--date=short", "--", str(path)],
+        ["git", "log", "--follow", "--format=%ad\t%at", "--date=short", "--", str(path)],
     ):
         result = subprocess.run(args, cwd=root, capture_output=True, text=True, check=True)
-        dates = result.stdout.strip().splitlines()
-        if dates:
-            return dates[-1]
-    return "unknown"
+        lines = result.stdout.strip().splitlines()
+        if lines:
+            date, _, stamp = lines[-1].partition("\t")
+            return date, int(stamp)
+    return "unknown", float("inf")
+
+
+def series_positions():
+    """Map "topic/slug" to its position in its series.json series, if any.
+
+    Entries added in one commit share a timestamp; their series order breaks
+    the tie, as in build_site.py.
+    """
+    manifest = root / "series.json"
+    if not manifest.exists():
+        return {}
+    positions = {}
+    for series in json.loads(manifest.read_text()).values():
+        for position, path in enumerate(series["entries"], start=1):
+            positions[path.removesuffix(".md")] = position
+    return positions
 
 
 def title_for(path):
@@ -35,6 +59,7 @@ def title_for(path):
 
 
 def collect_topics():
+    positions = series_positions()
     topics = []
     for entry in sorted(root.iterdir()):
         if not entry.is_dir() or entry.name in SKIP_DIRS or entry.name.startswith("."):
@@ -42,16 +67,20 @@ def collect_topics():
         md_files = sorted(entry.glob("*.md"))
         if not md_files:
             continue
-        rows = [
-            {
-                "title": title_for(md),
-                "date": created_date(md),
-                "topic": entry.name,
-                "slug": md.stem,
-            }
-            for md in md_files
-        ]
-        rows.sort(key=lambda r: r["date"])
+        rows = []
+        for md in md_files:
+            date, created_ts = created_date_and_timestamp(md)
+            rows.append(
+                {
+                    "title": title_for(md),
+                    "date": date,
+                    "created_ts": created_ts,
+                    "series_pos": positions.get(f"{entry.name}/{md.stem}", 0),
+                    "topic": entry.name,
+                    "slug": md.stem,
+                }
+            )
+        rows.sort(key=lambda r: (r["created_ts"], r["series_pos"]))
         topics.append((entry.name, rows, rows[0]["date"]))
     topics.sort(key=lambda t: t[2])
     return topics
