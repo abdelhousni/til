@@ -50,7 +50,7 @@ version: 3
 
 images:
   base_image:
-    name: quay.io/fedora/fedora:44@sha256:8938dce2600de0b78f5ef8d1541192f207fdafb7414d83957f6687147aa8998b
+    name: registry.fedoraproject.org/fedora:44@sha256:8938dce2600de0b78f5ef8d1541192f207fdafb7414d83957f6687147aa8998b
 
 dependencies:
   python_interpreter:
@@ -67,7 +67,14 @@ dependencies:
 
 Each input is pinned:
 
-**The base image, by digest.** A tag such as `44` can be re-pushed; the `@sha256:` digest names one exact image. `docker inspect --format '{{index .RepoDigests 0}}' quay.io/fedora/fedora:44` prints it after a pull.
+**The base image, by digest.** A tag such as `44` can be re-pushed; the `@sha256:` digest names one exact image. `docker inspect --format '{{index .RepoDigests 0}}' registry.fedoraproject.org/fedora:44` prints it after a pull.
+
+A digest only works while the *registry*, the server the image is pulled from, still serves it. This one was first pinned as `quay.io/fedora/fedora:44@sha256:8938dceâ€¦`, and a day later it no longer pulled: `no such manifest`.
+- **The cause:** Quay's tag history for `fedora:44` shows a new build every morning at about 06:56 UTC. The pinned build was the tag for exactly one day, and quay.io stopped serving it by digest once the tag moved on.
+- **The fix here:** `registry.fedoraproject.org/fedora` carries the same builds under the same digests. On 2026-09-30 it still served all 15 daily digests from the previous two weeks. Only the registry name changed, so the image is the same one.
+- **For production:** copy the base image into a registry you control, for example with `skopeo copy` (skopeo is a command-line tool that copies images between registries), and pin that digest. The pin then lasts as long as you keep the image.
+
+A digest that disappears fails the build loudly. That is still better than a tag, which silently builds on whatever image it points to that day.
 
 **ansible-core and ansible-runner, with `==`.** ansible-core 2.21 supports Python 3.12 to 3.14, which includes Fedora 44's 3.14.
 
@@ -125,9 +132,18 @@ ansible-navigator run site.yml --eei registry.example.com/ansible/my-ee@sha256:â
 
 Tested against a local registry, with `--ce docker`. A playbook calling `community.general.json_query` printed `"msg": "2.21.4 / 2"`: the image's ansible-core, and the jmespath dependency working.
 
+## The example repository
+
+The series' companion repository has both definitions, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/03-execution-environment-from-a-locked-requirements-file). There are two commits: the typical first definition, which fails with `/usr/bin/python3 is not an executable`, then the locked one, which `git show` lists. Its CI builds the image with ansible-builder 3.1.1 on every push and once a week. The weekly run catches a base image the registry stops serving. Each run then checks the image:
+- `requirements.txt` still matches `requirements.in`, after rerunning `uv pip compile`;
+- `pip list` inside the image equals the lock, apart from `pip` and `dumb-init`;
+- the two collections are at 13.4.0 and 1.1.5;
+- ansible-navigator runs a playbook in the image that prints `"msg": "2.21.4 / 2"`.
+
 ## Sources
 
 - [ansible-builder definition reference](https://ansible.readthedocs.io/projects/builder/en/stable/definition/) (the `python`, `python_interpreter` and `exclude` keys, and the PEP 508 note) and [collection metadata](https://ansible.readthedocs.io/projects/builder/en/stable/collection_metadata/) (merging and excluded names). Read from the 3.1.1 sdist, along with its generated `Dockerfile` and scripts.
 - Ansible docs, [building your first EE](https://docs.ansible.com/projects/ansible/latest/getting_started_ee/build_execution_environment.html), from [ansible/ansible-documentation](https://github.com/ansible/ansible-documentation). Its example adds `python_interpreter` to a Fedora base.
+- Quay's tag history for `fedora/fedora`, from `https://quay.io/api/v1/repository/fedora/fedora/tag/?specificTag=44&onlyActiveTags=false`, read on 2026-09-30.
 - [uv `pip compile`](https://docs.astral.sh/uv/pip/compile/) and [`uv export`](https://docs.astral.sh/uv/concepts/projects/export/).
 - Every output above was produced here with ansible-builder 3.1.1, ansible-navigator 26.9.0, uv 0.12.20, Docker 29.3.1 and a local `registry:2`. The test builds added this sandbox's proxy CA to the image's trust store, a test-only step left out of the listings.
