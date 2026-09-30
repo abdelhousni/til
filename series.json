@@ -37,7 +37,8 @@
       "ansible/ansible-dev-container-with-adt.md",
       "ansible/shared-dev-server-for-vscode-remote-ssh.md",
       "ansible/ansible-lint-fix-in-the-editor-and-in-ci.md",
-      "ansible/scaffolding-with-ansible-creator.md"
+      "ansible/scaffolding-with-ansible-creator.md",
+      "ansible/collection-venv-with-ansible-dev-environment.md"
     ]
   }
 }
