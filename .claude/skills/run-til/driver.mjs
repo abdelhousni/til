@@ -7,8 +7,15 @@
 // PATH is relative to the site root, e.g. ansible/foo.html or "" for /.
 // Exits 1 if any page has a problem.
 import { createRequire } from "node:module";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 
+// The cloud container keeps Chromium in /opt/pw-browsers and points
+// PLAYWRIGHT_BROWSERS_PATH at it; a shell without that variable would look in
+// ~/.cache/ms-playwright and fail.
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH && existsSync("/opt/pw-browsers")) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = "/opt/pw-browsers";
+}
 const require = createRequire(import.meta.url);
 let playwright;
 for (const p of ["playwright", "/opt/node-tools/node_modules/playwright"]) {
@@ -33,20 +40,30 @@ mkdirSync(out, { recursive: true });
 
 const browser = await playwright.chromium.launch({
   executablePath: process.env.CHROMIUM || undefined,
-  // Chromium ignores HTTPS_PROXY. Pass it as a Chromium flag so CDN
-  // scripts (Mermaid) load in containers that only reach the internet
-  // through a proxy. Not Playwright's `proxy` option: that one also sends
-  // localhost through the proxy, which answers 405.
-  args: ["--no-sandbox",
-    ...(process.env.HTTPS_PROXY ? [`--proxy-server=${process.env.HTTPS_PROXY}`] : [])],
+  args: ["--no-sandbox"],
 });
-// ignoreHTTPSErrors: in the cloud container, CDN requests (Mermaid, the
-// analytics script) go through a proxy whose CA Chromium doesn't trust.
-const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, ignoreHTTPSErrors: true });
+const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 // The GoatCounter script is protocol-relative, so on http://localhost it is
-// fetched over plain HTTP, which the proxy refuses. A local preview shouldn't
+// fetched over plain HTTP, which a proxy may refuse. A local preview shouldn't
 // count as a visit anyway.
 await context.route("**/gc.zgo.at/**", (route) => route.abort());
+// External resources (Mermaid from cdn.jsdelivr.net, the shields.io badge)
+// fail in Chromium behind the cloud container's TLS-inspecting proxy:
+// ERR_CERT_AUTHORITY_INVALID, or ERR_TOO_MANY_RETRIES with ignoreHTTPSErrors.
+// curl trusts the proxy's CA, so fetch them with curl and hand the bytes over.
+if (process.env.HTTPS_PROXY) {
+  await context.route(/^https:\/\//, (route) => {
+    try {
+      const out = execFileSync("curl",
+        ["-sSfL", "-o", "-", "-w", "\n%{content_type}", route.request().url()],
+        { maxBuffer: 64 << 20 });
+      const nl = out.lastIndexOf(10);
+      route.fulfill({ status: 200, body: out.subarray(0, nl), headers: {
+        "content-type": out.subarray(nl + 1).toString() || "application/octet-stream",
+        "access-control-allow-origin": "*" } });
+    } catch { route.abort(); }
+  });
+}
 const page = await context.newPage();
 let failed = false;
 
