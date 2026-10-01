@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->93<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->94<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -142,6 +142,7 @@ Browse these TILs at https://til.housni.eu/
 * [What cgroups v2 actually is, and how Podman and Kubernetes use it](https://til.housni.eu/linux/cgroups-v2-podman-kubernetes.html) - 2026-09-18
 * [Building a custom WSL2 kernel on GitHub Actions: `KCFLAGS`, not `CFLAGS`](https://til.housni.eu/linux/wsl2-kernel-on-github-actions.html) - 2026-09-28
 * [Checking new firewall rules with nc and Python: open, refused, or dropped](https://til.housni.eu/linux/check-firewall-rules-with-nc-and-python.html) - 2026-09-29
+* [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
 
 ## windows
 
