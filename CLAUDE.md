@@ -23,9 +23,24 @@ remove it — editing the body does not re-append it.
 ## Commit authorship
 
 Commits are authored by the repository owner, with Claude credited only in the
-`Co-Authored-By` trailer. Before the first commit in a session, check
-`git config user.email`; if it is `noreply@anthropic.com` (the default in cloud
-sessions), set the repository-local identity first:
+`Co-Authored-By` trailer. Before the first commit in a session, check the
+identity Git will actually use:
+
+```bash
+git var GIT_AUTHOR_IDENT
+git var GIT_COMMITTER_IDENT
+```
+
+Both should show `abdel.h <23284113+abdelhousni@users.noreply.github.com>`.
+The cloud environment sets `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`,
+`GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL`, which override every git config
+file. `git config user.email` doesn't see them: it still prints
+`noreply@anthropic.com`, which the cloud session writes to `~/.gitconfig` at
+start, so don't go by it.
+
+If either line shows another identity, such as `Claude <noreply@anthropic.com>`,
+the variables aren't set in this environment. Set the repository-local
+identity first:
 
 ```bash
 git config user.name "abdel.h"
