@@ -71,24 +71,29 @@ visudo checks syntax, and every rule above passed it. So the check reads the rul
 cvtsudoers -e -f json 40-postgresql
 ```
 
-Each rule becomes an entry in `User_Specs`, and each command an object such as `{ "command": "/usr/bin/vim /var/lib/pgsql/*" }`. A `NOEXEC` tag shows up as `{ "noexec": true }` in the rule's `Options`. *jq*, a command-line JSON processor, then applies a policy to every command. Commands that a rule forbids with `!` are skipped. The policy reports:
-- **`FAIL`** for `ALL`;
-- **`FAIL`** for a program on a list of shells, editors, pagers, mail and terminal programs and interpreters, the manual's categories with examples from [GTFOBins](https://gtfobins.github.io/), whether or not the rule has `NOEXEC`;
-- **`FAIL`** for a wildcard in the arguments, unless they're a `^…$` regular expression;
+Each rule becomes an entry in `User_Specs`, and each command an object such as `{ "command": "/usr/bin/vim /var/lib/pgsql/*" }`. A `NOEXEC` tag shows up as `{ "noexec": true }` in the rule's `Options`. *jq*, a command-line JSON processor, then applies a policy to every command. Commands that a rule forbids with `!` are skipped.
+
+The policy needs to know which programs are dangerous through sudo. [GTFOBins](https://gtfobins.org/) is a curated list of them, with examples of each technique tagged by the context it works in: unprivileged, sudo, SUID or capabilities. Its site publishes the whole list as JSON at `https://gtfobins.org/api.json`. A short jq filter turns that into the functions each program has through sudo: `shell`, `file-read`, `file-write` and so on. It resolves GTFOBins' aliases and its *inherit* entries, where a program gets another one's techniques: vim inherits vi's shell, and `systemctl` and `journalctl` inherit `less`'s, through their pager.
+
+GTFOBins' examples need arguments, though. `systemctl`'s shell comes from `systemctl link` and `enable` on a unit file the user wrote, or from `systemctl edit`, which `systemctl start postgresql.service` doesn't allow. So the arguments decide. The manual: *"If no command line arguments are specified, the user may run the command with any arguments they choose."* The policy reports:
+- **`FAIL`** for `ALL`, and for a directory such as `/usr/local/bin/`, which allows every program in it;
+- **`FAIL`** for shells, editors, pagers, mail and terminal programs, the manual's categories, whatever their arguments and whether or not the rule has `NOEXEC`;
+- **`FAIL`** for a rule without arguments, for a program that GTFOBins lists with sudo functions;
+- **`FAIL`** for a wildcard in the arguments, unless they're a `^…$` regular expression, naming GTFOBins' functions for the program when it has some;
 - **`WARN`** for `journalctl`, or `systemctl status`, `show`, `cat` or `list-…`, without `--no-pager`.
 
-`check-sudoers.sh` runs visudo, cvtsudoers and the policy on each file, and exits 1 on any `FAIL`. On the first drop-in:
+`check-sudoers.sh` downloads GTFOBins' list, or reads a saved copy named by `GTFOBINS_API`, then runs visudo, cvtsudoers and the policy on each file. It exits 1 on any `FAIL`. On the first drop-in:
 
 ```text
 WARN starts a pager without --no-pager: /usr/bin/systemctl status postgresql.service
 WARN starts a pager without --no-pager: /usr/bin/journalctl -u postgresql.service
-FAIL vim can start a shell or write any file as root: /usr/bin/vim /var/lib/pgsql/*
-FAIL a wildcard in the arguments also matches extra arguments: /usr/bin/vim /var/lib/pgsql/*
+FAIL vim can start a shell or write any file as root, whatever its arguments: /usr/bin/vim /var/lib/pgsql/*
+FAIL a wildcard in the arguments also matches extra arguments; GTFOBins lists sudo functions for vim: bind-shell, download, file-read, file-write, library-load, reverse-shell, shell, upload: /usr/bin/vim /var/lib/pgsql/*
 ```
 
-With `sudoedit` and `--no-pager`, it printed `OK`. It also failed a test file with `%admins ALL=(ALL) ALL`, with `NOEXEC: /usr/bin/less /var/log/messages`, and with `/usr/bin/psql *` behind a command alias.
+With `sudoedit` and `--no-pager`, it printed `OK`. On a test file, it failed `%admins ALL=(ALL) ALL`, `NOEXEC: /usr/bin/less /var/log/messages`, `/usr/bin/psql *` behind a command alias, `/usr/bin/tar` and `/usr/bin/systemctl` without arguments, `/usr/local/bin/`, and `/usr/bin/find /var/log -name *.gz`. It passed `/usr/bin/systemctl start nginx.service`, `/usr/bin/python3 /opt/backup/run.py`, `/usr/bin/cat ""` (no arguments allowed) and `/usr/bin/tail ^/var/log/[^[:space:]]*$`.
 
-The pipeline renders the files the deployment would install, then runs the check before anything reaches a host. In GitHub Actions, where `ubuntu-24.04` runners already have sudo and jq:
+The pipeline renders the files the deployment would install, then runs the check before anything reaches a host. In GitHub Actions, where `ubuntu-24.04` runners already have sudo, jq and curl:
 
 ```yaml
 sudoers-policy:
@@ -112,17 +117,17 @@ sudoers-policy:
     - ./check-sudoers.sh out/*
 ```
 
-The GitHub job runs in the example repository below. The GitLab job wasn't run on GitLab, but its commands ran in a Rocky Linux 9.8 container, with sudo 1.9.17p2 and jq 1.6, and gave the same findings.
+The GitHub job runs in the example repository below. The GitLab job wasn't run on GitLab, but its commands ran in a Rocky Linux 9.8 container, with sudo 1.9.17p2 and jq 1.6, downloaded GTFOBins' list there, and gave the same findings.
 
-The list is a denylist, so a program that isn't on it passes. GTFOBins lists many more programs than the check does. A stricter policy lists the commands each team may have, and fails everything else.
+The check is still a denylist: a program that neither list knows passes, and so does a fixed set of arguments that a GTFOBins technique fits. A stricter policy lists the commands each team may have, and fails everything else. The download also means the result can change when GTFOBins adds a program; a pipeline that must give the same answer every time can pin a saved `api.json` with `GTFOBINS_API`.
 
 ## The example repository
 
-[abdelhousni/ansible-data-shaping-series](https://github.com/abdelhousni/ansible-data-shaping-series/tree/main/sudo-shell-escapes) holds the check: `check-sudoers.sh`, `sudoers-policy.jq` and `shell-escape-commands.txt`. It renders the first drop-in and the safer one through the `linux-system-roles.sudo` role's template, then runs the check on both. Its `sudoers-policy` job runs the check as a gate on the safer rules.
+[abdelhousni/ansible-data-shaping-series](https://github.com/abdelhousni/ansible-data-shaping-series/tree/main/sudo-shell-escapes) holds the check: `check-sudoers.sh`, `sudoers-policy.jq`, `gtfobins-sudo.jq` and `interactive-commands.txt`. It renders the first drop-in and the safer one through the `linux-system-roles.sudo` role's template, then runs the check on both and on a file with one rule per case above. Its `sudoers-policy` job runs the check as a gate on the safer rules.
 
 ## Sources
 
-- The sudoers manual for sudo 1.9.17p2, `docs/sudoers.mdoc.in` in [sudo-project/sudo](https://github.com/sudo-project/sudo) at tag `v1.9.17p2`: *Preventing shell escapes* (including `noexec` and sudoedit) and *Wildcards in command arguments*.
+- The sudoers manual for sudo 1.9.17p2, `docs/sudoers.mdoc.in` in [sudo-project/sudo](https://github.com/sudo-project/sudo) at tag `v1.9.17p2`: *Preventing shell escapes* (including `noexec` and sudoedit), *Wildcards in command arguments*, and the `Cmnd_List` description for commands without arguments.
 - systemd 252, `man/common-variables.xml` in [systemd/systemd](https://github.com/systemd/systemd) at tag `v252`: `$SYSTEMD_PAGERSECURE`.
-- [GTFOBins](https://gtfobins.github.io/), the list of programs that can be used to escape restrictions.
+- [GTFOBins](https://gtfobins.org/): `api.json` as published on 2026-10-01, and [GTFOBins/GTFOBins.github.io](https://github.com/GTFOBins/GTFOBins.github.io) at commit `acd5246` for its format (`_data/contexts.yml`, `_gtfobins/`).
 - Every result above came from a Rocky Linux 9.8 container (sudo 1.9.17p2, vim-enhanced 8.2.2637, systemd 252, less 590) on 2026-10-01, and from Ubuntu 24.04's sudo 1.9.15p5 and jq 1.7 for the check.
