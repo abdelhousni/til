@@ -285,6 +285,49 @@ MERMAID_SCRIPT = """<script type="module">
 MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
+LIST_ITEM_RE = re.compile(r"^ {0,3}(?:[-*+]|\d+[.)])[ \t]+\S")
+FENCE_RE = re.compile(r"^ {0,3}(```|~~~)")
+
+
+def separate_lists_from_paragraphs(text):
+    """Insert a blank line before a list that directly follows a paragraph.
+
+    Python-Markdown only starts a list after a blank line, so
+
+        This entry is about:
+        - one thing;
+        - another.
+
+    renders as a single <p> with literal dashes. GitHub and CommonMark
+    render it as a list, which is how the entries are written. Fenced code
+    blocks are left alone, and so are lines inside a list already started,
+    including its indented sub-items and wrapped continuation lines.
+    """
+    out = []
+    fence = None
+    in_list = False
+    prev = ""
+    for line in text.split("\n"):
+        match = FENCE_RE.match(line)
+        if fence:
+            if match and match.group(1) == fence:
+                fence = None
+        elif match:
+            fence = match.group(1)
+            in_list = False
+        elif not line.strip():
+            pass
+        elif LIST_ITEM_RE.match(line):
+            if prev.strip() and not in_list and not prev.lstrip().startswith("|"):
+                out.append("")
+            in_list = True
+        elif not prev.strip() and not line.startswith((" ", "\t")):
+            in_list = False
+        out.append(line)
+        prev = line
+    return "\n".join(out)
+
+
 def created_date_and_timestamp(path):
     """(YYYY-MM-DD, unix seconds) of the commit that first added this file.
 
@@ -676,7 +719,7 @@ def main():
             lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
         )
         html_body = markdown.markdown(
-            body_text,
+            separate_lists_from_paragraphs(body_text),
             extensions=["fenced_code", "tables", "codehilite"],
             extension_configs={"codehilite": {"guess_lang": False}},
         )
