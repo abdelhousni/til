@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->91<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->92<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -33,6 +33,7 @@ Browse these TILs at https://til.housni.eu/
 * [Scaffolding with ansible-creator: roles inside a collection, and what to change in the output](https://til.housni.eu/ansible/scaffolding-with-ansible-creator.html) - 2026-09-30
 * [A collection-aware venv with ansible-dev-environment (ade): what it installs, what it edits, and how to pin it](https://til.housni.eu/ansible/collection-venv-with-ansible-dev-environment.html) - 2026-09-30
 * [One sudoers line per command with community.general.dict_kv: building a list of dicts from a list of values](https://til.housni.eu/ansible/readable-sudoers-with-dict-kv.html) - 2026-10-01
+* [Lists and dicts back and forth: dict2items, items2dict and zip on role, Foreman and Proxmox data](https://til.housni.eu/ansible/lists-and-dicts-dict2items-items2dict-zip.html) - 2026-10-01
 
 ## github-pages
 
