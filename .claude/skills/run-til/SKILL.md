@@ -1,6 +1,6 @@
 ---
 name: run-til
-description: Build, serve, screenshot and check the TIL static site (til.housni.eu). Use when asked to run or preview the site, build it, see how an entry renders, take a screenshot of a page, check that lists, tables or Mermaid diagrams render, or run the site's link checks.
+description: Build, serve, screenshot and check the TIL static site (til.housni.eu). Use when asked to run or preview the site, build it, see how an entry renders, take a screenshot of a page, check that lists or tables render, check Mermaid diagram syntax, or run the site's link checks.
 ---
 
 The site is static: `build_site.py` turns the markdown entries into `_site/`,
@@ -57,7 +57,6 @@ For each page it takes a full-page screenshot in `/tmp/til-shots/` (`--out
 DIR` to change; `--base URL` for another port), and reports `FAIL` with a
 reason for:
 - `list inside <p>`: a `- item` line that stayed in a paragraph;
-- `mermaid blocks not rendered`: a ```` ```mermaid ```` block with no SVG;
 - console errors, failed requests to the site, and non-200 pages.
 
 It exits 1 if any page failed. Every page of the site, about 4 minutes:
@@ -85,8 +84,21 @@ make serve    # builds, then serves on http://localhost:8000/ until ctrl-c
 ## Test
 
 ```bash
-make check    # build + internal link check: "No broken internal links found (N pages checked)."
+make check    # build, internal link check, then Mermaid syntax
 ```
+
+Mermaid diagrams are checked without a browser: `check_mermaid.mjs` parses
+every ```` ```mermaid ```` block with Mermaid's own parser, in Node with
+jsdom. It takes about 2 seconds for the whole site and gives the file, line
+and parser message for a syntax error. Alone, or on one file:
+
+```bash
+make check-mermaid
+node check_mermaid.mjs podman/artifactory-as-a-pull-through-mirror.md
+```
+
+It doesn't check layout. For a new or changed diagram, screenshot it with
+the driver and look at it.
 
 `make preflight` is what CI runs; it also rewrites `README.md` and checks
 external links, which is slow.
@@ -99,7 +111,8 @@ external links, which is slow.
   check is how that bug was found on 71 paragraphs, so run it after touching
   the markdown pipeline.
 - **External resources behind the cloud proxy.** Mermaid
-  (`cdn.jsdelivr.net`) and the shields.io badge fail in Chromium with
+  (`cdn.jsdelivr.net`, needed for diagrams to appear in screenshots) and the
+  shields.io badge fail in Chromium with
   `ERR_CERT_AUTHORITY_INVALID`. `ignoreHTTPSErrors` turns that into
   `ERR_TOO_MANY_RETRIES`, and Chromium's `--proxy-server` doesn't help. When
   `HTTPS_PROXY` is set, the driver fetches every external `https://` request

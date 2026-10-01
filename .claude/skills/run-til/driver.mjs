@@ -1,8 +1,9 @@
 // Screenshots pages of the locally served TIL site with headless Chromium
 // and checks what the build can get wrong without failing:
 //   - list lines left inside a <p> ("- item" right after a paragraph);
-//   - ```mermaid blocks that didn't render to an SVG;
 //   - console errors and failed requests to the site itself.
+// Mermaid syntax is checked by check_mermaid.mjs at the repository root,
+// which doesn't need a browser.
 // Usage: node driver.mjs [--base http://localhost:8000] [--out DIR] PATH...
 // PATH is relative to the site root, e.g. ansible/foo.html or "" for /.
 // Exits 1 if any page has a problem.
@@ -83,10 +84,6 @@ for (const path of paths) {
     ps.filter((p) => /\n\s*(?:[-*+]|\d+[.)])\s/.test(p.textContent))
       .map((p) => p.textContent.trim().slice(0, 80)));
   for (const s of stray) problems.push(`list inside <p>: ${JSON.stringify(s)}`);
-
-  const mermaid = await page.$$eval("pre.mermaid", (els) =>
-    els.map((e) => !!e.querySelector("svg")));
-  if (mermaid.includes(false)) problems.push(`mermaid blocks not rendered: ${mermaid.filter((x) => !x).length}`);
 
   const shot = `${out}/${(path || "index").replace(/\//g, "_").replace(/\.html$/, "")}.png`;
   await page.screenshot({ path: shot, fullPage: true });
