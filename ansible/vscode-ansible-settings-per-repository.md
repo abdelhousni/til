@@ -60,6 +60,15 @@ On desktop VS Code this only suggests: per VS Code's docs, *"VS Code prompts a u
 
 Once the EE is set, lint and completion come from the same image the playbook runs in under ansible-navigator, and in AAP.
 
+## The example repository
+
+The series' companion repository has both files, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/06-vscode-ansible-settings-per-repository). There the EE setting names a real image, part 7's, instead of the placeholder above. A script there checks the settings against the extension itself:
+- it downloads the released `redhat.ansible` 26.8.2 from Open VSX and checks the file's SHA-256;
+- it reads the extension's `package.json`, and fails if a committed `ansible.*` setting doesn't exist, has the wrong type, or isn't one of the allowed values;
+- it prints each setting next to its default, and checks that `site.yml` opens as an Ansible file without `files.associations`.
+
+VS Code silently ignores a misspelled setting such as `ansible.validation.lintt.enabled`; the script fails on it. Its CI runs the script on every push.
+
 ## Sources
 
 - The Ansible extension's manifest, [`package.json`](https://github.com/ansible/vscode-ansible/blob/main/package.json) in ansible/vscode-ansible at commit `509d149` (2026-09-29): every setting name, default, scope and enum value above, the `extensionDependencies`, and the `filenamePatterns` for the `ansible` language. Released version from Open VSX: 26.8.2.
