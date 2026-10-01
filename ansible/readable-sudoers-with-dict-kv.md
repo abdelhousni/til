@@ -126,6 +126,23 @@ With those three changes, visudo accepted the file, and `sudo -l` listed the new
 - **Where the base can live:** an anchor only works inside the YAML file that defines it. `postgres_sudo_spec_base` is an ordinary variable, so with `dict_kv` it can sit in `group_vars/all.yml` while each group adds its own commands.
 - **What it needs:** `dict_kv` comes from community.general; anchors need nothing.
 
+## The example repository
+
+The series' companion repository, [abdelhousni/ansible-data-shaping-series](https://github.com/abdelhousni/ansible-data-shaping-series/tree/main/01-readable-sudoers-with-dict-kv), holds the vars files above:
+- one item with nine commands;
+- the anchor version;
+- the `dict_kv` version;
+- the flat strings;
+- the safer variant.
+
+A playbook renders each one through the role's own template and validates it with `visudo -cf`, the way the role does, without installing anything. A script prints:
+- the number of lines and the longest line of each file;
+- whether the anchor and `dict_kv` files are byte-identical;
+- visudo's error for the flat strings;
+- the types at each step of the chain.
+
+Its CI runs the script on every push and compares the output with the expected one. The `sudo -l` checks above needed a Rocky Linux 9 host and aren't repeated there.
+
 ## Sources
 
 - `linux-system-roles.sudo` 1.5.0 (commit `035e774`), cloned from [linux-system-roles/sudo](https://github.com/linux-system-roles/sudo): `templates/sudoers.j2` for the line format and the `join` calls, `tasks/main.yml` for `validate: visudo -cf %s`.

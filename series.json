@@ -44,7 +44,8 @@
   "ansible-data-shaping": {
     "title": "Shaping data in Ansible",
     "entries": [
-      "ansible/readable-sudoers-with-dict-kv.md"
+      "ansible/readable-sudoers-with-dict-kv.md",
+      "ansible/lists-and-dicts-dict2items-items2dict-zip.md"
     ]
   }
 }
