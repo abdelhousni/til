@@ -87,6 +87,15 @@ A collection copied into the project brings its code, not its Python dependencie
 
 In the editor, Dworjan notes that the first time the Ansible extension switches to an EE, it pulls the image and copies its plugin docs. Highlighting may need a window reload to catch up.
 
+## The example repository
+
+The series' companion repository has this project, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/07-develop-against-the-production-execution-environment): `ansible-navigator.yml`, `ansible.cfg`, `where.yml` and the `json_query` playbook. Its CI installs ansible-navigator 26.9.0 and repeats each run above on every push:
+- `where.yml` must report the EE's ansible-core 2.21.3, the project's `ansible.cfg`, `DEMO_TOKEN=abc123` and `OTHER_VAR=unset`;
+- the `json_query` playbook must fail with the missing filter;
+- after `community.general` 13.4.0 is installed into `./collections`, it must fail with the `jmespath` message.
+
+On GitHub's runner, which has both Podman and Docker, `container-engine: auto` picked Podman, and the results were the same.
+
 ## Sources
 
 - Alex Dworjan: [Ansible Development Environment Options](https://www.youtube.com/watch?v=SWa8bPLteAA) (2024), [Dev Containers](https://www.youtube.com/watch?v=kOGs6Ntt8JY) (2024) and [Dev Spaces with Execution Environments](https://www.youtube.com/watch?v=Kej_7MeoxmE) (2026), and his [ansible-navigator.yml template](https://github.com/shadowman-lab/Ansible-Development/blob/main/roles/shadowman_dev_server/templates/ansible-navigator.yml.j2).

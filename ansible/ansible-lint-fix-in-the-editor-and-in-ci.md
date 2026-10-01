@@ -59,6 +59,14 @@ write_list:
 
 The extension looks for this file the way ansible-lint does, walking up from the linted file, and passes it with `-c`. So the editor and CI read the same file.
 
+`write_list` in this file does more than limit `--fix`: it turns fixing on for every run. ansible-lint 26.9.0 uses the file's `write_list` whenever the file sets one, with or without `--fix` on the command line. On the sample:
+- **A plain run rewrites the file.** `ansible-lint site.yml`, without `--fix`, applied the formatting fixes and printed `Modified 1 file.` Those violations weren't reported: 13 failures, not 19.
+- **The command line can't turn it off.** `--fix=none` rewrote the file too.
+- **CI still fails, but the log reads oddly.** On a playbook whose only problems were formatting, the run printed `Passed: 0 failure(s)` and exited with 8, `FIXED_VIOLATIONS`. So the job still goes red when a committed file isn't formatted.
+- **In the editor**, the extension lints each file when it's opened, with this file passed by `-c`, so opening a file should apply the fixes even with `autoFixOnSave` off. That follows from the command-line runs; it wasn't tested in the editor.
+
+So set `write_list` in the file only if every ansible-lint run may rewrite files.
+
 ## In CI: pin what runs
 
 Dworjan's example workflow uses `actions/checkout@v4` and `ansible/ansible-lint@main`. Both are moving references:
@@ -123,11 +131,20 @@ Installed locally the same way, that lock gave ansible-lint 26.9.0 with ansible-
 
 Both workflows pass actionlint 1.7.12, and zizmor 1.30.1 reported no findings. These are the two checks this site runs on its own workflows. `persist-credentials: false` stops checkout from leaving the job's token in `.git/config`, which zizmor flags.
 
+## The example repository
+
+The series' companion repository has the sample and its fixed version, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/10-ansible-lint-fix-in-the-editor-and-in-ci). It also has the `.ansible-lint` and `.vscode/settings.json` above, and ansible-lint 26.9.0 locked with hashes. Its CI runs a script on every push that repeats this entry's measurements with the locked ansible-lint:
+- the `--fix` table: 19 and 2, then 6 and 1, 4 and 1, 4 and 0, and a fourth pass that changes nothing;
+- the three `write_list` results above.
+
+It then lints the fixed playbook, which passes the `production` profile, and checks that the run changed no file.
+
 ## Sources
 
 - ansible-lint, [ansible/ansible-lint](https://github.com/ansible/ansible-lint) at `f9364be` (2026-09-24):
   - `docs/autofix.md` and `docs/_autofix_rules.md` for `write_list` and the fixable rules;
   - `action.yml`, and `.config/requirements-lock.txt` at tag v26.9.0.
+- ansible-lint 26.9.0 as installed from PyPI: `cli.py` (`merge_fix_list_config`, where the file's `write_list` wins), `__main__.py` (fixes run whenever `write_list` is set) and `constants.py` (exit code 8, `FIXED_VIOLATIONS`).
 - The Ansible extension, [ansible/vscode-ansible](https://github.com/ansible/vscode-ansible) at `509d149`:
   - `package.json` for the `ansible.validation.lint.*` settings;
   - `packages/ansible-language-server/src/services/ansibleLint.ts`, where `--fix` is appended;

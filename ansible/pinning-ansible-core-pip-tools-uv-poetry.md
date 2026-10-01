@@ -189,6 +189,19 @@ ansible-galaxy collection install -r collections/requirements.yml
 
 This installed community.general 13.4.0. Collections follow semantic versioning, so a range below the next major is safe here. `ansible-galaxy` knows `==`, `!=`, `>=`, `>`, `<=`, `<` and `*`; `~=13.0` failed with `Non integer values in LooseVersion ('~=13.0')`. There is no lock file: community.general's own dependency, `community.library_inventory_filtering_v1`, was installed at whatever version was newest. For fully fixed collections without extra tooling, pin the `ansible` package instead of ansible-core. Each `ansible` release ships a fixed set of collection versions.
 
+## The example repository
+
+The series' companion repository has these files, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/02-pinning-ansible-core-pip-tools-uv-poetry): the base and dev locks for all three tools, the collections file, and the constraint examples. There are two commits:
+- **the first** locks `ansible-core==2.21.0` in each tool;
+- **the second** relaxes it to `~=2.21.0` (`~2.21.0` in Poetry) and runs the three upgrade commands above. `git show` on it shows ansible-core moving to 2.21.4 in every lock and nothing else changing.
+
+A script reruns the constraint table with uv's `--exclude-newer 2026-09-30T00:00:00Z`, which makes uv ignore anything uploaded to PyPI after that moment. So the table comes out the same after new releases. Its CI runs on every push:
+- each lock must still match its input;
+- each lock must install and report ansible-core 2.21.4 and ansible-lint 26.9.0;
+- the constraint table must match;
+- Poetry's `^2.15.9` must still be locked at 2.21.4;
+- the collection range must install a 13.x `community.general`.
+
 ## Sources
 
 - Ansible docs: [release and maintenance](https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html) (versioning, support table) and [installing collections](https://docs.ansible.com/projects/ansible/latest/collections_guide/collections_installing.html) (range identifiers), from [ansible/ansible-documentation](https://github.com/ansible/ansible-documentation).
