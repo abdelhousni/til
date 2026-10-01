@@ -182,6 +182,20 @@ The server was a Rocky Linux 9.8 container running systemd, with sshd, reached b
 
 On a RHEL 9 VM, the capabilities and device permissions are already set that way, and the proxy and the Docker connection don't apply.
 
+## The example repository
+
+The series' companion repository has the playbook and its ADT lock, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/09-shared-dev-server-for-vscode-remote-ssh). The lock is compiled with uv's `--exclude-newer` set to this entry's test date, which makes uv ignore anything uploaded to PyPI after it. So it holds the same 69 packages, hashes included.
+
+Its CI repeats the test on every push, against a Rocky Linux 9 container booted with systemd:
+- it runs the playbook twice, and the second run must report `changed=0`;
+- it checks that lingering is enabled for alice;
+- then, as alice, it checks that `/opt/adt/bin` is on `PATH` once and that ADT has ansible-core 2.21.4;
+- rootless Podman must find the EE through the shared store;
+- `ansible-navigator run` must get the EE's ansible-core 2.21.3. Her own image storage stayed at 196 KB, as above;
+- the machine settings file must point at `/opt/adt/bin/python`.
+
+Most of the test notes above apply there too. One more was needed on GitHub's runner. systemd in the container couldn't start alice's user manager: PAM refused it with *"Authentication service cannot retrieve authentication info"*, for a reason not found. So CI checks that lingering is enabled, then gives alice a runtime directory directly. The repository's README lists each of these adjustments.
+
 ## Sources
 
 - Alex Dworjan, [Dev Server Using VS Code Remote SSH](https://www.youtube.com/watch?v=2QwkRiVHaxU) (2023-12), and his [shadowman-lab/Ansible-Development](https://github.com/shadowman-lab/Ansible-Development) repository at commit `2e3ea6f` (2026-08-19): `ansibleremoteserver.yml`, `ansiblesharedimage.yml`, and the `shadowman_dev_vs_codeserver` and `shadowman_dev_shared_image_store` roles.

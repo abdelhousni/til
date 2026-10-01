@@ -102,6 +102,22 @@ Collections are another matter. `requirements.yml` pins the ones it lists with `
 
 Dworjan's video then points the Ansible extension's `ansible.python.interpreterPath` at the venv's `bin/python`, so that completion and highlighting see the venv's collections. That step wasn't tested here. [Part 6](vscode-ansible-settings-per-repository.md) covers the setting: each machine is expected to set its own, so commit it only where the path is the same for everyone.
 
+## The example repository
+
+The series' companion repository repeats these steps, in [abdelhousni/ansible-development-environment-series](https://github.com/abdelhousni/ansible-development-environment-series/tree/main/12-collection-venv-with-ansible-dev-environment). It holds:
+- the `requirements.yml` with amazon.aws 11.4.0, and the constraints lock above;
+- an `ansible.cfg` with `collections_path = ./collections`;
+- a minimal collection under development, whose `bindep.txt` names a package that doesn't exist.
+
+A script runs ade in a scratch copy and prints what each step did:
+- the venv's versions match the lock;
+- `ansible.cfg` is rewritten;
+- the editable install exits with code 2 and names the missing package;
+- the editable install adds `.venv`, `collections` and `.tox` to `build_ignore`;
+- a filter's output changes after an edit to the plugin, without a reinstall.
+
+Its CI runs the script on every push and compares the output with the expected one.
+
 ## Sources
 
 - `ade --help` and `ade install --help` (26.9.0), and its source: `subcommands/installer.py` for seeding, the ansible-core install and the Python requirements command, `config.py` for `uv pip`, and `cli.py` for the isolation modes.
