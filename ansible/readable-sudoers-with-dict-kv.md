@@ -1,6 +1,6 @@
 # One sudoers line per command with community.general.dict_kv: building a list of dicts from a list of values
 
-First entry in the Shaping data in Ansible series. Ansible variables are YAML data: strings, lists and dictionaries (*dicts*, key–value mappings). *Filters* are the functions after a `|` in a `{{ }}` expression, and they turn one shape of data into another. This entry uses one of them, `community.general.dict_kv`, to make a generated sudoers file readable without repeating the same YAML nine times.
+First entry in the Shaping data in Ansible series. Ansible variables are YAML data: strings, lists and dictionaries (*dicts*, key–value mappings). *Filters* are the functions after a `|` in a `{{ }}` expression, and they turn one shape of data into another. This entry uses one of them, `community.general.dict_kv`, to make a generated sudoers file readable without repeating the same YAML eight times.
 
 `community.general` is a *collection*, a package of extra modules and filters ([this entry](block-rescue-always-error-handling.md) explains collections). Everything below ran with ansible-core 2.21.4, community.general 13.4.0 and the `linux-system-roles.sudo` role 1.5.0, against Rocky Linux 9.8 with sudo 1.9.17p2.
 
@@ -14,15 +14,15 @@ Each item in a file's `user_specifications` becomes one sudoers line. The role's
 {{ spec.users | join(", ") }} {{ spec.hosts | join(", ") }}=({{ spec.operators | join(", ") }}) {{ spec.tags | join(":") }}: {{ spec.commands | join(", ") }}
 ```
 
-So one item with nine `commands` gives one line:
+So one item with eight `commands` gives one line:
 
 ```text
-%postgres ALL=(root) NOPASSWD: /usr/bin/systemctl start postgresql.service, /usr/bin/systemctl stop postgresql.service, /usr/bin/systemctl restart postgresql.service, … /usr/bin/vim /var/lib/pgsql/*
+%postgres ALL=(root) NOPASSWD: /usr/bin/systemctl start postgresql.service, /usr/bin/systemctl stop postgresql.service, /usr/bin/systemctl restart postgresql.service, … /usr/bin/journalctl -u postgresql.service
 ```
 
-That line was 434 characters long. Nine items with one command each give nine lines that are easy to read and to diff, but the YAML then repeats `users`, `hosts`, `operators` and `tags` nine times.
+That line was 403 characters long. Eight items with one command each give eight lines that are easy to read and to diff, but the YAML then repeats `users`, `hosts`, `operators` and `tags` eight times.
 
-## The same nine items, with less YAML
+## The same eight items, with less YAML
 
 **With a YAML anchor.** `&name` marks a value, `*name` refers back to it, and the *merge key* `<<` copies a referenced dict into the current one:
 
@@ -40,7 +40,7 @@ sudo_sudoers_files:
         commands: ["/usr/bin/systemctl start postgresql.service"]
       - <<: *postgres_sudo_spec_base
         commands: ["/usr/bin/systemctl stop postgresql.service"]
-      # … seven more
+      # … six more
 ```
 
 **With `dict_kv`.** The commands become a plain list, and filters build the items:
@@ -61,7 +61,6 @@ postgres_sudo_commands:
   - ["/usr/bin/systemctl reload postgresql.service"]
   - ["/usr/bin/systemctl force-reload postgresql.service"]
   - ["/usr/bin/journalctl -u postgresql.service"]
-  - ["/usr/bin/vim /var/lib/pgsql/*"]
 
 sudo_sudoers_files:
   - path: /etc/sudoers.d/40-postgresql
@@ -83,7 +82,6 @@ Run through the role, both versions wrote byte-identical files:
 %postgres ALL=(root) NOPASSWD: /usr/bin/systemctl reload postgresql.service
 %postgres ALL=(root) NOPASSWD: /usr/bin/systemctl force-reload postgresql.service
 %postgres ALL=(root) NOPASSWD: /usr/bin/journalctl -u postgresql.service
-%postgres ALL=(root) NOPASSWD: /usr/bin/vim /var/lib/pgsql/*
 ```
 
 ## The data types, step by step
@@ -111,13 +109,9 @@ The template runs `commands | join(", ")`. On a list, `join` joins the items. On
 
 The role validates every file with `visudo -cf` before installing it. visudo refused this one, *"expected a fully-qualified path name"*, and the task failed without touching the server. So keep the brackets: `["…"]` makes each `commands` a list of one string.
 
-## Before using these commands as they are
+## Before reusing these rules
 
-Two of these lines give more than they appear to. The sudoers manual's section *Preventing shell escapes* warns that *"Common programs that permit shell escapes include shells (obviously), editors, paginators, mail, and terminal programs"*. A shell started from them runs as root.
-- **`/usr/bin/vim /var/lib/pgsql/*`.** vim can start a shell. And per the manual's *Wildcards in command arguments*, *"a wildcard character such as `?` or `*` will match across word boundaries"*. With this rule, `sudo -l` confirmed that `vim /var/lib/pgsql/data/x /etc/shadow` is allowed. The manual's answer for editing is `sudoedit`, which edits a copy as the user and writes it back: `["sudoedit /var/lib/pgsql/data/postgresql.conf"]`.
-- **`journalctl` and `systemctl status`** show their output through a pager on a terminal, which is the manual's "paginators". Listing them with `--no-pager`, for example `["/usr/bin/journalctl --no-pager -u postgresql.service"]`, avoids it. Users then have to type the command with `--no-pager`, since sudo matches the arguments as written.
-
-With those three changes, visudo accepted the file, and `sudo -l` listed the new rules.
+A sudo rule can give more than the command it names: `journalctl` and `systemctl status` start a pager, for example. [This entry](../linux/sudo-rules-that-hand-out-a-root-shell.md) covers the rules that hand out a root shell, and a CI check that refuses them before they're installed.
 
 ## Anchor or `dict_kv`?
 
@@ -129,11 +123,10 @@ With those three changes, visudo accepted the file, and `sudo -l` listed the new
 ## The example repository
 
 The series' companion repository, [abdelhousni/ansible-data-shaping-series](https://github.com/abdelhousni/ansible-data-shaping-series/tree/main/01-readable-sudoers-with-dict-kv), holds the vars files above:
-- one item with nine commands;
+- one item with eight commands;
 - the anchor version;
 - the `dict_kv` version;
-- the flat strings;
-- the safer variant.
+- the flat strings.
 
 A playbook renders each one through the role's own template and validates it with `visudo -cf`, the way the role does, without installing anything. A script prints:
 - the number of lines and the longest line of each file;
@@ -141,11 +134,10 @@ A playbook renders each one through the role's own template and validates it wit
 - visudo's error for the flat strings;
 - the types at each step of the chain.
 
-Its CI runs the script on every push and compares the output with the expected one. The `sudo -l` checks above needed a Rocky Linux 9 host and aren't repeated there.
+Its CI runs the script on every push and compares the output with the expected one.
 
 ## Sources
 
 - `linux-system-roles.sudo` 1.5.0 (commit `035e774`), cloned from [linux-system-roles/sudo](https://github.com/linux-system-roles/sudo): `templates/sudoers.j2` for the line format and the `join` calls, `tasks/main.yml` for `validate: visudo -cf %s`.
 - community.general 13.4.0, `plugins/filter/dict_kv.py`: the filter's documentation and the `map('dict_kv', …) | map('combine', …)` example.
-- The sudoers manual for sudo 1.9.17p2, `docs/sudoers.mdoc.in` in [sudo-project/sudo](https://github.com/sudo-project/sudo) at tag `v1.9.17p2`: *Preventing shell escapes* and *Wildcards in command arguments*.
-- Every rendered line, error and `sudo -l` result above came from running the role against a Rocky Linux 9.8 container. `vim`, `systemctl` and `journalctl` were empty stand-ins there, since `sudo -l` checks only commands that exist.
+- The rendered lines and visudo's error above came from running the role against a Rocky Linux 9.8 container. The 403-character length came from rendering the role's template with ansible-core 2.21.4, as the example repository does.
