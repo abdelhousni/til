@@ -46,7 +46,8 @@
     "entries": [
       "ansible/readable-sudoers-with-dict-kv.md",
       "ansible/lists-and-dicts-dict2items-items2dict-zip.md",
-      "ansible/combine-recursive-list-merge-postgresql-quadlets.md"
+      "ansible/combine-recursive-list-merge-postgresql-quadlets.md",
+      "ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.md"
     ]
   }
 }
