@@ -40,5 +40,11 @@
       "ansible/scaffolding-with-ansible-creator.md",
       "ansible/collection-venv-with-ansible-dev-environment.md"
     ]
+  },
+  "ansible-data-shaping": {
+    "title": "Shaping data in Ansible",
+    "entries": [
+      "ansible/readable-sudoers-with-dict-kv.md"
+    ]
   }
 }
