@@ -49,7 +49,8 @@
       "ansible/combine-recursive-list-merge-postgresql-quadlets.md",
       "ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.md",
       "ansible/subelements-versus-product-quadlet-volumes-pg-hba.md",
-      "ansible/set-operations-union-difference-proxmox-drift.md"
+      "ansible/set-operations-union-difference-proxmox-drift.md",
+      "ansible/strings-into-structures-df-findmnt-from-json.md"
     ]
   }
 }
