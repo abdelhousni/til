@@ -4,6 +4,8 @@ The [Ansible Vault entry](../ansible/what-ansible-vault-actually-encrypts.md) on
 
 The *state file* is where Terraform records what it created, attribute by attribute, so the next `plan` can compare it with the configuration. The *provider* is the plugin that talks to the actual API (AWS, Proxmox and so on). Both are introduced in [the Terraform/OpenTofu fundamentals entry](what-is-terraform-opentofu-and-how-it-works.md).
 
+The Terraform and OpenTofu behaviour below was checked with Terraform 1.16.4 and OpenTofu 1.13.1.
+
 ## `sensitive` keeps nothing out of state, and Terraform's own docs say so
 
 `sensitive = true` on a variable looks like the HCL cousin of Ansible's [`!vault` tag](../ansible/ansible-vault-podman-secrets.md), which marks one encrypted value in a YAML file — mark the value, and Terraform hides it:
@@ -43,11 +45,17 @@ Per [Terraform's variables docs](https://developer.hashicorp.com/terraform/langu
 
 The tradeoff is that an ephemeral value is contagious and narrowly usable. Referencing one anywhere makes the referencing expression ephemeral too — *"`local.database_password` is implicitly ephemeral because it depends on `var.password`"* — and an ephemeral value can only be used in specific contexts: write-only arguments, other ephemeral variables and outputs, locals, ephemeral resources, provider configuration blocks, and provisioner and `connection` blocks. Anywhere else, Terraform errors rather than silently keeping the value around.
 
+Keeping the value out of plan files has a consequence for a *saved plan*, the file `terraform plan -out=FILE` writes so that `terraform apply FILE` later applies exactly what was reviewed. The plan file doesn't contain the ephemeral value, so the apply needs it again. Without it, Terraform stops: *"The ephemeral input variable "token" was set during the plan phase, and so must also be set during the apply phase."* A CI pipeline that plans in one job and applies in another has to give the variable to both.
+
 ## Write-only arguments, and the workaround their statelessness requires
 
 Ephemeral variables need somewhere to actually land on a resource, and that's what write-only arguments (1.11+) are for — a resource argument whose value Terraform hands to the provider and then discards, never writing it to state or plan:
 
 ```hcl
+ephemeral "random_password" "db_password" {
+  length = 20
+}
+
 resource "aws_db_instance" "example" {
   # ...
   password_wo         = ephemeral.random_password.db_password.result
@@ -72,9 +80,9 @@ None of the above changes a fact that predates ephemeral values entirely. Per [T
 
 ## OpenTofu's actual answer, and what it still doesn't cover
 
-This is the fork divergence the site's [Terraform/OpenTofu fundamentals entry](what-is-terraform-opentofu-and-how-it-works.md) already flagged as a headline feature without detailing it — and it's the one item from that queue worth pulling forward here, since it's squarely a secrets feature rather than a full OpenTofu-only survey (that comparison is its own future entry). Per [OpenTofu 1.7.0's own CHANGELOG](https://github.com/opentofu/opentofu/blob/v1.7/CHANGELOG.md), verbatim: *"We're introducing optional end-to-end encryption for state files."* The encryption method is AES-GCM, a standard authenticated cipher: a tampered file fails to decrypt instead of decrypting to garbage. A *key provider* is where the encryption key comes from. The original ones are a passphrase (stretched into a key with PBKDF2), the AWS and GCP key-management services (KMS), and OpenBao, the open-source fork of HashiCorp Vault. Azure Key Vault has since joined the list. Terraform has no equivalent; this is the actual, load-bearing "handful of things OpenTofu genuinely has" fact, not a footnote. OpenTofu doesn't trade away the rest to get it, either: per its [1.11.0 CHANGELOG](https://github.com/opentofu/opentofu/blob/v1.11/CHANGELOG.md), *"Ephemeral values, ephemeral resources, and write-only attributes are now supported"*, so everything in the two sections above applies to `tofu` as well.
+This is the fork divergence the site's [Terraform/OpenTofu fundamentals entry](what-is-terraform-opentofu-and-how-it-works.md) already flagged as a headline feature without detailing it — and it's the one item from that queue worth pulling forward here, since it's squarely a secrets feature rather than a full OpenTofu-only survey (that comparison is its own future entry). Per [OpenTofu 1.7.0's own CHANGELOG](https://github.com/opentofu/opentofu/blob/v1.7/CHANGELOG.md), verbatim: *"We're introducing optional end-to-end encryption for state files."* The encryption method is AES-GCM, a standard authenticated cipher: a tampered file fails to decrypt instead of decrypting to garbage. A *key provider* is where the encryption key comes from. The original ones are a passphrase (stretched into a key with PBKDF2), the AWS and GCP key-management services (KMS), and OpenBao, the open-source fork of HashiCorp Vault. Azure Key Vault and OVHcloud KMS have since joined the list, and an *external* key provider, a program of your own that hands OpenTofu the key, covers anything else. The same `encryption` block can encrypt saved plan files too, which matters because a plan file holds the same attribute values as state. Terraform has no equivalent; this is the actual, load-bearing "handful of things OpenTofu genuinely has" fact, not a footnote. OpenTofu doesn't trade away the rest to get it, either: per its [1.11.0 CHANGELOG](https://github.com/opentofu/opentofu/blob/v1.11/CHANGELOG.md), *"Ephemeral values, ephemeral resources, and write-only attributes are now supported"*, so everything in the two sections above applies to `tofu` as well.
 
-Even here, OpenTofu's own docs are careful about exactly what the feature buys, in a caveat that lands in the same place as everything above: *"OpenTofu does not and cannot protect the sensitive values in the state file from the person running the `tofu` command."* [State encryption](https://github.com/opentofu/opentofu/blob/main/website/docs/language/state/encryption.mdx) closes the stolen-file threat — an attacker who gets the state file off disk or out of a bucket gets ciphertext. It does nothing about the operator who is supposed to be running `tofu plan` in the first place, which is exactly the boundary Ansible's own vault guide draws around "data at rest" too: a promise about a file sitting still, not about anyone legitimately allowed to touch it.
+Even here, OpenTofu's own docs are careful about exactly what the feature buys, in a caveat that lands in the same place as everything above: *"OpenTofu does not and cannot protect the sensitive values in the state file from the person running the `tofu` command."* [State encryption](https://github.com/opentofu/opentofu/blob/main/website/docs/language/state/encryption.mdx) closes the stolen-file threat — an attacker who gets the state file off disk or out of a bucket gets ciphertext. It does nothing about the operator who is supposed to be running `tofu plan` in the first place, which is exactly the boundary Ansible's own vault guide draws around "data at rest" too: a promise about a file sitting still, not about anyone legitimately allowed to touch it. The same page names two more limits: encryption doesn't protect against data loss, a damaged state file, nor against a *replay attack*, where someone gets you to run an older state or plan file that still decrypts.
 
 ## Packer has no state file, and its `sensitive` flag says so by what it doesn't claim
 
