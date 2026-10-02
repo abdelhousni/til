@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->96<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->97<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -37,6 +37,7 @@ Browse these TILs at https://til.housni.eu/
 * [Merging dicts with combine: PostgreSQL settings in layers, Quadlet units from a base](https://til.housni.eu/ansible/combine-recursive-list-merge-postgresql-quadlets.html) - 2026-10-01
 * [Picking from a list of dicts: selectattr, rejectattr and map on Proxmox guests and host facts](https://til.housni.eu/ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.html) - 2026-10-02
 * [subelements versus product: Quadlet volume directories and PostgreSQL pg_hba rules](https://til.housni.eu/ansible/subelements-versus-product-quadlet-volumes-pg-hba.html) - 2026-10-02
+* [Set operations on lists: declared Proxmox guests against the cluster, and why the order changes between runs](https://til.housni.eu/ansible/set-operations-union-difference-proxmox-drift.html) - 2026-10-02
 
 ## github-pages
 
