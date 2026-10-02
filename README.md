@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->101<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->102<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -42,6 +42,7 @@ Browse these TILs at https://til.housni.eu/
 * [default, default(omit), mandatory and ternary: sudo rules that don't set every field](https://til.housni.eu/ansible/default-omit-mandatory-ternary-sudo-rules.html) - 2026-10-02
 * [Forcing types: extra vars arrive as strings, and ansible-core 2.19 stopped guessing](https://til.housni.eu/ansible/forcing-types-extra-vars-conditionals.html) - 2026-10-02
 * [Writing data out: a Caddy JSON configuration with to_nice_json, sort_keys and indent](https://til.housni.eu/ansible/writing-data-out-to-nice-json-caddy.html) - 2026-10-03
+* [Data from other hosts: pg_hba rules from the app servers' facts, with hostvars and extract](https://til.housni.eu/ansible/data-from-other-hosts-extract-hostvars-pg-hba.html) - 2026-10-03
 
 ## github-pages
 
