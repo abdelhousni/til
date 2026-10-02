@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->105<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->106<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -46,6 +46,7 @@ Browse these TILs at https://til.housni.eu/
 * [groupby, groupby_as_dict and lists_mergeby: Proxmox guests by node, and joined to what the team declares](https://til.housni.eu/ansible/groupby-lists-mergeby-proxmox-guests.html) - 2026-10-03
 * [json_query or native filters: part 4's Proxmox selections written in JMESPath](https://til.housni.eu/ansible/json-query-jmespath-versus-native-filters.html) - 2026-10-03
 * [Network data with ansible.utils: checking pg_hba subnets and numbering Proxmox guests](https://til.housni.eu/ansible/ansible-utils-ipaddr-pg-hba-subnets-proxmox.html) - 2026-10-03
+* [set_fact in a loop or one expression: part 11's pg_hba rules, built both ways](https://til.housni.eu/ansible/set-fact-loop-or-one-expression-pg-hba.html) - 2026-10-03
 
 ## github-pages
 
