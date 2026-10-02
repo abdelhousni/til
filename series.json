@@ -51,7 +51,8 @@
       "ansible/subelements-versus-product-quadlet-volumes-pg-hba.md",
       "ansible/set-operations-union-difference-proxmox-drift.md",
       "ansible/strings-into-structures-df-findmnt-from-json.md",
-      "ansible/default-omit-mandatory-ternary-sudo-rules.md"
+      "ansible/default-omit-mandatory-ternary-sudo-rules.md",
+      "ansible/forcing-types-extra-vars-conditionals.md"
     ]
   }
 }
