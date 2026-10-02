@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->95<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->96<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -36,6 +36,7 @@ Browse these TILs at https://til.housni.eu/
 * [Lists and dicts back and forth: dict2items, items2dict and zip on role, Foreman and Proxmox data](https://til.housni.eu/ansible/lists-and-dicts-dict2items-items2dict-zip.html) - 2026-10-01
 * [Merging dicts with combine: PostgreSQL settings in layers, Quadlet units from a base](https://til.housni.eu/ansible/combine-recursive-list-merge-postgresql-quadlets.html) - 2026-10-01
 * [Picking from a list of dicts: selectattr, rejectattr and map on Proxmox guests and host facts](https://til.housni.eu/ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.html) - 2026-10-02
+* [subelements versus product: Quadlet volume directories and PostgreSQL pg_hba rules](https://til.housni.eu/ansible/subelements-versus-product-quadlet-volumes-pg-hba.html) - 2026-10-02
 
 ## github-pages
 
