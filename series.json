@@ -53,7 +53,8 @@
       "ansible/strings-into-structures-df-findmnt-from-json.md",
       "ansible/default-omit-mandatory-ternary-sudo-rules.md",
       "ansible/forcing-types-extra-vars-conditionals.md",
-      "ansible/writing-data-out-to-nice-json-caddy.md"
+      "ansible/writing-data-out-to-nice-json-caddy.md",
+      "ansible/data-from-other-hosts-extract-hostvars-pg-hba.md"
     ]
   }
 }
