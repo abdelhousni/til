@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->103<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->104<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -44,6 +44,7 @@ Browse these TILs at https://til.housni.eu/
 * [Writing data out: a Caddy JSON configuration with to_nice_json, sort_keys and indent](https://til.housni.eu/ansible/writing-data-out-to-nice-json-caddy.html) - 2026-10-03
 * [Data from other hosts: pg_hba rules from the app servers' facts, with hostvars and extract](https://til.housni.eu/ansible/data-from-other-hosts-extract-hostvars-pg-hba.html) - 2026-10-03
 * [groupby, groupby_as_dict and lists_mergeby: Proxmox guests by node, and joined to what the team declares](https://til.housni.eu/ansible/groupby-lists-mergeby-proxmox-guests.html) - 2026-10-03
+* [json_query or native filters: part 4's Proxmox selections written in JMESPath](https://til.housni.eu/ansible/json-query-jmespath-versus-native-filters.html) - 2026-10-03
 
 ## github-pages
 
