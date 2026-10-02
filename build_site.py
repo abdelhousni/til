@@ -156,6 +156,7 @@ TOPIC_TEMPLATE = """<!doctype html>
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
+<link rel="alternate" type="application/atom+xml" title="{topic} - {site_title}" href="feed.atom">
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 <link rel="describedby" href="../llms.txt">
 </head>
@@ -163,7 +164,7 @@ TOPIC_TEMPLATE = """<!doctype html>
 <header><a href="../index.html">&larr; All TILs</a></header>
 <main>
 <h1>{topic}</h1>
-<p class="meta">{count} TIL{plural} filed under {topic}.</p>
+<p class="meta">{count} TIL{plural} filed under {topic}. <a href="feed.atom">Atom feed</a> for this topic.</p>
 {body}
 </main>
 {analytics_script}</body>
@@ -201,9 +202,9 @@ Sitemap: {site_url}/sitemap.xml
 FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 <title>{title}</title>
-<link href="{site_url}/feed.atom" rel="self"/>
-<link href="{site_url}/"/>
-<id>{feed_id}/</id>
+<link href="{self_url}" rel="self"/>
+<link href="{alternate_url}"/>
+<id>{feed_id}</id>
 <updated>{updated}</updated>
 <author>
 <name>{author}</name>
@@ -502,6 +503,7 @@ def build_llms_txt(all_entries, topics, series_nav):
         "",
         f"- [Homepage]({SITE_URL}/): the rendered site, with the same entries grouped by topic.",
         f"- [Atom feed]({SITE_URL}/feed.atom): stamped by last modification, not first publication.",
+        f"- Topic feeds: each topic has its own Atom feed at `{SITE_URL}/<topic>/feed.atom`, linked from its index page.",
         f"- [Sitemap]({SITE_URL}/sitemap.xml): every HTML page, including the per-topic indexes.",
         "- [Source repository](https://github.com/abdelhousni/til): the markdown these pages are built from.",
         "",
@@ -509,7 +511,11 @@ def build_llms_txt(all_entries, topics, series_nav):
     return "\n".join(lines)
 
 
-def build_feed(entries):
+def build_feed(entries, title=SITE_TITLE, path=""):
+    # path is "" for the whole site, or "<topic>/" for a topic's own feed.
+    # The site feed keeps its id on FEED_ID_BASE (see above); topic feeds
+    # were first published on the custom domain, so their id is the topic
+    # page's URL there.
     # Sorted and stamped by last_modified, not creation date -- an edited
     # older entry should surface near the top and look "updated" to
     # subscribers, the same way any other feed behaves.
@@ -525,7 +531,16 @@ def build_feed(entries):
         )
         for e in entries
     )
-    return FEED_TEMPLATE.format(title=SITE_TITLE, site_url=SITE_URL, feed_id=FEED_ID_BASE, author=SITE_AUTHOR, updated=updated, entries=entry_xml)
+    return FEED_TEMPLATE.format(
+        title=escape(title),
+        self_url=f"{SITE_URL}/{path}feed.atom",
+        alternate_url=f"{SITE_URL}/{path}",
+        feed_id=f"{SITE_URL}/{path}" if path else f"{FEED_ID_BASE}/",
+        site_url=SITE_URL,
+        author=SITE_AUTHOR,
+        updated=updated,
+        entries=entry_xml,
+    )
 
 
 ORDINALS = [
@@ -838,6 +853,8 @@ def main():
                 analytics_script=ANALYTICS_SCRIPT,
             )
         )
+        topic_entries = [e for e in all_entries if e["topic"] == topic]
+        (site / topic / "feed.atom").write_text(build_feed(topic_entries, f"{topic} - {SITE_TITLE}", f"{topic}/"))
 
     (site / "feed.atom").write_text(build_feed(all_entries))
     (site / "sitemap.xml").write_text(build_sitemap(all_entries, topics))
