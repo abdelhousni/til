@@ -55,7 +55,8 @@
       "ansible/forcing-types-extra-vars-conditionals.md",
       "ansible/writing-data-out-to-nice-json-caddy.md",
       "ansible/data-from-other-hosts-extract-hostvars-pg-hba.md",
-      "ansible/groupby-lists-mergeby-proxmox-guests.md"
+      "ansible/groupby-lists-mergeby-proxmox-guests.md",
+      "ansible/json-query-jmespath-versus-native-filters.md"
     ]
   }
 }
