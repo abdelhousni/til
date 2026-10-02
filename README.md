@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->97<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->98<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -38,6 +38,7 @@ Browse these TILs at https://til.housni.eu/
 * [Picking from a list of dicts: selectattr, rejectattr and map on Proxmox guests and host facts](https://til.housni.eu/ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.html) - 2026-10-02
 * [subelements versus product: Quadlet volume directories and PostgreSQL pg_hba rules](https://til.housni.eu/ansible/subelements-versus-product-quadlet-volumes-pg-hba.html) - 2026-10-02
 * [Set operations on lists: declared Proxmox guests against the cluster, and why the order changes between runs](https://til.housni.eu/ansible/set-operations-union-difference-proxmox-drift.html) - 2026-10-02
+* [Strings into structures: df with split and regex_findall, findmnt with from_json](https://til.housni.eu/ansible/strings-into-structures-df-findmnt-from-json.html) - 2026-10-02
 
 ## github-pages
 
