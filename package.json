@@ -1,0 +1,13 @@
+{
+  "name": "til-checks",
+  "private": true,
+  "description": "Node tooling for the site's checks: check_mermaid.mjs",
+  "type": "module",
+  "scripts": {
+    "check-mermaid": "node check_mermaid.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1",
+    "mermaid": "11.17.2"
+  }
+}

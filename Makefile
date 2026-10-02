@@ -10,7 +10,7 @@ VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 PORT ?= 8000
 
-.PHONY: help venv build serve check check-external readme preflight clean clean-all check-history warn-untracked
+.PHONY: help venv build serve check check-external check-mermaid readme preflight clean clean-all check-history warn-untracked
 .DEFAULT_GOAL := help
 .NOTPARALLEL:
 
@@ -36,8 +36,15 @@ serve: build ## Build, then serve _site/ on localhost (override PORT=)
 	@echo
 	$(VENV_PYTHON) -m http.server $(PORT) -d _site
 
-check: build ## Build and check internal links only (fast)
+check: build check-mermaid ## Build, check internal links and Mermaid syntax (fast)
 	$(VENV_PYTHON) check_links.py
+
+node_modules: package.json package-lock.json
+	npm ci --no-audit --no-fund
+	@touch node_modules
+
+check-mermaid: node_modules ## Parse every Mermaid diagram with Mermaid's own parser
+	node check_mermaid.mjs
 
 check-external: build ## Build and check external links too (slow; this is the deploy gate)
 	$(VENV_PYTHON) check_links.py --external
@@ -45,15 +52,15 @@ check-external: build ## Build and check external links too (slow; this is the d
 readme: check-history warn-untracked $(VENV_PYTHON) ## Regenerate the README index in place
 	$(VENV_PYTHON) update_readme.py --rewrite
 
-preflight: readme check-external ## Everything CI runs, in CI's order
+preflight: readme check-external check-mermaid ## Everything CI runs, in CI's order
 	@echo
 	@echo "  Preflight clean -- this is what the deploy will do."
 
 clean: ## Remove the built site
 	rm -rf _site
 
-clean-all: clean ## Remove the built site and the virtualenv
-	rm -rf $(VENV)
+clean-all: clean ## Remove the built site, the virtualenv and node_modules
+	rm -rf $(VENV) node_modules
 
 # Entry dates come from "git log --follow --diff-filter=A", so history has to
 # be there. CI sets fetch-depth: 0 for exactly this reason. A shallow clone
