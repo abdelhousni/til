@@ -50,7 +50,8 @@
       "ansible/selectattr-rejectattr-map-proxmox-guests-and-facts.md",
       "ansible/subelements-versus-product-quadlet-volumes-pg-hba.md",
       "ansible/set-operations-union-difference-proxmox-drift.md",
-      "ansible/strings-into-structures-df-findmnt-from-json.md"
+      "ansible/strings-into-structures-df-findmnt-from-json.md",
+      "ansible/default-omit-mandatory-ternary-sudo-rules.md"
     ]
   }
 }
