@@ -290,6 +290,25 @@ LIST_ITEM_RE = re.compile(r"^ {0,3}(?:[-*+]|\d+[.)])[ \t]+\S")
 FENCE_RE = re.compile(r"^ {0,3}(```|~~~)")
 
 
+TABLE_CELL_RE = re.compile(r"<(td|th)([^>]*)>(.*?)</\1>", re.S)
+TABLE_CELL_CODE_RE = re.compile(r"<code>(.*?)</code>", re.S)
+
+
+def unescape_pipes_in_table_code(body):
+    # A table cell can only hold a literal pipe as "\|". GitHub's table
+    # parser drops that backslash even inside code spans; Python-Markdown
+    # keeps it, so `a \| b` in a cell rendered as "a \| b". Only code in
+    # table cells is touched: elsewhere a "\|" is meant, as in a grep pattern.
+    def fix_code(code):
+        return "<code>" + code.group(1).replace("\\|", "|") + "</code>"
+
+    def fix_cell(cell):
+        tag, attrs, content = cell.groups()
+        return f"<{tag}{attrs}>{TABLE_CELL_CODE_RE.sub(fix_code, content)}</{tag}>"
+
+    return TABLE_CELL_RE.sub(fix_cell, body)
+
+
 def separate_lists_from_paragraphs(text):
     """Insert a blank line before a list that directly follows a paragraph.
 
@@ -733,10 +752,12 @@ def main():
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
             lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
         )
-        html_body = markdown.markdown(
-            separate_lists_from_paragraphs(body_text),
-            extensions=["fenced_code", "tables", "codehilite"],
-            extension_configs={"codehilite": {"guess_lang": False}},
+        html_body = unescape_pipes_in_table_code(
+            markdown.markdown(
+                separate_lists_from_paragraphs(body_text),
+                extensions=["fenced_code", "tables", "codehilite"],
+                extension_configs={"codehilite": {"guess_lang": False}},
+            )
         )
         url = f"{SITE_URL}/{topic}/{slug}.html"
         description = attr_escape(plain_text_summary(html_body))
