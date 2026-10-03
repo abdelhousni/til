@@ -60,8 +60,8 @@ Browse these TILs at https://til.housni.eu/
 * [Secrets in the inventory: vault.yml next to vars.yml, with plaintext aliases](https://til.housni.eu/ansible/inventory-secrets-vault-yml-aliases.html) - 2026-10-03
 * [--limit in practice: every play, run_once per batch, and the facts of hosts left out](https://til.housni.eu/ansible/inventory-limit-in-practice.html) - 2026-10-03
 * [Let the inventory be the loop: delegate_to instead of a list of hosts](https://til.housni.eu/ansible/inventory-is-the-loop-delegate-to.html) - 2026-10-03
+* [Several inventories at once: -i dir/, load order, and which source wins](https://til.housni.eu/ansible/inventory-several-sources-load-order.html) - 2026-10-03
 * [A single source of truth: inventory plugins, enable_plugins and auto](https://til.housni.eu/ansible/inventory-plugins-single-source-of-truth.html) - 2026-10-03
-* [Several inventories at once: -i dir/, load order, and which source wins](https://til.housni.eu/ansible/inventory-several-sources-load-order.html) - unknown
 
 ## github-pages
 
