@@ -79,7 +79,8 @@
       "ansible/inventory-limit-in-practice.md",
       "ansible/inventory-is-the-loop-delegate-to.md",
       "ansible/inventory-several-sources-load-order.md",
-      "ansible/inventory-plugins-single-source-of-truth.md"
+      "ansible/inventory-plugins-single-source-of-truth.md",
+      "ansible/inventory-writing-a-plugin-trust-order.md"
     ]
   }
 }
