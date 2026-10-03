@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->123<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->124<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -64,6 +64,7 @@ Browse these TILs at https://til.housni.eu/
 * [A single source of truth: inventory plugins, enable_plugins and auto](https://til.housni.eu/ansible/inventory-plugins-single-source-of-truth.html) - 2026-10-03
 * [The Proxmox inventory plugin: guests as hosts, filtered by tag and status](https://til.housni.eu/ansible/inventory-proxmox-plugin-guests-as-hosts.html) - 2026-10-03
 * [ansible.builtin.constructed: keyed_groups, groups and compose on top of another source](https://til.housni.eu/ansible/inventory-constructed-keyed-groups-compose.html) - 2026-10-03
+* [When the inventory cache lies: stale hosts, cache_timeout and --flush-cache](https://til.housni.eu/ansible/inventory-cache-stale-data.html) - 2026-10-03
 
 ## github-pages
 
