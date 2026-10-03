@@ -69,7 +69,8 @@
       "ansible/inventory-directory-group-vars-per-role.md",
       "ansible/inventory-ini-or-yaml-hosts-file.md",
       "ansible/inventory-connection-variables-ssh-docker-local.md",
-      "ansible/inventory-environments-directories-or-groups.md"
+      "ansible/inventory-environments-directories-or-groups.md",
+      "ansible/inventory-checking-with-ansible-inventory.md"
     ]
   }
 }
