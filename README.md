@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->116<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->117<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -57,6 +57,7 @@ Browse these TILs at https://til.housni.eu/
 * [Facts or variables: what Ansible discovers (as-is) against what you declare (to-be)](https://til.housni.eu/ansible/inventory-facts-or-variables-as-is-to-be.html) - 2026-10-03
 * [Where a variable should live: role defaults, group_vars, host_vars, and extra vars as safety switches](https://til.housni.eu/ansible/inventory-where-a-variable-should-live.html) - 2026-10-03
 * [Inventory precedence: all, parent, child, host, and what ansible_group_priority really does](https://til.housni.eu/ansible/inventory-precedence-depth-and-group-priority.html) - 2026-10-03
+* [Secrets in the inventory: vault.yml next to vars.yml, with plaintext aliases](https://til.housni.eu/ansible/inventory-secrets-vault-yml-aliases.html) - 2026-10-03
 
 ## github-pages
 
