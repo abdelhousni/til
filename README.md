@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->112<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->114<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -53,6 +53,8 @@ Browse these TILs at https://til.housni.eu/
 * [INI or YAML for the hosts file, and why variables stay out of both](https://til.housni.eu/ansible/inventory-ini-or-yaml-hosts-file.html) - 2026-10-03
 * [Connection variables: ansible_host, ansible_port, ansible_user and ansible_connection, with ssh, docker and local](https://til.housni.eu/ansible/inventory-connection-variables-ssh-docker-local.html) - 2026-10-03
 * [Environments in an Ansible inventory: separate directories, or prod and staging as groups](https://til.housni.eu/ansible/inventory-environments-directories-or-groups.html) - 2026-10-03
+* [Checking what Ansible sees: ansible-inventory --graph, --list and --host](https://til.housni.eu/ansible/inventory-checking-with-ansible-inventory.html) - 2026-10-03
+* [Facts or variables: what Ansible discovers (as-is) against what you declare (to-be)](https://til.housni.eu/ansible/inventory-facts-or-variables-as-is-to-be.html) - 2026-10-03
 
 ## github-pages
 
