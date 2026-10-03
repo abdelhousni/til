@@ -74,7 +74,8 @@
       "ansible/inventory-facts-or-variables-as-is-to-be.md",
       "ansible/inventory-where-a-variable-should-live.md",
       "ansible/inventory-precedence-depth-and-group-priority.md",
-      "ansible/inventory-secrets-vault-yml-aliases.md"
+      "ansible/inventory-secrets-vault-yml-aliases.md",
+      "ansible/targeting-hosts-static-and-dynamic-inventory.md"
     ]
   }
 }
