@@ -15,6 +15,7 @@ and, further down, *"role vars (defined in `vars/main.yml`) represent constants 
 |---|---|---|
 | role `defaults/main.yml` | 2 | every setting the role reads, with a safe value |
 | inventory `group_vars/` | 6 | the desired state of a group |
+| `group_vars/` beside the playbook | 7 | nothing, if the inventory is the source of truth |
 | inventory `host_vars/` | 9 | the desired state of one host |
 | play `vars:` | 12 | nothing, by the good practices |
 | role `vars/main.yml` | 15 | the role's own constants, never something a user sets |
@@ -61,6 +62,17 @@ The tidy version moves every value:
 
 It rendered the same values, on the standard port, and `ansible-inventory --host db1` now listed them: `"pgconf_max_connections": 200, "pgconf_shared_buffers": "1GB"`. Whoever reads the inventory reads the configuration.
 
+## group_vars beside the playbook, or inside a role
+
+`group_vars/` isn't only read in the inventory. Ansible also reads a `group_vars/` directory next to the playbook, in the project's root folder when the playbook sits there, and ranks it just above the inventory's: playbook `group_vars/*` is 7th in the list, inventory `group_vars/*` 6th, and the same holds for `host_vars/`. The inventory guide, *Organizing host and group variables*, says it outright: *"the variables that Ansible sources relative to the playbook override the variables that it sources relative to the inventory source."*
+
+With `pgconf_max_connections: 250` in a `group_vars/postgresql/` directory beside the tidy playbook, and 200 in the inventory's:
+- **the host got 250**, from the playbook side;
+- **`ansible-inventory --host db1` still said 200**: it doesn't know which playbook will run, so it reads only the inventory;
+- **`--playbook-dir` with the playbook's directory showed 250**, as item 6 found.
+
+So a `group_vars/` beside the playbook is a second, stronger source of desired state that the inventory doesn't show. In a project where the inventory directory and the playbooks are separate, keep `group_vars/` and `host_vars/` in the inventory only. A role has no `group_vars/` of its own: a `group_vars/all/` directory inside `roles/pgconf/`, setting 999, was never read. Settings a role reads go in its `defaults/`.
+
 ## Extra vars as safety switches
 
 *Extra vars*, the variables given with `-e` on the command line, win over everything, rank 22. That makes them dangerous for desired state, which then exists only for one run, and useful for one thing the good practices name: a switch that protects a destructive step, *"something like `are_you_really_really_sure: true/false`"*. The role's defaults include `pgconf_allow_restart: false`, and its task reported *"restart skipped: pgconf_allow_restart is false"* on a normal run and *"restart allowed"* with `-e pgconf_allow_restart=true`. The role tests it with `| bool`: an extra var given as `key=value` arrives as the string `"true"`, which [part 9 of the data-shaping series](forcing-types-extra-vars-conditionals.md) explains.
@@ -77,7 +89,7 @@ Role vars rank 15, above every inventory variable and below extra vars. The docs
 ## In short
 
 - **Settings a role reads:** `defaults/main.yml`, every one, with a safe value.
-- **Desired state:** `group_vars/` and `host_vars/`, where `ansible-inventory` shows it.
+- **Desired state:** `group_vars/` and `host_vars/` in the inventory, where `ansible-inventory` shows it; not beside the playbook, where they silently win.
 - **Not in the playbook:** play `vars:` and `set_fact` hide settings from the inventory and override it.
 - **Role `vars/`:** constants only; a user-facing value there silently beats the inventory.
 - **Extra vars:** safety switches and troubleshooting, tested with `| bool`.
@@ -89,5 +101,5 @@ The series' companion repository, [abdelhousni/ansible-inventory-series](https:/
 ## Sources
 
 - Red Hat Community of Practice, [automation good practices](https://github.com/redhat-cop/automation-good-practices): `inventories/README.adoc`, *Restrict your usage of variable types* and *Prefer inventory variables over extra vars to describe the desired state*; `roles/README.adoc`, on the `__` prefix for internal variables.
-- Ansible docs, from [ansible/ansible-documentation](https://github.com/ansible/ansible-documentation): `playbook_guide/playbooks_variables.rst` (*Understanding variable precedence*).
+- Ansible docs, from [ansible/ansible-documentation](https://github.com/ansible/ansible-documentation): `playbook_guide/playbooks_variables.rst` (*Understanding variable precedence*) and `inventory_guide/intro_inventory.rst` (*Organizing host and group variables*).
 - Every result above came from ansible-core 2.21.4 on 2026-10-03, on the local machine.
