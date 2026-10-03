@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->129<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->130<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -70,6 +70,7 @@ Browse these TILs at https://til.housni.eu/
 * [group_by: groups from facts, built during the run](https://til.housni.eu/ansible/inventory-group-by.html) - 2026-10-03
 * [Writing an inventory plugin, after the trust order](https://til.housni.eu/ansible/inventory-writing-a-plugin-trust-order.html) - 2026-10-03
 * [Inventory in AAP: sources from a project, smart and constructed inventories](https://til.housni.eu/ansible/inventory-in-aap-sources-smart-constructed.html) - 2026-10-03
+* [Testing the inventory in CI, with a JSON Schema and policy checks](https://til.housni.eu/ansible/inventory-testing-in-ci-json-schema.html) - 2026-10-03
 
 ## github-pages
 
