@@ -6,13 +6,13 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->120<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->121<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
 
 * [Starting an Ansible role project with uv for the venv](https://til.housni.eu/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
-* [Using the Foreman/Satellite dynamic inventory plugin](https://til.housni.eu/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
+* [The Foreman/Satellite dynamic inventory plugin](https://til.housni.eu/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
 * [Targeting hosts with patterns, --limit and constructed groups](https://til.housni.eu/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
 * [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://til.housni.eu/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://til.housni.eu/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
@@ -60,7 +60,8 @@ Browse these TILs at https://til.housni.eu/
 * [Secrets in the inventory: vault.yml next to vars.yml, with plaintext aliases](https://til.housni.eu/ansible/inventory-secrets-vault-yml-aliases.html) - 2026-10-03
 * [--limit in practice: every play, run_once per batch, and the facts of hosts left out](https://til.housni.eu/ansible/inventory-limit-in-practice.html) - 2026-10-03
 * [Let the inventory be the loop: delegate_to instead of a list of hosts](https://til.housni.eu/ansible/inventory-is-the-loop-delegate-to.html) - 2026-10-03
-* [ansible.builtin.constructed: keyed_groups, groups and compose on top of another source](https://til.housni.eu/ansible/inventory-constructed-keyed-groups-compose.html) - unknown
+* [Several inventories at once: -i dir/, load order, and which source wins](https://til.housni.eu/ansible/inventory-several-sources-load-order.html) - 2026-10-03
+* [A single source of truth: inventory plugins, enable_plugins and auto](https://til.housni.eu/ansible/inventory-plugins-single-source-of-truth.html) - 2026-10-03
 
 ## github-pages
 
