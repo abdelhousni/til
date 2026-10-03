@@ -67,7 +67,8 @@
     "entries": [
       "ansible/inventory-hosts-groups-all-ungrouped.md",
       "ansible/inventory-directory-group-vars-per-role.md",
-      "ansible/inventory-ini-or-yaml-hosts-file.md"
+      "ansible/inventory-ini-or-yaml-hosts-file.md",
+      "ansible/inventory-connection-variables-ssh-docker-local.md"
     ]
   }
 }
