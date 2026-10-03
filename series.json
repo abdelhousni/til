@@ -65,7 +65,8 @@
   "ansible-inventory": {
     "title": "Ansible inventory from scratch",
     "entries": [
-      "ansible/inventory-hosts-groups-all-ungrouped.md"
+      "ansible/inventory-hosts-groups-all-ungrouped.md",
+      "ansible/inventory-directory-group-vars-per-role.md"
     ]
   }
 }
