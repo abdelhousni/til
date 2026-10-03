@@ -22,6 +22,35 @@ and, further down, *"role vars (defined in `vars/main.yml`) represent constants 
 | `set_fact`, `register` | 19 | values computed during the run |
 | extra vars, `-e` | 22 | safety switches and troubleshooting, not desired state |
 
+The same eight places as a ladder: each rung overrides every rung below it, and the colour says what belongs there.
+
+```mermaid
+flowchart BT
+    R2["2 · role defaults/main.yml<br/>every setting, with a safe value"]
+    R6["6 · inventory group_vars/<br/>desired state of a group"]
+    R7["7 · group_vars/ beside the playbook<br/>nothing"]
+    R9["9 · inventory host_vars/<br/>desired state of one host"]
+    R12["12 · play vars:<br/>nothing"]
+    R15["15 · role vars/main.yml<br/>the role's constants"]
+    R19["19 · set_fact, register<br/>computed during the run"]
+    R22["22 · extra vars, -e<br/>safety switches"]
+    R2 -->|overridden by| R6 --> R7 --> R9 --> R12 --> R15 --> R19 --> R22
+    classDef defaults fill:#e8f0fe,stroke:#4a6fa5,color:#1a1a1a
+    classDef desired fill:#d9f2e3,stroke:#2e8b57,color:#1a1a1a
+    classDef avoid fill:#eeeeee,stroke:#999999,color:#555555,stroke-dasharray:4 3
+    classDef constant fill:#fff1d6,stroke:#c98a00,color:#1a1a1a
+    classDef runtime fill:#e6e0f8,stroke:#6a5acd,color:#1a1a1a
+    classDef switch fill:#fde0dc,stroke:#c0392b,color:#1a1a1a
+    class R2 defaults
+    class R6,R9 desired
+    class R7,R12 avoid
+    class R15 constant
+    class R19 runtime
+    class R22 switch
+```
+
+Green is where desired state lives; grey, dashed, is what the good practices leave empty; orange sits above the inventory, which is why a role's `vars/` can't be overridden from it (below).
+
 ## A playbook with its settings in the wrong places
 
 The messy version keeps its settings in the play, a `set_fact` and the command line:
