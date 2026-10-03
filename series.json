@@ -77,7 +77,8 @@
       "ansible/inventory-secrets-vault-yml-aliases.md",
       "ansible/targeting-hosts-static-and-dynamic-inventory.md",
       "ansible/inventory-limit-in-practice.md",
-      "ansible/inventory-is-the-loop-delegate-to.md"
+      "ansible/inventory-is-the-loop-delegate-to.md",
+      "ansible/inventory-constructed-keyed-groups-compose.md"
     ]
   }
 }
