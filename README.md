@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->107<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->108<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -48,6 +48,7 @@ Browse these TILs at https://til.housni.eu/
 * [Network data with ansible.utils: checking pg_hba subnets and numbering Proxmox guests](https://til.housni.eu/ansible/ansible-utils-ipaddr-pg-hba-subnets-proxmox.html) - 2026-10-03
 * [set_fact in a loop or one expression: part 11's pg_hba rules, built both ways](https://til.housni.eu/ansible/set-fact-loop-or-one-expression-pg-hba.html) - 2026-10-03
 * [Text on lists: building a systemd ExecStart line with regex_replace, join and replace](https://til.housni.eu/ansible/execstart-lines-regex-replace-join-systemd.html) - 2026-10-03
+* [Hosts and groups: the two groups every inventory has, all and ungrouped](https://til.housni.eu/ansible/inventory-hosts-groups-all-ungrouped.html) - 2026-10-03
 
 ## github-pages
 
