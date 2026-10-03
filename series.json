@@ -58,7 +58,8 @@
       "ansible/groupby-lists-mergeby-proxmox-guests.md",
       "ansible/json-query-jmespath-versus-native-filters.md",
       "ansible/ansible-utils-ipaddr-pg-hba-subnets-proxmox.md",
-      "ansible/set-fact-loop-or-one-expression-pg-hba.md"
+      "ansible/set-fact-loop-or-one-expression-pg-hba.md",
+      "ansible/execstart-lines-regex-replace-join-systemd.md"
     ]
   }
 }
