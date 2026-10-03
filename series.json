@@ -88,7 +88,8 @@
       "ansible/inventory-add-host-provision-then-configure.md",
       "ansible/inventory-group-by.md",
       "ansible/inventory-writing-a-plugin-trust-order.md",
-      "ansible/inventory-in-aap-sources-smart-constructed.md"
+      "ansible/inventory-in-aap-sources-smart-constructed.md",
+      "ansible/inventory-testing-in-ci-json-schema.md"
     ]
   }
 }
