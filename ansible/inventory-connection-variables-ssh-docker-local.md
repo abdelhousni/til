@@ -54,7 +54,7 @@ The older names, `ansible_ssh_host`, `ansible_ssh_port` and `ansible_ssh_user`, 
 ## When ansible_host is missing
 
 The example left `ansible_host` at its default, the inventory name, for each container host:
-- **db1 over SSH** failed clearly: *"Could not resolve hostname db1: Name or service not known"*, and the host was marked unreachable.
+- **db1 over SSH** failed clearly: *"Could not resolve hostname db1"*, followed by the resolver's own reason, which differed between machines (*"Name or service not known"* locally, *"Temporary failure in name resolution"* on GitHub's runner), and the host was marked unreachable.
 - **app1 through Docker** failed misleadingly: *"Failed to create temporary directory. In some cases, you may have been able to authenticate and did not have permissions on the target directory."* There was no container called `app1`, and nothing said so; even at `-vvv`, the only clue was the command Ansible ran, `docker exec -u appuser -i app1 …`, with the container name it tried.
 
 So when a docker host is unreachable with a permissions message, check `ansible_host` against `docker ps` first.
