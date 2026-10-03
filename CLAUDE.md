@@ -66,3 +66,15 @@ repeating it. If no entry does, define it in a sentence or a short list where
 it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
+
+## Companion repositories
+
+Every series with a companion example repository (today
+abdelhousni/ansible-data-shaping-series and
+abdelhousni/ansible-inventory-series) keeps an `INDEX.md` at its root: a
+technique index that maps each problem to the feature that solves it and the
+file that runs it, with the pitfalls the examples record and the testing
+patterns worth reusing. The README points to it, and CI fails when an
+example directory has no row. A new series that gets a companion
+repository starts with the same `INDEX.md`, README pointer and CI check,
+and each new example adds its rows in the same pull request.
