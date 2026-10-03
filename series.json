@@ -72,7 +72,8 @@
       "ansible/inventory-environments-directories-or-groups.md",
       "ansible/inventory-checking-with-ansible-inventory.md",
       "ansible/inventory-facts-or-variables-as-is-to-be.md",
-      "ansible/inventory-where-a-variable-should-live.md"
+      "ansible/inventory-where-a-variable-should-live.md",
+      "ansible/inventory-precedence-depth-and-group-priority.md"
     ]
   }
 }
