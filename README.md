@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->126<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->127<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -67,6 +67,7 @@ Browse these TILs at https://til.housni.eu/
 * [When the inventory cache lies: stale hosts, cache_timeout and --flush-cache](https://til.housni.eu/ansible/inventory-cache-stale-data.html) - 2026-10-03
 * [The inventory cache and performance: request counts, want_facts and timeouts](https://til.housni.eu/ansible/inventory-cache-performance.html) - 2026-10-03
 * [add_host: provision then configure in one run](https://til.housni.eu/ansible/inventory-add-host-provision-then-configure.html) - 2026-10-03
+* [group_by: groups from facts, built during the run](https://til.housni.eu/ansible/inventory-group-by.html) - 2026-10-03
 
 ## github-pages
 
