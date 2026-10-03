@@ -80,6 +80,11 @@
       "ansible/inventory-is-the-loop-delegate-to.md",
       "ansible/inventory-several-sources-load-order.md",
       "ansible/inventory-plugins-single-source-of-truth.md",
+      "ansible/foreman-dynamic-inventory-plugin.md",
+      "ansible/inventory-proxmox-plugin-guests-as-hosts.md",
+      "ansible/inventory-constructed-keyed-groups-compose.md",
+      "ansible/inventory-cache-stale-data.md",
+      "ansible/inventory-cache-performance.md",
       "ansible/inventory-add-host-provision-then-configure.md"
     ]
   }
