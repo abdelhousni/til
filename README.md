@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->127<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->129<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -68,6 +68,8 @@ Browse these TILs at https://til.housni.eu/
 * [The inventory cache and performance: request counts, want_facts and timeouts](https://til.housni.eu/ansible/inventory-cache-performance.html) - 2026-10-03
 * [add_host: provision then configure in one run](https://til.housni.eu/ansible/inventory-add-host-provision-then-configure.html) - 2026-10-03
 * [group_by: groups from facts, built during the run](https://til.housni.eu/ansible/inventory-group-by.html) - 2026-10-03
+* [Writing an inventory plugin, after the trust order](https://til.housni.eu/ansible/inventory-writing-a-plugin-trust-order.html) - 2026-10-03
+* [Inventory in AAP: sources from a project, smart and constructed inventories](https://til.housni.eu/ansible/inventory-in-aap-sources-smart-constructed.html) - 2026-10-03
 
 ## github-pages
 
