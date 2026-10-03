@@ -79,6 +79,7 @@ Much of the expression's time is `ansible-playbook` itself starting up. Five tim
 - **Building a list or dict from other data:** one expression, in `vars`, with the filters of the earlier parts.
 - **The expression is expensive and read often:** the same expression, stored once with `set_fact`.
 - **A loop that appends with `set_fact`:** only for small lists, and never where the tasks can run twice. To start over, reset it with another `set_fact`; `vars` can't.
+- **A loop over hosts, to act once per host:** neither; a play on those hosts, with `delegate_to` when the action runs elsewhere, as [item 13 of the inventory series](inventory-is-the-loop-delegate-to.md) shows.
 
 ## The example repository
 
