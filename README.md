@@ -13,7 +13,7 @@ Browse these TILs at https://til.housni.eu/
 
 * [Starting an Ansible role project with uv for the venv](https://til.housni.eu/ansible/starting-a-role-with-uv-venv.html) - 2026-09-05
 * [Using the Foreman/Satellite dynamic inventory plugin](https://til.housni.eu/ansible/foreman-dynamic-inventory-plugin.html) - 2026-09-05
-* [Targeting hosts the same way, whether the inventory is static or dynamic](https://til.housni.eu/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
+* [Targeting hosts with patterns, --limit and constructed groups](https://til.housni.eu/ansible/targeting-hosts-static-and-dynamic-inventory.html) - 2026-09-05
 * [Storing an Ansible Galaxy token as an environment variable, not in ansible.cfg](https://til.housni.eu/ansible/galaxy-token-as-environment-variable.html) - 2026-09-05
 * [git tag basics, grounded in how Ansible collection releases actually use them](https://til.housni.eu/ansible/git-tag-basics-collection-releases.html) - 2026-09-12
 * [Deploying a Podman Quadlet stack on RHEL9 with linux-system-roles](https://til.housni.eu/ansible/podman-quadlet-caddy-adminer-php-linux-system-roles.html) - 2026-09-16
