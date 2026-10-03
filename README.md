@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->114<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->115<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -55,6 +55,7 @@ Browse these TILs at https://til.housni.eu/
 * [Environments in an Ansible inventory: separate directories, or prod and staging as groups](https://til.housni.eu/ansible/inventory-environments-directories-or-groups.html) - 2026-10-03
 * [Checking what Ansible sees: ansible-inventory --graph, --list and --host](https://til.housni.eu/ansible/inventory-checking-with-ansible-inventory.html) - 2026-10-03
 * [Facts or variables: what Ansible discovers (as-is) against what you declare (to-be)](https://til.housni.eu/ansible/inventory-facts-or-variables-as-is-to-be.html) - 2026-10-03
+* [Where a variable should live: role defaults, group_vars, host_vars, and extra vars as safety switches](https://til.housni.eu/ansible/inventory-where-a-variable-should-live.html) - 2026-10-03
 
 ## github-pages
 
