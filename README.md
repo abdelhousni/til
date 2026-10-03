@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->110<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->111<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -51,6 +51,7 @@ Browse these TILs at https://til.housni.eu/
 * [Hosts and groups: the two groups every inventory has, all and ungrouped](https://til.housni.eu/ansible/inventory-hosts-groups-all-ungrouped.html) - 2026-10-03
 * [An inventory as a directory: a hosts file without variables, and group_vars per role](https://til.housni.eu/ansible/inventory-directory-group-vars-per-role.html) - 2026-10-03
 * [INI or YAML for the hosts file, and why variables stay out of both](https://til.housni.eu/ansible/inventory-ini-or-yaml-hosts-file.html) - 2026-10-03
+* [Connection variables: ansible_host, ansible_port, ansible_user and ansible_connection, with ssh, docker and local](https://til.housni.eu/ansible/inventory-connection-variables-ssh-docker-local.html) - 2026-10-03
 
 ## github-pages
 
