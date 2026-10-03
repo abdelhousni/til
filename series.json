@@ -85,7 +85,8 @@
       "ansible/inventory-constructed-keyed-groups-compose.md",
       "ansible/inventory-cache-stale-data.md",
       "ansible/inventory-cache-performance.md",
-      "ansible/inventory-add-host-provision-then-configure.md"
+      "ansible/inventory-add-host-provision-then-configure.md",
+      "ansible/inventory-group-by.md"
     ]
   }
 }
