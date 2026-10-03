@@ -78,3 +78,13 @@ patterns worth reusing. The README points to it, and CI fails when an
 example directory has no row. A new series that gets a companion
 repository starts with the same `INDEX.md`, README pointer and CI check,
 and each new example adds its rows in the same pull request.
+
+Each companion repository also documents its local lab, so readers can
+reproduce the examples on their own machine: a "Local lab" section in the
+README (every tool, collection and role the examples need, the version
+tested, which examples need it, and the setup commands), and a
+`lab/check.sh` that reports anything missing and changes nothing. Test it
+from a fresh clone before opening the pull request: `lab/check.sh` passes
+after the documented setup, and every `run.sh` matches its `expected.txt`.
+A new series starts with both; an example that needs a new tool adds it to
+the table and to `lab/check.sh` in the same pull request.
