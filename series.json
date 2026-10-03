@@ -61,5 +61,11 @@
       "ansible/set-fact-loop-or-one-expression-pg-hba.md",
       "ansible/execstart-lines-regex-replace-join-systemd.md"
     ]
+  },
+  "ansible-inventory": {
+    "title": "Ansible inventory from scratch",
+    "entries": [
+      "ansible/inventory-hosts-groups-all-ungrouped.md"
+    ]
   }
 }
