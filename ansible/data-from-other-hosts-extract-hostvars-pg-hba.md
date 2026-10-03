@@ -117,6 +117,7 @@ The ansible-core 2.20 porting guide confirms that the default switches to false 
 - **Some hosts may have no facts:** `map('extract', hostvars)`, then `selectattr`/`rejectattr` with `defined`, and an `assert` that names the missing hosts.
 - **Facts of hosts not in the play:** a fact cache, a first play that gathers them, or `setup` with `delegate_to` and `delegate_facts: true`.
 - **Always:** read facts through `ansible_facts`, not the top-level `ansible_*` variables.
+- **Doing something for each host of a group on one other host,** such as creating a database role per app host on db1: a play on the group with `delegate_to`, not a loop over a list of hosts, as [item 13 of the inventory series](inventory-is-the-loop-delegate-to.md) measures.
 
 ## The example repository
 

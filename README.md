@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->118<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->119<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -59,6 +59,7 @@ Browse these TILs at https://til.housni.eu/
 * [Inventory precedence: all, parent, child, host, and what ansible_group_priority really does](https://til.housni.eu/ansible/inventory-precedence-depth-and-group-priority.html) - 2026-10-03
 * [Secrets in the inventory: vault.yml next to vars.yml, with plaintext aliases](https://til.housni.eu/ansible/inventory-secrets-vault-yml-aliases.html) - 2026-10-03
 * [--limit in practice: every play, run_once per batch, and the facts of hosts left out](https://til.housni.eu/ansible/inventory-limit-in-practice.html) - 2026-10-03
+* [Let the inventory be the loop: delegate_to instead of a list of hosts](https://til.housni.eu/ansible/inventory-is-the-loop-delegate-to.html) - 2026-10-03
 
 ## github-pages
 
