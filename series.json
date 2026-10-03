@@ -87,7 +87,8 @@
       "ansible/inventory-cache-performance.md",
       "ansible/inventory-add-host-provision-then-configure.md",
       "ansible/inventory-group-by.md",
-      "ansible/inventory-writing-a-plugin-trust-order.md"
+      "ansible/inventory-writing-a-plugin-trust-order.md",
+      "ansible/inventory-in-aap-sources-smart-constructed.md"
     ]
   }
 }
