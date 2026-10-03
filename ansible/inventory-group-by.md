@@ -1,6 +1,6 @@
 # group_by: groups from facts, built during the run
 
-Twenty-second entry in the Ansible inventory from scratch series. The earlier items gave each group a place in the inventory before the run: in a hosts file, or built by an inventory plugin from the data of another system. Some groups depend on what a host turns out to be: its distribution, its OS family. `ansible.builtin.group_by` is the module that builds those during a play, from *facts*, the values Ansible gathers from a host (see [item 7](inventory-facts-or-variables-as-is-to-be.md)). The previous entry, *add_host: provision then configure in one run*, used its sibling `add_host`, which adds hosts rather than groups. Everything below ran with ansible-core 2.21.4.
+Twenty-second entry in the Ansible inventory from scratch series. The earlier items gave each group a place in the inventory before the run: in a hosts file, or built by an inventory plugin from the data of another system. Some groups depend on what a host turns out to be: its distribution, its OS family. `ansible.builtin.group_by` is the module that builds those during a play, from *facts*, the values Ansible gathers from a host (see [item 7](inventory-facts-or-variables-as-is-to-be.md)). [The previous entry](inventory-add-host-provision-then-configure.md) used its sibling `add_host`, which adds hosts rather than groups. Everything below ran with ansible-core 2.21.4.
 
 ## Facts from several distributions on one machine
 
@@ -81,7 +81,7 @@ group_by changes the *in-memory inventory*, the copy `ansible-playbook` works fr
 
 ## When keyed_groups is the better tool
 
-[Item 11](targeting-hosts-static-and-dynamic-inventory.md) built groups with the `constructed` inventory plugin's `keyed_groups`, and item 18, *ansible.builtin.constructed: keyed_groups, groups and compose on top of another source*, covered it in full. constructed builds its groups when the inventory is parsed, from variables the earlier sources set and from the fact cache. The example's `keyed/constructed.yml`:
+[Item 11](targeting-hosts-static-and-dynamic-inventory.md) built groups with the `constructed` inventory plugin's `keyed_groups`, and [item 18](inventory-constructed-keyed-groups-compose.md) covered it in full. constructed builds its groups when the inventory is parsed, from variables the earlier sources set and from the fact cache. The example's `keyed/constructed.yml`:
 
 ```yaml
 plugin: ansible.builtin.constructed
