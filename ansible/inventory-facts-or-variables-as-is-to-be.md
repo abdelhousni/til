@@ -136,6 +136,7 @@ With injection on, the declared list was replaced by the fact's dict of installe
 - **Never copy a discovered value into `host_vars/`**: it stops being a declaration and hides the drift.
 - **A fact cache makes facts show up in `ansible-inventory --host`**; `--export` shows the host's own inventory variables only.
 - **Read facts through `ansible_facts.`**, and keep inventory variables off fact names, at least until `INJECT_FACTS_AS_VARS` defaults to false in 2.24.
+- **Local facts from `facts.d` blur the split:** a hand-written one is a declared value that looks measured. [Item 26](inventory-local-facts-facts-d-risks.md) shows what it does to a drift check.
 
 ## The example repository
 
