@@ -1,4 +1,4 @@
-# Installing PowerShell 7 on Windows, Debian and RHEL, the way Microsoft documents it
+# Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it
 
 PowerShell 7 (`pwsh`) is the cross-platform PowerShell. On Windows, it installs next to Windows PowerShell 5.1 (`powershell.exe`) rather than replacing it. On Linux, Microsoft's preferred source is its own package repository, packages.microsoft.com ("PMC"). Commands below are from Microsoft Learn, current for PowerShell 7.6 (LTS).
 
@@ -38,6 +38,23 @@ sudo apt-get install -y powershell
 
 Remove it with `sudo apt-get remove powershell`.
 
+## Ubuntu 22.04, 24.04 and 26.04: the same repository
+
+```sh
+sudo apt-get update
+sudo apt-get install -y wget apt-transport-https software-properties-common
+source /etc/os-release
+wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb   # adds the repository and its signing key
+rm packages-microsoft-prod.deb
+sudo apt-get update
+sudo apt-get install -y powershell
+```
+
+Remove it with `sudo apt-get remove powershell`. Interim releases such as 25.10 aren't supported; use the `.deb` from GitHub there.
+
+One catch: Ubuntu's own repository ships .NET packages at different versions from Microsoft's. Registering the Microsoft repository makes both available, which can break a later .NET install. If you also install .NET, pin the feed you want with apt priorities ([Microsoft's instructions](https://learn.microsoft.com/en-us/dotnet/core/install/linux-package-mixup)).
+
 ## RHEL 8, 9 and 10: the same repository, through dnf
 
 ```sh
@@ -51,7 +68,7 @@ sudo dnf install -y powershell
 
 Remove it with `sudo dnf remove powershell`. Microsoft's script also runs a full `sudo dnf update` before the install; that step is optional.
 
-On both Linux distributions, the repository package keeps `pwsh` updated with the rest of the system (`apt upgrade`, `dnf upgrade`). If there's no repository for your release, Microsoft's fallback is the `.deb` or `.rpm` from the [GitHub releases](https://github.com/PowerShell/PowerShell/releases).
+On all three Linux distributions, the repository package keeps `pwsh` updated with the rest of the system (`apt upgrade`, `dnf upgrade`). If there's no repository for your release, Microsoft's fallback is the `.deb` or `.rpm` from the [GitHub releases](https://github.com/PowerShell/PowerShell/releases).
 
 ## Check it
 
@@ -71,5 +88,6 @@ On Linux, profiles and modules follow XDG: `~/.config/powershell/` and `~/.local
 
 ## Sources
 
-- Microsoft Learn: install PowerShell 7 on [Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-windows), [Debian](https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian) and [RHEL](https://learn.microsoft.com/en-us/powershell/scripting/install/install-rhel), all current for 7.6.
-- The five repository config packages (`config/debian/{12,13}` and `config/rhel/{8,9,10}`) all return HTTP 200 from packages.microsoft.com. The installs themselves weren't run here.
+- Microsoft Learn: install PowerShell 7 on [Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-windows), [Debian](https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian), [Ubuntu](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu) and [RHEL](https://learn.microsoft.com/en-us/powershell/scripting/install/install-rhel), all current for 7.6.
+- The repository config packages (`config/debian/{12,13}`, `config/ubuntu/{22.04,24.04,26.04}` and `config/rhel/{8,9,10}`) all return HTTP 200 from packages.microsoft.com.
+- Ubuntu: the steps above ran in `ubuntu:22.04` and `ubuntu:24.04` containers on 2026-10-06 and installed PowerShell 7.6.6 with `$PSHOME` at `/opt/microsoft/powershell/7`. The Debian, RHEL and Windows installs weren't run here.
