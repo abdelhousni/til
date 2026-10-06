@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->131<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->132<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -187,6 +187,7 @@ Browse these TILs at https://til.housni.eu/
 * [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://til.housni.eu/windows/rdp-microsoft-account-login.html) - 2026-09-28
 * [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
+* [Running Linux containers on Windows with wslc, the container CLI built into WSL](https://til.housni.eu/windows/wslc-containers-in-wsl.html) - 2026-10-06
 
 ## vscode
 
