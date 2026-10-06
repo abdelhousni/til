@@ -186,7 +186,7 @@ Browse these TILs at https://til.housni.eu/
 * [Finding and force-closing a locked file on a Windows SMB share](https://til.housni.eu/windows/close-open-smb-files-powershell.html) - 2026-09-18
 * [RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`](https://til.housni.eu/windows/rdp-microsoft-account-login.html) - 2026-09-28
 * [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
-* [Installing PowerShell 7 on Windows, Debian and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
+* [Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 
 ## vscode
 
