@@ -53,7 +53,7 @@ ntfy.example.net {
 }
 ```
 
-LAN-only, add `tls internal`: Caddy signs the certificate with its own local CA (`/data/caddy/pki/authorities/local/root.crt` in the Caddy container), which clients must then trust. ntfy's docs note that Caddy's `reverse_proxy` handles WebSockets too, with no extra config.
+LAN-only, either get a real certificate through the DNS-01 challenge ([Caddy with deSEC](../tls/caddy-dns-01-desec-dedyn-io.md)), or add `tls internal`: Caddy signs the certificate with its own local CA (`/data/caddy/pki/authorities/local/root.crt` in the Caddy container), which clients must then trust. ntfy's docs note that Caddy's `reverse_proxy` handles WebSockets too, with no extra config.
 
 ## Check it
 
