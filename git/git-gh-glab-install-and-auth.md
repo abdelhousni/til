@@ -42,7 +42,7 @@ sudo dnf install gh
 (RHEL/CentOS on the older DNF4 use `sudo dnf config-manager --add-repo ...` instead of `addrepo --from-repofile=...` — the flag changed between DNF4 and DNF5.)
 
 ```sh
-gh auth login          # interactive: pick github.com or a GHES hostname, HTTPS or SSH, browser or token
+gh auth login          # interactive: pick github.com or a GHES (GitHub Enterprise Server, a company's self-hosted GitHub) hostname, HTTPS or SSH, browser or token
 gh auth setup-git       # <- the important one, see below
 gh auth status          # confirm
 ```

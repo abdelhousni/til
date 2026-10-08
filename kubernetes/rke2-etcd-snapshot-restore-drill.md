@@ -1,6 +1,6 @@
 # RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none
 
-Tenth entry in the RKE2/Kubernetes series. The [HA entry](rke2-ha-embedded-etcd-external-datastore.md) closed on a warning: snapshots run without being configured, but quorum surviving a node dying and cluster state being *recoverable* are different guarantees. This entry actually tests that second one — snapshot, corrupt the cluster on purpose, restore — on a real single-server homelab cluster with Rook-Ceph running on top.
+Tenth entry in the RKE2/Kubernetes series. The [HA entry](rke2-ha-embedded-etcd-external-datastore.md) closed on a warning: snapshots run without being configured, but quorum surviving a node dying and cluster state being *recoverable* are different guarantees. This entry actually tests that second one — snapshot, corrupt the cluster on purpose, restore — on a real single-server homelab cluster with Rook-Ceph running on top. (Ceph is a distributed storage system; Rook runs it on Kubernetes.)
 
 ## "Enabled by default" isn't "you have a backup yet"
 
@@ -73,7 +73,7 @@ The actual drill: snapshot, then create a namespace and configmap as a marker, t
 
 ## Rook-Ceph needed nothing special
 
-The restore only touches etcd — the Kubernetes API objects. Rook-Ceph's actual data lives on the OSD disks and in `/var/lib/rook` on the node, entirely outside etcd. As long as the snapshot postdates the Ceph install, the `CephCluster` object and its StorageClasses come back from the snapshot, Rook's operator reconciles against the OSDs that were never touched, and Ceph returns to `HEALTH_OK` on its own — no separate Ceph-specific restore step. The general shape: an etcd restore only rewinds *what Kubernetes knows*, not any storage system's own on-disk state.
+The restore only touches etcd — the Kubernetes API objects. Rook-Ceph's actual data lives on the OSD disks (a Ceph OSD, Object Storage Daemon, is the process that manages one disk) and in `/var/lib/rook` on the node, entirely outside etcd. As long as the snapshot postdates the Ceph install, the `CephCluster` object and its StorageClasses come back from the snapshot, Rook's operator reconciles against the OSDs that were never touched, and Ceph returns to `HEALTH_OK` on its own — no separate Ceph-specific restore step. The general shape: an etcd restore only rewinds *what Kubernetes knows*, not any storage system's own on-disk state.
 
 ## One open question, left open on purpose
 

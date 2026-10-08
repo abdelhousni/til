@@ -2,6 +2,8 @@
 
 Installing `ansible-lint` with `pip` inside every single pipeline run works, but it's slow and re-downloads the same packages on every commit. Building a small custom image once — based on the official `python` image, nothing fancier — and reusing it is barely more setup and considerably faster.
 
+The GitLab terms used below, as [GitLab's CI/CD docs](https://docs.gitlab.com/ci/) use them: a *pipeline* is made up of *stages* and *jobs* and starts whenever something triggers it, such as a commit; a *job* is the task performed in a stage; a *runner* is the agent that runs your jobs. An *image* here is a container image: each job runs inside one. The *Container Registry* is the store for container images that every GitLab project has, and `docker:dind` (Docker-in-Docker) is an image that runs its own Docker engine inside the job, which is what lets a job build images.
+
 ## The image
 
 ```dockerfile

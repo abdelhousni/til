@@ -5,7 +5,7 @@ Eleventh entry in the Ansible development environment series. *ansible-creator* 
 ## The commands now
 
 - **`init`** creates a project: `collection`, `playbook`, `execution_env` or `decision_environment`.
-- **`add resource`** adds to an existing project: a `role`, a `playbook`, `devcontainer` or `devfile` files, an `execution-environment` file, `ee-ci` (an EE build workflow), `play-argspec` or `ai` (agent instruction files).
+- **`add resource`** adds to an existing project: a `role`, a `playbook`, `devcontainer` or `devfile` files, an `execution-environment` file, `ee-ci` (an EE build workflow; an EE, or execution environment, is the container image Ansible runs in, [explained here](execution-environment-from-a-locked-requirements-file.md)), `play-argspec` or `ai` (agent instruction files).
 - **`add plugin`** adds an `action`, `filter`, `lookup`, `module` or `test` plugin to a collection.
 
 The Ansible extension's command palette runs the same tool: **Ansible: Create New Playbook Project**, **Ansible: Create New Collection**, **Ansible: Add Role** and so on.

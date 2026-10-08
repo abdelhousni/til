@@ -2,6 +2,8 @@
 
 Ansible needs a Python environment (`ansible-core`, plus `ansible-lint`/`molecule` if you're testing), but a role's directory layout is fixed by `ansible-galaxy` — not something `uv init`'s project scaffolding understands. So the two tools stay in their own lanes: `ansible-galaxy` for the role skeleton, `uv` purely for the venv.
 
+In case any of those names is new: a *role* is Ansible's reusable bundle of tasks, variables and handlers; `ansible-lint` checks roles and playbooks against best-practice rules; `molecule` runs a role in a throwaway test instance; and [uv](../python/newer-python-with-uv-without-touching-system-python-rhel.md) is a Python package and project manager. That entry also explains what a *venv* (virtual environment) is: a directory with its own interpreter and packages, isolated from the system's.
+
 ## Scaffold the role, then the venv
 
 ```sh

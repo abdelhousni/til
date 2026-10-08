@@ -2,6 +2,8 @@
 
 This repo is mostly written with a coding agent (Claude Code, running in a cloud session). The agent opens branches and PRs and fixes CI. After a few rounds of that I wondered whether there's any agreed guidance on how the *repository* should be set up for it: branch protection, CI, instructions files. The answer: yes, but it's spread across vendors, and Simon Willison's guide, which I expected to cover it, mostly doesn't.
 
+Four terms recur below. *Branch protection* and *rulesets* are GitHub settings that restrict what can be pushed to a branch, such as blocking force pushes. `CODEOWNERS` is a file that names who owns which paths, so GitHub can require their review of changes to those paths. `AGENTS.md` is a Markdown file of instructions for coding agents, a convention several tools read; `CLAUDE.md` is the same idea for Claude Code. *MCP* (Model Context Protocol) is a standard for connecting tools and data sources to an agent, configured per repository in a file.
+
 ## Simon Willison: git is the safety net, not the gate
 
 Simon's [Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/) is about how you *work* with an agent, not how you configure the repo. The relevant chapter, [Using Git with coding agents](https://simonwillison.net/guides/agentic-engineering-patterns/using-git-with-coding-agents/), treats git as the thing that makes mistakes cheap:

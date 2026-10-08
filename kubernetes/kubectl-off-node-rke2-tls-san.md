@@ -69,7 +69,7 @@ sequenceDiagram
 
 ## When you actually need `tls-san`
 
-The `tls-san` config option only matters for a name or address that *isn't* already covered above — a load balancer VIP in front of an HA control plane, a floating/public IP not bound to any local interface, or a custom DNS name you want in the cert instead of the raw IP. RKE2's [own config docs](https://docs.rke2.io/install/configuration) show it as a list in `config.yaml`:
+The `tls-san` config option only matters for a name or address that *isn't* already covered above — a load balancer VIP (virtual IP address) in front of an HA (high-availability: several server nodes) control plane, a floating/public IP not bound to any local interface, or a custom DNS name you want in the cert instead of the raw IP. RKE2's [own config docs](https://docs.rke2.io/install/configuration) show it as a list in `config.yaml`:
 
 ```yaml
 # /etc/rancher/rke2/config.yaml

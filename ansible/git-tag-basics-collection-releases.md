@@ -19,7 +19,7 @@ Two things worth noticing in that one line: no `v` prefix, and the message names
 
 ## Why no `v` prefix
 
-The tag has to match `galaxy.yml`'s `version:` field **exactly** — `2.1.0`, not `v2.1.0`. Tooling that computes the next SemVer bump (or checks what's already released) reads the tag list back and compares it directly against that version string. A tag with an extra `v` doesn't just look inconsistent, it silently stops matching anything that string-compares against `galaxy.yml`.
+The tag has to match the `version:` field of `galaxy.yml`, the file that describes a collection, **exactly** — `2.1.0`, not `v2.1.0`. Tooling that computes the next SemVer bump (semantic versioning, `MAJOR.MINOR.PATCH`; [explained here](pinning-ansible-core-pip-tools-uv-poetry.md)) (or checks what's already released) reads the tag list back and compares it directly against that version string. A tag with an extra `v` doesn't just look inconsistent, it silently stops matching anything that string-compares against `galaxy.yml`.
 
 ## `git push` does not push tags
 

@@ -17,7 +17,7 @@ openssl x509 -in cert.pem -noout -subject -issuer
 openssl x509 -in cert.pem -noout -ext subjectAltName
 ```
 
-`-noout` matters on every one of these — without it, `openssl x509` also prints the PEM-encoded certificate itself before the field you asked for.
+`-noout` matters on every one of these — without it, `openssl x509` also prints the PEM-encoded certificate itself before the field you asked for. PEM is the usual text format for certificates: a block of Base64 between `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----` lines.
 
 ## From a live server (no file needed)
 
@@ -28,7 +28,7 @@ echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/
   | openssl x509 -noout -dates -subject
 ```
 
-`-servername` matters if the server uses SNI to serve different certificates for different hostnames on the same IP (basically every server behind a modern reverse proxy or CDN) — without it you might get whatever the default/first certificate happens to be, not the one for the host you actually asked about. The `echo |` is just there to close `s_client`'s stdin immediately, since it otherwise waits for interactive input.
+`-servername` matters if the server uses SNI (Server Name Indication: the client names the host it wants during the TLS handshake) to serve different certificates for different hostnames on the same IP (basically every server behind a modern reverse proxy or CDN) — without it you might get whatever the default/first certificate happens to be, not the one for the host you actually asked about. The `echo |` is just there to close `s_client`'s stdin immediately, since it otherwise waits for interactive input.
 
 ## Scripting an expiry check
 
