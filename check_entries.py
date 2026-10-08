@@ -85,9 +85,12 @@ QUESTIONS = {
     "untested_claim": {
         "type": "noul",
         "instructions": (
-            "Does the text give commands or configuration whose behaviour "
-            "depends on a version or an operating system, while never naming "
-            "a version, an operating system or an environment it was run on?"
+            "Does the text present commands or configuration as something "
+            "that works or was tried, for example by showing their output or "
+            "saying they were run, while never naming a version, an "
+            "operating system or an environment? Text that openly attributes "
+            "its claims to documentation or to another source, and does not "
+            "say it ran anything, does not count."
         ),
     },
 }
