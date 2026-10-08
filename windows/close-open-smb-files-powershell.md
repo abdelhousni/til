@@ -1,6 +1,10 @@
 # Finding and force-closing a locked file on a Windows SMB share
 
-Someone leaves for the day with a spreadsheet still open over the network, or a desktop app crashes without releasing its file handle, and now everyone else gets: *"The document `filename` is locked for editing by another user."* Three ways to find and clear that lock, from oldest to most useful — condensed and re-verified against current Microsoft docs, but the structure and the walkthrough itself are [Windows OS Hub's](https://woshub.com/managing-open-files-windows-server-share/), not mine; full credit there for the original writeup.
+Someone leaves for the day with a spreadsheet still open over the network, or a desktop app crashes without releasing its file handle, and now everyone else gets: *"The document `filename` is locked for editing by another user."*
+
+**SMB** (Server Message Block) is the network file-sharing protocol behind Windows shared folders, per [Microsoft's overview](https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview): the computer that shares the folder is the *SMB server*, and the computer that opens files on it is the *SMB client*. A *share* is one shared folder, such as `\\server\Finance`. The lock above comes from the server keeping the file open for a client that hasn't released it.
+
+Three ways to find and clear that lock, from oldest to most useful — condensed and re-verified against current Microsoft docs, but the structure and the walkthrough itself are [Windows OS Hub's](https://woshub.com/managing-open-files-windows-server-share/), not mine; full credit there for the original writeup.
 
 ## GUI: Computer Management
 
@@ -98,7 +102,7 @@ Get-SmbOpenFile -CimSession $sessn -ClientUserName "*mjenny*" |
 
 Both confirmed in `Get-SmbOpenFile`'s current parameter list, useful specifically once a file server stops being one box:
 
-- **`-ScopeName`** filters to files open through a particular Scale-Out File Server (SOFS) scope, when multiple file server roles share one cluster.
+- **`-ScopeName`** filters to files open through a particular Scale-Out File Server (SOFS) scope, when multiple file server roles share one cluster. A SOFS is a cluster of servers that all serve the same shares at once, so a client keeps its files if one server fails.
 - **`-IncludeHidden`** surfaces handles the SMB server creates and uses internally, normally left out of the default listing — genuinely a debugging-only flag, not something to leave on.
 
 ---
