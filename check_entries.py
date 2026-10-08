@@ -54,7 +54,7 @@ MAX_CHARS = 30_000
 # An answer at or above this probability is reported. Start high so the first
 # runs show only the clear cases; lower it with --threshold once you have seen
 # how noisy the questions are on real entries.
-THRESHOLD = 0.75
+THRESHOLD = 0.70
 
 # One yes/no question per way an entry can break the rule. Several questions
 # go in one request: they are evaluated in parallel and the entry text, which
@@ -64,26 +64,30 @@ QUESTIONS = {
     "undefined_term": {
         "type": "noul",
         "instructions": (
-            "Does this text rely on a technical term, tool or acronym that "
-            "a reader new to the topic would have to look up elsewhere, "
-            "because the text neither explains it nor links to an entry or "
-            "page that does?"
+            "The reader knows the Linux command line and Git but is new to "
+            "this entry's subject. Does the text use a term specific to that "
+            "subject, such as a tool, file format, protocol or concept, "
+            "without defining it where it first appears and without linking "
+            "to an entry or page that does? Everyday command-line and "
+            "programming vocabulary does not count."
         ),
     },
     "forward_reference": {
         "type": "noul",
         "instructions": (
-            "Does this text tell the reader to look in another entry, "
-            "'later', 'below' or 'in a follow-up' for a definition or step "
-            "that it needs in order to be understood now?"
+            "Does the text send the reader to a later or next entry, part or "
+            "section for a definition or step that they need in order to "
+            "follow the text they are reading now? A pointer to further "
+            "reading, a mention of a future topic, or the word 'later' "
+            "meaning a time or a version number does not count."
         ),
     },
     "untested_claim": {
         "type": "noul",
         "instructions": (
-            "Does this text present commands or configuration as working "
-            "without saying where, with which versions, or that it was "
-            "actually run?"
+            "Does the text give commands or configuration whose behaviour "
+            "depends on a version or an operating system, while never naming "
+            "a version, an operating system or an environment it was run on?"
         ),
     },
 }
