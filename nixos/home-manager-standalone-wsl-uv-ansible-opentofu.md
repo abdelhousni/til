@@ -12,7 +12,7 @@ The split is by who updates what:
 
 | Tool | Installed by | Why |
 |---|---|---|
-| Python 3, OpenTofu, Git, `uv` | Home Manager (Nix) | Pinned by the flake lock, rolled back with a generation |
+| Python 3, OpenTofu, Git, `uv` | Home Manager (Nix) | Pinned by `flake.lock` (explained below), rolled back with a *generation*, one saved state of the profile |
 | `ansible-core`, `ansible-lint` | `uv tool install` | They're Python packages, and Ansible releases move faster than nixpkgs |
 | Project libraries (`jinja2`, `netaddr`…) | `uv add` in each project | Per-project, locked in `uv.lock` |
 
