@@ -113,13 +113,20 @@ def entries(paths):
 
 
 def changed_entries(ref):
-    """Entries added or modified since `ref` (e.g. origin/main), for PR runs."""
-    out = subprocess.run(
-        ["git", "diff", "--name-only", "--diff-filter=AM", f"{ref}...HEAD", "--", "*.md"],
-        cwd=root, capture_output=True, text=True, check=True,
-    ).stdout.split()
+    """Entries added or modified since `ref` (e.g. origin/main).
+
+    Three sources, because a draft is usually not committed yet: commits since
+    `ref`, uncommitted edits to tracked files, and brand-new untracked files.
+    """
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=root, capture_output=True,
+                              text=True, check=True).stdout.split("\n")
+
+    names = set(git("diff", "--name-only", "--diff-filter=AM", f"{ref}...HEAD", "--", "*.md"))
+    names |= set(git("diff", "--name-only", "--diff-filter=AM", "HEAD", "--", "*.md"))
+    names |= set(git("ls-files", "--others", "--exclude-standard", "--", "*.md"))
     wanted = {str(p) for p in entries([])}
-    return [pathlib.Path(p) for p in out if p in wanted]
+    return sorted(pathlib.Path(n) for n in names if n in wanted)
 
 
 def decide(url, key, text):
