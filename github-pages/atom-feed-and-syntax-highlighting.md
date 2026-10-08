@@ -1,6 +1,6 @@
 # Adding an Atom feed and syntax highlighting to a static site build script
 
-Continuing on from [publishing this TIL collection as a static site](static-site-instead-of-datasette.md), I wanted two things a real TIL site should have: an Atom feed people can subscribe to, and syntax-highlighted code blocks instead of flat gray `<pre>` boxes.
+Continuing on from [publishing this TIL collection as a static site](static-site-instead-of-datasette.md), I wanted two things a real TIL site should have: an Atom feed (an XML file listing the newest entries, in a standard format that feed readers poll) people can subscribe to, and syntax-highlighted code blocks instead of flat gray `<pre>` boxes.
 
 ## Atom feed
 
@@ -27,7 +27,7 @@ I validated the output the boring way: `xml.dom.minidom.parse()` on the generate
 
 ## Syntax highlighting
 
-Python-Markdown ships a `codehilite` extension that hands fenced code blocks to Pygments. Turning it on is one line:
+Python-Markdown ships a `codehilite` extension that hands fenced code blocks to Pygments, the Python syntax-highlighting library. Turning it on is one line:
 
 ```python
 markdown.markdown(

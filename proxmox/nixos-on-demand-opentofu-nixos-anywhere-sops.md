@@ -3,8 +3,8 @@
 The goal is a Proxmox VM created on demand that ends up as a NixOS machine described in Git, with its secrets, and with no hand-made template. It takes three tools, each doing one thing:
 
 1. **OpenTofu** creates a *skeleton*: a stock Debian cloud image, a static IP and one SSH key.
-2. **nixos-anywhere** logs into the skeleton, kexecs into a NixOS installer, lets **disko** repartition the disk, and installs the flake's configuration.
-3. **sops-nix** decrypts the secrets on first boot with the VM's SSH host key. That key was generated **before the VM existed**, so the secrets could already be encrypted to it.
+2. **nixos-anywhere** logs into the skeleton, kexecs (boots a new kernel straight from the running system, with no reboot through firmware) into a NixOS installer, lets **disko** (declarative disk partitioning for NixOS) repartition the disk, and installs the flake's configuration.
+3. **sops-nix** (the NixOS integration of SOPS, a tool that keeps secrets encrypted in files that are safe to commit) decrypts the secrets on first boot with the VM's SSH host key. That key was generated **before the VM existed**, so the secrets could already be encrypted to it.
 
 Everything here is in [dar-nixos/proxmox](https://github.com/abdelhousni/dar-nixos/tree/main/proxmox). It installs the same machine as [the first-steps entry](../nixos/first-steps-configuration-generations-rollback.md), including [its Zsh setup](../nixos/zsh-oh-my-zsh-declarative.md). Versions: bpg/proxmox 0.114, and from nixpkgs 26.05 OpenTofu 1.11, nixos-anywhere 1.13.0 and sops 3.13, and the disko and sops-nix revisions pinned in the flake.
 

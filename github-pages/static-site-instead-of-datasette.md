@@ -1,6 +1,6 @@
 # Publishing a TIL collection as a static GitHub Pages site
 
-I forked [simonw/til](https://github.com/simonw/til) to start my own "Today I Learned" collection, but its publishing pipeline was built around Simon's own infrastructure: `build_database.py` compiled every entry into a sqlite database, `generate_screenshots.py` rendered preview images via Playwright, and the GitHub Actions workflow pushed the result to an S3 bucket and deployed a Datasette instance on Fly.io. None of that infrastructure was mine, so the workflow just failed without those secrets configured.
+I forked [simonw/til](https://github.com/simonw/til) to start my own "Today I Learned" collection, but its publishing pipeline was built around Simon's own infrastructure: `build_database.py` compiled every entry into a sqlite database, `generate_screenshots.py` rendered preview images via Playwright (a browser-automation library), and the GitHub Actions workflow pushed the result to an S3 bucket (Amazon's object storage) and deployed a Datasette instance (Datasette publishes a SQLite database as a browsable website) on Fly.io (an app-hosting platform). None of that infrastructure was mine, so the workflow just failed without those secrets configured.
 
 Since I only wanted a browsable index of my own notes, I replaced the whole pipeline with a much smaller one:
 

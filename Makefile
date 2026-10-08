@@ -10,7 +10,7 @@ VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 PORT ?= 8000
 
-.PHONY: help venv build serve check check-external check-mermaid readme preflight clean clean-all check-history warn-untracked
+.PHONY: help venv build serve check check-external check-mermaid check-entries readme preflight clean clean-all check-history warn-untracked
 .DEFAULT_GOAL := help
 .NOTPARALLEL:
 
@@ -38,6 +38,17 @@ serve: build ## Build, then serve _site/ on localhost (override PORT=)
 
 check: build check-mermaid ## Build, check internal links and Mermaid syntax (fast)
 	$(VENV_PYTHON) check_links.py
+
+# Advisory, and deliberately not part of "check" or "preflight": it needs
+# JEV_API_KEY, calls a third-party service and only ever suggests. It sends the
+# text of each entry it checks to that service, so run it on drafts you are
+# happy to share. The script uses only the standard library, so no virtualenv.
+#   make check-entries                     entries changed since origin/main
+#   make check-entries FILES="a/b.md"      just these entries
+#   make check-entries FILES=--all         every entry (about 130 calls)
+FILES ?= --changed origin/main
+check-entries: ## Ask Jev whether changed entries define their terms (advisory; needs JEV_API_KEY)
+	@if [ "$(FILES)" = "--all" ]; then $(PYTHON) check_entries.py; else $(PYTHON) check_entries.py $(FILES); fi
 
 node_modules: package.json package-lock.json
 	npm ci --no-audit --no-fund

@@ -45,7 +45,7 @@ Podman's own version lives on Quay, not Docker Hub, and confirms the same four s
 
 ## They're not actually locked to their own registries
 
-Both are just standard OCI images on public registries, so either engine can pull either image:
+Both are just standard OCI (Open Container Initiative, the open image and container format) images on public registries, so either engine can pull either image:
 
 ```sh
 podman run docker.io/library/hello-world

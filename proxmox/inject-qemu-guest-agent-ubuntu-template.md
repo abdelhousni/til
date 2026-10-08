@@ -4,7 +4,7 @@ A cloud image straight from Ubuntu doesn't have `qemu-guest-agent` installed, so
 
 ## Inject the package into the image before it's ever booted
 
-`virt-customize` (from `libguestfs-tools`) can modify a qcow2 image offline — no VM needs to exist yet:
+`virt-customize` (from `libguestfs-tools`) can modify a qcow2 image (QEMU's disk-image format) offline — no VM needs to exist yet:
 
 ```sh
 apt update
