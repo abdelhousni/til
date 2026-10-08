@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->135<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->136<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -205,6 +205,7 @@ Browse these TILs at https://til.housni.eu/
 * [Testing a NixOS configuration on self-managed GitLab CE: the eval job runs anywhere, the VM test needs a runner you prepare](https://til.housni.eu/nixos/nixos-config-tests-gitlab-ce.html) - 2026-09-26
 * [Home Manager as a NixOS module: dotfiles in the same rebuild, and the file that's in the way](https://til.housni.eu/nixos/home-manager-nixos-module.html) - 2026-09-27
 * [A user's PATH on NixOS: declare packages, and know which settings reach services](https://til.housni.eu/nixos/user-path-packages-shells-services.html) - 2026-09-28
+* [A minimal IaC toolbox on WSL2 with standalone Home Manager: Nix owns Python and OpenTofu, uv owns Ansible](https://til.housni.eu/nixos/home-manager-standalone-wsl-uv-ansible-opentofu.html) - 2026-10-08
 
 ## claude-code
 
