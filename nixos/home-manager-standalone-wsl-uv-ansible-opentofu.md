@@ -2,7 +2,7 @@
 
 WSL2 (*Windows Subsystem for Linux*) runs a real Linux in a lightweight virtual machine on Windows. This entry builds a small admin and IaC (*infrastructure as code*) toolbox inside it, from one Git repository: a system Python 3, [OpenTofu](../terraform/what-is-terraform-opentofu-and-how-it-works.md), `uv`, and Ansible with `ansible-lint`. **Home Manager** installs it. It's a tool that declares a user's packages and dotfiles in the Nix language (see [the NixOS-module entry](home-manager-nixos-module.md) for how it works inside `nixos-rebuild`). **`uv`** is a fast Python package and project manager that replaces `pip`, `venv`, `pipx` and `pyenv`.
 
-Built and activated with Home Manager `release-26.05`, nixpkgs `nixos-26.05`, `uv` 0.11 and `ansible-core` 2.20 on x86_64 Linux. WSL itself wasn't available here: the activation ran in a plain Linux container with Nix installed, in a scratch home directory. The one NixOS-only failure, below, is from the documentation and wasn't reproduced.
+The same flake then drives a [`.devcontainer`](#the-same-toolbox-as-a-devcontainer), for projects that should carry their own environment. Built and activated with Home Manager `release-26.05`, nixpkgs `nixos-26.05`, `uv` 0.11 and `ansible-core` 2.20 on x86_64 Linux. WSL itself wasn't available here: the activation ran in a plain Linux container with Nix installed, in a scratch home directory. The one NixOS-only failure, below, is from the documentation and wasn't reproduced.
 
 ## Why standalone, and why two tools
 
@@ -117,7 +117,52 @@ uv run python -c "import jinja2"
 
 Commit `pyproject.toml` and `uv.lock`; `.venv/` stays out of Git. A clone anywhere does `uv sync`. In my test `uv run` used `.venv/bin/python3` created from the Nix Python.
 
-Dev Containers are the other way to get a reproducible tool set, [with ADT in a container](../ansible/ansible-dev-container-with-adt.md), and the comparison of where to run it is in [the Ansible environment entry](../ansible/where-to-run-an-ansible-dev-environment.md). Home Manager is lighter: no container runtime, and the tools run directly in the WSL distribution. It reaches only your own user, and a Dev Container carries the setup to anyone who opens the repository.
+## The same toolbox as a `.devcontainer`
+
+A *Dev Container* is a container that VS Code (through the Dev Containers extension) or the `@devcontainers/cli` opens a project in. The editor server and every tool run inside it, and the configuration is a `devcontainer.json` file in the repository. [The ADT Dev Container entry](../ansible/ansible-dev-container-with-adt.md) uses a ready-made Ansible image. Here the image is a plain Ubuntu one, and the toolbox above is installed into it by the same Home Manager flake, so the container and the WSL distribution can't drift apart. On WSL2 the container engine is Docker Desktop with its WSL 2 backend, or Docker Engine or Podman inside the distribution ([Podman setting](../ansible/ansible-dev-container-with-adt.md#with-podman-instead-of-docker)).
+
+Three files, under `.devcontainer/`:
+
+```text
+.devcontainer/
+├── devcontainer.json
+└── home/
+    ├── flake.nix      # the flake from above, with username "vscode"
+    ├── flake.lock     # created by the first run; commit it
+    └── home.nix       # the home.nix from above, with home.username = "vscode"
+```
+
+```json
+{
+  "name": "iac-toolbox",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/nix:1": {
+      "extraNixConfig": "experimental-features = nix-command flakes"
+    }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "USER=$(id -un) nix run \"git+https://github.com/nix-community/home-manager?ref=release-26.05&shallow=1\" -- switch --flake .devcontainer/home#vscode -b backup",
+  "customizations": {
+    "vscode": {
+      "extensions": ["redhat.ansible", "ms-python.python", "charliermarsh.ruff", "opentofu.vscode-opentofu"]
+    }
+  }
+}
+```
+
+- A **Dev Container Feature** is a reusable install step. `ghcr.io/devcontainers/features/nix` installs Nix, and `extraNixConfig` turns on flakes.
+- `postCreateCommand` runs once, after the container is created, as `remoteUser`. It does the first Home Manager switch, with `-b backup` renaming any file in the way, as [the NixOS-module entry](home-manager-nixos-module.md#the-file-thats-in-the-way) explains.
+
+I ran it with `@devcontainers/cli` 0.89.0 on Docker 29.8.2. After `devcontainer up`, a plain `devcontainer exec` shell found `tofu` (OpenTofu 1.11.14), `uv` 0.11.21, `ansible` 2.20.10 and `ansible-lint` on the `PATH`. The extensions list wasn't exercised, because there was no VS Code. In this sandbox I had to add the proxy's CA certificate to a copy of the base image so that the Nix feature could clone from GitHub; on a normal network the file above works as written.
+
+Three things failed on the way, and each has an easy fix:
+
+- **`github:` flake URLs hit the GitHub API.** `github:nix-community/home-manager/release-26.05` (and `nix run home-manager/release-26.05`, which resolves the same way) fetches from `api.github.com`, and the container got `HTTP error 403 … API rate limit exceeded`. Unauthenticated requests are limited per IP address, so a shared office or VPN address runs out fast. `git+https://github.com/...?ref=...&shallow=1` URLs, used above, clone with Git and don't count against it.
+- **`USER` isn't set in `postCreateCommand`.** `home-manager` stopped with `USER: unbound variable`, the same message as in my first activation outside a login shell. Setting `USER=$(id -un)` in front of the command fixes it.
+- **The workspace must belong to the container user.** With a bind-mounted folder owned by another user, Nix refused with `repository path '/workspaces/dc' is not owned by current user`, and then with `Permission denied` on `flake.lock`. On WSL2 your first user is normally UID 1000, like the image's `vscode` user, so this shouldn't happen when the repository is on the Linux filesystem. Opening a folder from `/mnt/c` is where it shows up, and it's also the slow place to work.
+
+Home Manager in a container costs more on the first build than a ready-made image: Nix evaluates and downloads the closure (the packages and everything they depend on) once. In return, the Python, OpenTofu and `uv` versions come from the lock file, not from an image tag.
 
 ## Keep it in Git
 
