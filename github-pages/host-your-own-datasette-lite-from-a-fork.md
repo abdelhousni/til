@@ -15,3 +15,5 @@ The fork came with a `CNAME` file containing `lite.datasette.io`. GitHub Pages r
 Because my only change is that deletion, catching up with upstream is a fast "Sync fork" on GitHub, or a merge that never conflicts. When I checked in October 2026, my `main` already sat on upstream's tip, `779b2d4`, which added support for passing `?url=` more than once to load several databases at the same time.
 
 Credit: everything that makes this work is Simon Willison's; this is just how to host a copy of it.
+
+TODO: serve this copy under my own domain. This site's custom domain, `til.housni.eu`, belongs to the `til` project site only, so it doesn't cover `abdelhousni.github.io/datasette-lite`. Either add a redirect page at `til.housni.eu/datasette-lite/` that keeps the `?url=` parameters, or put a subdomain such as `lite.housni.eu` in the fork's `CNAME` file and point a DNS record at it.
