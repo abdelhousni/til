@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->133<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->135<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -105,6 +105,7 @@ Browse these TILs at https://til.housni.eu/
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://til.housni.eu/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 * [Debugging a Proxmox VM whose cloud-init config didn't apply](https://til.housni.eu/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A Proxmox VM on demand, NixOS from Git: OpenTofu builds a skeleton, nixos-anywhere replaces it, and the host key exists before the VM](https://til.housni.eu/proxmox/nixos-on-demand-opentofu-nixos-anywhere-sops.html) - 2026-09-27
+* [ntfy in a Proxmox LXC, private and behind Caddy for TLS](https://til.housni.eu/proxmox/ntfy-lxc-behind-caddy-tls.html) - 2026-10-08
 
 ## python
 
@@ -123,6 +124,7 @@ Browse these TILs at https://til.housni.eu/
 * [Checking a TLS certificate's dates, issuer, and SANs with openssl](https://til.housni.eu/tls/openssl-checking-cert-dates-and-details.html) - 2026-09-05
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://til.housni.eu/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
 * [Adding a certificate to a Java keystore/truststore with keytool](https://til.housni.eu/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
+* [A Let's Encrypt certificate for a LAN-only service: Caddy, DNS-01 and deSEC](https://til.housni.eu/tls/caddy-dns-01-desec-dedyn-io.html) - 2026-10-08
 
 ## cloud-init
 
