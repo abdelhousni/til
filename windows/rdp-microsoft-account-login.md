@@ -1,6 +1,6 @@
 # RDP into Windows 11 with a Microsoft account: the password, not the PIN, and `MicrosoftAccount\`
 
-RDP to a Windows 11 PC signed in with a Microsoft account usually fails for two reasons. RDP needs the account's **password**, not the Windows Hello PIN. And the username often has to name the account provider explicitly.
+RDP (Remote Desktop Protocol, Microsoft's protocol for using another computer's desktop over the network) to a Windows 11 PC signed in with a Microsoft account usually fails for two reasons. RDP needs the account's **password**, not the Windows Hello PIN. (Windows Hello is the sign-in method that uses a PIN or biometrics, such as a fingerprint or a face scan, instead of a password.) And the username often has to name the account provider explicitly.
 
 ## On the host (the PC you connect to)
 
@@ -11,12 +11,14 @@ RDP to a Windows 11 PC signed in with a Microsoft account usually fails for two 
 
 ## In the client (`mstsc`)
 
+`mstsc` (`mstsc.exe`) is the Remote Desktop Connection program that ships with Windows. Type `mstsc` in the Start menu or in *Win + R* to open it, and enter the computer's name and the username from the table below.
+
 | Account type | Username | Password |
 |---|---|---|
 | Microsoft account | `MicrosoftAccount\you@outlook.com` | the Microsoft account password |
 | Local account | `.\opsadmin` or `HOSTNAME\opsadmin` | the local password |
 
-The `MicrosoftAccount\` prefix selects the Microsoft account provider. `.\` forces a local account when Windows would otherwise resolve the name as a Microsoft Entra ID or domain user. Run `whoami` on the host to get the exact `HOSTNAME\user`.
+The `MicrosoftAccount\` prefix selects the Microsoft account provider. `.\` forces a local account when Windows would otherwise resolve the name as a Microsoft Entra ID or domain user. Microsoft Entra ID is Microsoft's cloud identity service, which organizations use to sign in to Microsoft 365 and Azure; a domain user is an account kept by an organization's own Windows domain server instead of on the PC. Run `whoami` on the host to get the exact `HOSTNAME\user`.
 
 ## If it still fails
 
@@ -64,5 +66,6 @@ Connect as `.\rdp-admin`. Give it a strong, unique password, allow RDP only over
   - [Can't login via RDP with my @live.com account](https://learn.microsoft.com/en-us/answers/questions/5878568/cant-login-via-rdp-with-my-@live-com-account);
   - [Remote Desktop: your credentials did not work](https://learn.microsoft.com/en-us/answers/questions/2187488/remote-desktop-your-credentials-did-not-work);
   - [Windows 11 Pro Remote Desktop connection login attempt](https://learn.microsoft.com/en-us/answers/questions/5561697/windows-11-pro-remote-desktop-connection-login-att).
+- Microsoft Learn: [mstsc](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mstsc), [Windows Hello for Business overview](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/) and [What is Microsoft Entra?](https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra).
 - Microsoft Learn: [Troubleshooting "access denied" and "user not authorized" RDS issues](https://learn.microsoft.com/en-us/troubleshoot/windows-server/remote/troubleshooting-access-denied-and-user-not-authorized-rds-issues).
 - TechTarget: [Fix Windows 11 remote desktop credentials that don't work](https://www.techtarget.com/enterprise-software/tip/Fix-Windows-11-remote-desktop-credentials-that-dont-work).
