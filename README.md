@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->132<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->133<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -78,6 +78,7 @@ Browse these TILs at https://til.housni.eu/
 * [Publishing a TIL collection as a static GitHub Pages site](https://til.housni.eu/github-pages/static-site-instead-of-datasette.html) - 2026-09-05
 * [Adding an Atom feed and syntax highlighting to a static site build script](https://til.housni.eu/github-pages/atom-feed-and-syntax-highlighting.html) - 2026-09-05
 * [Rendering Mermaid diagrams in a Python-Markdown static site](https://til.housni.eu/github-pages/mermaid-diagrams-in-markdown.html) - 2026-09-12
+* [Hosting my own copy of Datasette Lite from a fork](https://til.housni.eu/github-pages/host-your-own-datasette-lite-from-a-fork.html) - 2026-10-08
 
 ## gitlab-ci
 
