@@ -6,7 +6,7 @@ Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhous
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->136<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->137<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -97,6 +97,7 @@ Browse these TILs at https://til.housni.eu/
 * [Root vs rootless Podman on RHEL 10 and Ubuntu 26.04](https://til.housni.eu/podman/root-vs-rootless-rhel10-ubuntu2604.html) - 2026-09-13
 * [Auto-updating the Caddy/Adminer/PHP Quadlet stack needs more than one AutoUpdate key](https://til.housni.eu/podman/quadlet-autoupdate-caddy-adminer-php.html) - 2026-09-21
 * [Pointing Podman at an Artifactory mirror without editing a single image name](https://til.housni.eu/podman/artifactory-as-a-pull-through-mirror.html) - 2026-09-21
+* [`podman compose` fails because it handed the job to docker-compose, which needs the Podman socket](https://til.housni.eu/podman/podman-compose-docker-compose-plugin-needs-the-socket.html) - 2026-10-09
 
 ## proxmox
 
