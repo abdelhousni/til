@@ -67,6 +67,14 @@ it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
 
+## Decisions
+
+An entry explains how something works; it doesn't record which option was
+chosen. When a session chooses between options (a tool, an approach, a
+structure), record the decision as an ADR with the `adr` skill of the
+`toolkit` plugin, which says which private repository it goes in. Don't
+link those ADRs from entries: this repository is public.
+
 ## Companion repositories
 
 Every series with a companion example repository (today
