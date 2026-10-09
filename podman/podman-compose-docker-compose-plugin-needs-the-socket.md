@@ -58,6 +58,34 @@ compose_warning_logs = false
 - **Unit not found**: if `systemctl --user status podman.socket` says the unit doesn't exist, install the full `podman` package.
 - **Image pull**: once the socket works, `podman compose up -d` pulls `nginx` from Docker Hub, and `curl localhost:8080` returns the nginx welcome page.
 
+## On WSL2: netavark's firewall rules
+
+On WSL2 (Linux running in a lightweight VM on Windows), the socket can work and `up` still fail while it sets up the network. Podman's network backend, *netavark*, creates the container bridge and adds firewall rules for it: *NAT* (rewriting addresses so containers share the host's) for outbound traffic, and port forwarding for `ports:`. WSL2 keeps its own *nftables* rules (the kernel's current firewall), such as the `WSLPOSTROUTING` chain in `sudo nft list ruleset`, and the Windows host already does outbound NAT for the VM.
+
+Netavark has a `none` firewall driver that adds no rules at all:
+
+```sh
+mkdir -p ~/.config/containers/containers.conf.d
+printf '[network]\nfirewall_driver="none"\n' > ~/.config/containers/containers.conf.d/50-firewall.conf
+
+systemctl --user restart podman.socket
+podman compose down
+podman system migrate
+podman compose up -d
+```
+
+Files in `containers.conf.d/` are read after `containers.conf`, so this one setting lives in its own file. `podman system migrate` restarts Podman's helper processes so they read the new value. If your Podman doesn't recognise `firewall_driver`, the older `NETAVARK_FW=none` environment variable does the same.
+
+What stops working without firewall rules:
+
+- **Published ports**: `ports: - "8080:80"` relies on those rules, so the host likely can't reach nginx on 8080 any more. Use `network_mode: host` on the service instead: nginx then listens straight on the WSL2 VM's address (port 80 here, not 8080), and WSL forwards `localhost` from Windows to it. Or reach the container by its IP.
+- **Outbound access**: without masquerading (the NAT rule for outbound traffic) it may or may not work, depending on the setup. I haven't confirmed it either way.
+- **Container to container**: routed on the bridge, so it should keep working.
+
+So: if you need published ports, choose `firewall_driver="iptables"` instead, which still writes rules but through the older iptables tool. If not, `none` is the quickest way past the problem. Another option for rootless containers is `podman run --network=pasta`: *pasta* forwards ports in user space and needs no netavark rules, though I haven't checked it with compose.
+
+If `ports:` mappings stop working after an update, or networking behaves oddly, check `~/.config/containers/containers.conf.d/50-firewall.conf` first.
+
 ## Is `docker` real Docker?
 
 The `podman-docker` package installs a `docker` command that just runs `podman`. To see which one you have, and where Podman's API socket is:
