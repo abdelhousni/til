@@ -16,7 +16,7 @@ services:
 
 `podman compose` doesn't implement Compose itself. It's a wrapper that runs an external *provider*: either `docker-compose` (Docker's Compose v2 plugin) or `podman-compose` (a Python reimplementation that calls the `podman` command). When both are installed, it prefers `docker-compose`.
 
-`docker-compose` doesn't call `podman`. It talks to the *Docker API*, an HTTP API served on a Unix socket. Docker's daemon always serves it. Podman has no daemon, so it serves the same API only through a separate service, `podman.socket`, which is off until you enable it. For a *rootless* Podman (run as your own user, see [Root vs rootless Podman](root-vs-rootless-rhel10-ubuntu2604.md)), that socket is `/run/user/<uid>/podman/podman.sock`, for example `/run/user/1000/podman/podman.sock`. No socket, nothing for docker-compose to connect to.
+`docker-compose` doesn't call `podman`. It talks to the *Docker API*, an HTTP API served on a *Unix socket* (a special file that local programs connect to instead of a network port). Docker's daemon always serves it. Podman has no daemon, so it serves the same API only through a separate service, `podman.socket`, which is off until you enable it. For a *rootless* Podman (run as your own user, see [Root vs rootless Podman](root-vs-rootless-rhel10-ubuntu2604.md)), that socket is `/run/user/<uid>/podman/podman.sock`, for example `/run/user/1000/podman/podman.sock`. No socket, nothing for docker-compose to connect to.
 
 ## Fix 1: start the user socket
 
@@ -41,7 +41,7 @@ podman compose up -d
 
 ## Fix 2: use podman-compose and skip the socket
 
-Install it (`dnf install podman-compose`; on RHEL it comes from EPEL), then pick it as the provider in `~/.config/containers/containers.conf`:
+Install it (`dnf install podman-compose`; on RHEL it comes from EPEL, Fedora's Extra Packages for Enterprise Linux repository, which you enable first), then pick it as the provider in `~/.config/containers/containers.conf`:
 
 ```toml
 [engine]
@@ -54,9 +54,9 @@ compose_warning_logs = false
 ## If it still fails
 
 - **Rootful and rootless mixed**: if you once started the socket with `sudo`, disable the root one (`sudo systemctl disable --now podman.socket`) so the two don't conflict.
-- **SELinux**: if `getenforce` prints `Enforcing`, `sudo journalctl -t audit` shows whether it blocks the socket.
+- **SELinux** (the Linux security module that RHEL and Fedora use to restrict what each process may access): if `getenforce` prints `Enforcing`, `sudo journalctl -t audit` shows whether it blocks the socket.
 - **Unit not found**: if `systemctl --user status podman.socket` says the unit doesn't exist, install the full `podman` package.
-- **Image pull**: once the socket works, `podman compose up -d` pulls `nginx` from Docker Hub, and `curl localhost:8080` returns the nginx welcome page.
+- **Image pull**: once the socket works, `podman compose up -d` pulls `nginx` from Docker Hub (Docker's public image registry), and `curl localhost:8080` returns the nginx welcome page.
 
 ## On WSL2: netavark's firewall rules
 
