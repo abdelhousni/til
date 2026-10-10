@@ -133,6 +133,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
 <a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
 </p>
+<p>Entries are drafted with Claude Code, which also runs the commands they describe, usually in a Linux cloud container; I choose the topics, review and edit every entry, and publish it. Each entry says what was run and what wasn't.</p>
 <p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p>
 </header>
 <main>
@@ -500,6 +501,10 @@ def build_llms_txt(all_entries, topics, series_nav):
         "`.md` in place of `.html`; the links below point at the markdown. Sections are "
         "topics. Each line gives the entry's first-publication date, its place in a "
         "reading series where it has one, and how it opens.",
+        "",
+        "Entries are drafted with Claude Code, which also runs the commands they describe, "
+        "usually in a Linux cloud container; the author chooses the topics, reviews and "
+        "edits every entry, and publishes it. Each entry says what was run and what wasn't.",
         "",
     ]
     for topic, rows, _ in sorted(topics, key=lambda t: t[0]):
