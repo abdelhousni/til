@@ -2,6 +2,8 @@
 
 Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhousni/til). Site pattern and tooling adapted from [simonw/til](https://github.com/simonw/til).
 
+Entries are drafted with [Claude Code](https://claude.com/claude-code), which also runs the commands they describe, usually in a Linux cloud container; I choose the topics, review and edit every entry, and publish it. Each entry says what was run and what wasn't.
+
 [![Linkedin Badge](https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&logo=Linkedin&logoColor=white&labelColor=0A66C2&link=https://www.linkedin.com/in/abdelhousni/)](https://www.linkedin.com/in/abdelhousni/)
 
 Browse these TILs at https://til.housni.eu/

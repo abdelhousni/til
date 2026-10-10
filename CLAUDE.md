@@ -67,6 +67,25 @@ it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
 
+## Authorship
+
+The site says once, on the homepage, in the README and in `llms.txt`, that
+entries are drafted with Claude Code, which runs their commands, usually in
+a Linux cloud container, and that the owner reviews, edits and publishes
+them. Keep that note true when the way entries are made changes.
+
+Two cases go further, entry by entry:
+
+- **Where it ran matters.** When the entry is about an environment the
+  commands didn't run in (WSL, Windows, macOS, a GUI, real hardware, an
+  internal system) and a reader would assume they did, end the entry with
+  one line naming where the commands ran and where they didn't.
+- **Opinions.** A recommendation or judgement ("prefer X", "skip Y",
+  "the best way") is the owner's to make. List each such sentence in the
+  pull request description, under "Opinions to confirm", so the owner can
+  keep, rewrite or drop it before merging. Facts and procedures don't need
+  this.
+
 ## Decisions
 
 An entry explains how something works; it doesn't record which option was
