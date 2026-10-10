@@ -31,7 +31,7 @@ git var GIT_AUTHOR_IDENT
 git var GIT_COMMITTER_IDENT
 ```
 
-Both should show `abdel.h <23284113+abdelhousni@users.noreply.github.com>`.
+Both should show `abdelhousni <23284113+abdelhousni@users.noreply.github.com>`.
 The cloud environment sets `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`,
 `GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL`, which override every git config
 file. `git config user.email` doesn't see them: it still prints
@@ -43,7 +43,7 @@ the variables aren't set in this environment. Set the repository-local
 identity first:
 
 ```bash
-git config user.name "abdel.h"
+git config user.name "abdelhousni"
 git config user.email "23284113+abdelhousni@users.noreply.github.com"
 ```
 
