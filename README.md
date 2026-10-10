@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->137<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->138<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -213,6 +213,7 @@ Browse these TILs at https://til.housni.eu/
 ## claude-code
 
 * [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://til.housni.eu/claude-code/typesafe-jev-plugin.html) - 2026-09-29
+* [Packaging AI assistant context with Lola: MCP servers, skills and rules as modules](https://til.housni.eu/claude-code/lola-package-manager-for-ai-context.html) - 2026-10-10
 <!-- index ends -->
 
 ---
