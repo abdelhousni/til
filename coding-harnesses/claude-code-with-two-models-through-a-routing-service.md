@@ -6,8 +6,8 @@ Second entry in the Coding harnesses through an AI routing service series.
 
 ## The two models
 
-- **Claude Opus** is Anthropic's largest model. Its weights aren't published, so only Anthropic and the clouds that license it serve it: Amazon Bedrock, Google Vertex AI and Microsoft Azure. Those clouds have EU regions, which is how Opus can stay in the EU.
-- **GLM** is a family of open-weight models from Z.ai (Zhipu AI), a Chinese company. Open-weight means the weights are published, so any host can serve the model: OpenRouter lists about forty providers for GLM-5.3, including Z.ai itself and Mistral in the EU. Many serve it *quantized*, at reduced numeric precision (`fp8`, `fp4`) to make it cheaper and faster, which can cost some quality. The provider you end up with therefore decides price, region and precision. Z.ai documents its own Claude Code setup, with every model class on GLM.
+- **Claude Opus** is Anthropic's largest model, and all three routing services offer it. It is *closed-weight*, like every Anthropic model: Anthropic doesn't publish the trained parameters, so only Anthropic and the clouds it licenses the model to can run it: Amazon Bedrock, Google Vertex AI and Microsoft Azure. Those clouds have EU regions, which is how Opus can stay in the EU.
+- **GLM** is a family of open-weight models from Z.ai (Zhipu AI), a Chinese company. It is *open-weight*: the trained parameters are published, so any host can download and serve the model: OpenRouter lists about forty providers for GLM-5.3, including Z.ai itself and Mistral in the EU. Many serve it *quantized*, at reduced numeric precision (`fp8`, `fp4`) to make it cheaper and faster, which can cost some quality. The provider you end up with therefore decides price, region and precision. Z.ai documents its own Claude Code setup, with every model class on GLM.
 
 List prices on OpenRouter in October 2026, per million tokens (a token is a chunk of text, roughly three quarters of a word): Claude Opus 5.5 costs $4 input and $20 output, and GLM-5.3 from Z.ai costs $1.40 input and $4.40 output.
 
