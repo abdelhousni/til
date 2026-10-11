@@ -97,7 +97,8 @@
     "title": "Coding harnesses through an AI routing service (OpenRouter, Opper, Eden AI…)",
     "entries": [
       "coding-harnesses/coding-harnesses-and-ai-routing-services.md",
-      "coding-harnesses/claude-code-with-two-models-through-a-routing-service.md"
+      "coding-harnesses/claude-code-with-two-models-through-a-routing-service.md",
+      "coding-harnesses/opencode-with-two-models-through-a-routing-service.md"
     ]
   }
 }
