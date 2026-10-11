@@ -4,13 +4,13 @@ First entry in the Coding harnesses through an AI routing service series.
 
 This series connects terminal coding agents to models through an AI routing service such as [OpenRouter](https://openrouter.ai), [Opper](https://opper.ai) or [Eden AI](https://www.edenai.co), instead of each model vendor's own API. This entry defines the pieces. Each later entry covers one harness, and the series ends with a comparison and a way to run all of them in containers.
 
-> **A note on European sovereignty and in-region routing.** A routing service is one more company that sees your prompts, and your prompts contain your code. If that code or the data in it must stay in the EU, check two things separately: where the routing service itself decrypts and processes the request, and where the model provider it forwards the request to runs inference. A service hosted in the EU can still forward the request to a model served from the US. As of October 2026:
+> **A note on choosing where your requests run.** This series gives the local option first wherever one exists: for a reader in Europe, a routing service and model providers that process requests in the EU. That can matter for data protection rules, for latency, or simply as a preference for local providers. Other regions stay available; the point is to make the choice yourself instead of getting whatever the default routing picks. Two places decide where a request runs: where the routing service decrypts and processes it, and where the model provider it forwards it to runs the model. A service hosted in the EU can still forward a request to a provider in another region, and the other way round. As of October 2026:
 >
-> - **OpenRouter** has in-region routing on its Business and Enterprise plans. You send requests to `https://eu.openrouter.ai` (or `us.openrouter.ai`) instead of `openrouter.ai`, and it routes them only to providers it has onboarded for that region. If none serves the model there, the request fails instead of leaving the region. Only part of the catalog is available that way.
+> - **OpenRouter** has in-region routing on its Business and Enterprise plans. You send requests to `https://eu.openrouter.ai` (or `us.openrouter.ai`) instead of `openrouter.ai`, and it routes them only to providers it has onboarded for that region. If none serves the model there, the request fails instead of going to another region. Only part of the catalog is available that way.
 > - **Opper** says its gateway is hosted only in the EU. Where inference happens depends on the model you pick, and it marks the EU-hosted ones in its catalog. Rules enforced at the gateway can restrict a key to EU-only providers.
 > - **Eden AI** is headquartered in the EU and documents an EU endpoint, `https://api.eu.edenai.run/v3`. It notes that not every model has an EU deployment, and that fallback models may not have one either.
 >
-> These are the vendors' own claims. Read their data processing agreements (DPAs), and check where the exact model and its fallbacks are served, before you rely on any of them for compliance.
+> These are the vendors' own claims. If you need them for compliance, read their data processing agreements (DPAs) and check where the exact model and its fallbacks are served.
 
 ## The pieces
 
@@ -42,7 +42,7 @@ The harness doesn't know it is talking to a router. That is the point, and also 
 
 - **Billing**: you pay the routing service per token (a token is a chunk of text, roughly three quarters of an English word), not a monthly subscription. A Claude or ChatGPT subscription doesn't apply while the harness uses a routing-service key.
 - **Features**: vendor-specific features such as prompt caching (reusing an already-processed prompt prefix at a lower price) or a faster priority tier work only when the provider that serves the request supports them.
-- **Trust**: the routing service is one more party that processes your code, which is what the note at the top is about.
+- **Where it runs**: the routing service processes your code as well as the model provider, so you choose both, as the note at the top describes.
 
 ## Sources
 

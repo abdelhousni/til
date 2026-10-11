@@ -52,34 +52,11 @@ The same references on the other two services:
 | Build (GLM) | `openrouter/z-ai/glm-5.3` | `opper/glm-5.3` | `edenai/zai/glm-5.3` |
 | `small_model` | `openrouter/z-ai/glm-5.3-flash` | `opper/glm-5.3-flash` | `edenai/zai/glm-5.3-flash` |
 
-These are the IDs models.dev listed in October 2026, which is what `/models` shows. Opper's entries there are *pools*: a bare name such as `glm-5.3` that Opper balances across the providers serving it, without a region. Its registry list had Opus 5, not 5.5. To use a model the registry doesn't have, declare it yourself, as the EU section below does.
+These are the IDs models.dev listed in October 2026, which is what `/models` shows. Opper's entries there are *pools*: a bare name such as `glm-5.3` that Opper balances across the providers serving it, without a region. Its registry list had Opus 5, not 5.5. To use a model the registry doesn't have, declare it yourself, as the next section does for EU-hosted models.
 
-## Choose the provider behind GLM on OpenRouter
+## Prefer EU-hosted providers
 
-On OpenRouter the model ID doesn't pick the provider, and about forty serve GLM-5.3, many of them *quantized* (run at reduced precision, cheaper but sometimes worse). OpenCode passes OpenRouter's routing preferences per model:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "openrouter": {
-      "models": {
-        "z-ai/glm-5.3": {
-          "options": {
-            "provider": { "order": ["z-ai"], "allow_fallbacks": false }
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-`order` lists the providers to try first (`z-ai` is Z.ai's own endpoint), and `allow_fallbacks: false` makes the request fail rather than go to any other provider.
-
-## Keep it in the EU
-
-Every model the session uses has to be served in the EU, including `small_model` and the subagents' models, or part of the session leaves the region. See the note in the first entry for what each service guarantees.
+Each service can keep the session on providers that run in the EU. Point every model the session uses at one, `small_model` and the subagents' models included, so the whole session runs where you chose. The note in the first entry says what each service guarantees.
 
 - **OpenRouter**: override the base URL, and keep the same model IDs. This needs an account on OpenRouter's Business or Enterprise plan.
 
@@ -108,6 +85,29 @@ Every model the session uses has to be served in the EU, including `small_model`
   ```
 
   The same works on Eden AI for its EU IDs, `amazon/anthropic.claude-opus-5-5@eu` and `mistral/zai-glm-5-3`. The limits above are the ones models.dev lists for the same models under their global IDs; check the service's model list (`GET /v3/models`) in case a regional provider serves less.
+
+## Choose the provider behind GLM on OpenRouter
+
+On OpenRouter the model ID doesn't pick the provider, and about forty serve GLM-5.3, many of them *quantized* (run at reduced precision, cheaper but sometimes worse). OpenCode passes OpenRouter's routing preferences per model:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "openrouter": {
+      "models": {
+        "z-ai/glm-5.3": {
+          "options": {
+            "provider": { "order": ["z-ai"], "allow_fallbacks": false }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+`order` lists the providers to try first (`z-ai` is Z.ai's own endpoint), and `allow_fallbacks: false` makes the request fail rather than go to any other provider.
 
 ## Differences from Claude Code
 

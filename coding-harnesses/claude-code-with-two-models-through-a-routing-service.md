@@ -44,15 +44,15 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL="z-ai/glm-5.3-flash[1m]"
 export CLAUDE_CODE_SUBAGENT_MODEL="z-ai/glm-5.3[1m]"
 ```
 
-Those are OpenRouter's IDs. Each service names the same models differently, and on Opper and Eden AI the ID also selects the provider, and with it the region:
+Those are OpenRouter's IDs. Each service names the same models differently, and on Opper and Eden AI the ID also selects the provider, and with it the region. The EU-hosted option comes first:
 
 | Model | OpenRouter | Opper | Eden AI |
 |---|---|---|---|
-| Claude Opus 5.5 | `anthropic/claude-opus-5.5` | `anthropic/claude-opus-5-5` (US) | `anthropic/claude-opus-5-5` |
-| Claude Opus 5.5, EU | same ID on the EU URL | `aws/claude-opus-5-5` (Bedrock, Sweden) | `amazon/anthropic.claude-opus-5-5@eu` |
-| GLM-5.3 | `z-ai/glm-5.3` | `novita/zai-org/glm-5.3` (US) | `zai/glm-5.3` |
-| GLM-5.3, EU | same ID on the EU URL | `mistral/zai-glm-5-3` | `mistral/zai-glm-5-3` |
-| GLM-5.3 Flash | `z-ai/glm-5.3-flash` | `greenpt/glm-5.3-flash` (EU) | `zai/glm-5.3-flash` |
+| Claude Opus 5.5, EU-hosted | same ID on the EU URL | `aws/claude-opus-5-5` (Bedrock, Sweden) | `amazon/anthropic.claude-opus-5-5@eu` |
+| Claude Opus 5.5, default routing | `anthropic/claude-opus-5.5` | `anthropic/claude-opus-5-5` (Anthropic's API) | `anthropic/claude-opus-5-5` |
+| GLM-5.3, EU-hosted | same ID on the EU URL | `mistral/zai-glm-5-3` (Mistral) | `mistral/zai-glm-5-3` (Mistral) |
+| GLM-5.3, default routing | `z-ai/glm-5.3` | `novita/zai-org/glm-5.3` | `zai/glm-5.3` (Z.ai's API) |
+| GLM-5.3 Flash | `z-ai/glm-5.3-flash` | `greenpt/glm-5.3-flash` (EU-hosted) | `zai/glm-5.3-flash` |
 
 These come from each service's model list in October 2026 (`GET /api/v1/models` on OpenRouter, `/v3/models` on the other two). Catalogs change often, so check before copying.
 
@@ -66,7 +66,7 @@ Then switch with `/model opus` or `/model sonnet` inside a session, or start wit
 - **Tool calls.** Claude Code is built and tested with Claude models, and Anthropic doesn't support it with others. Z.ai runs every class on GLM in its own setup, so GLM is meant to handle Claude Code's tool calls, but expect rougher edges than with Claude on long edits. If file edits fail, move that class back to a Claude model.
 - **Prompt caching** (reusing an already-processed prompt prefix at a lower price) depends on the provider. A long session costs more on a host that doesn't cache.
 - **Thinking.** Claude's extended thinking blocks pass through only where the provider supports them.
-- **EU-only sessions.** Use the EU URL on OpenRouter, or the EU model IDs on Opper and Eden AI. Every class has to point to an EU model, the subagent class included, or part of the session leaves the region. Opper also suggests `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` on a network that allows traffic only to the routing service; it turns off Claude Code's version checks, telemetry and error reports.
+- **EU-hosted sessions.** Use the EU URL on OpenRouter, or the EU-hosted model IDs on Opper and Eden AI. Point every class at one, the subagent class included, so the whole session runs where you chose. Opper also suggests `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` on a network that allows traffic only to the routing service; it turns off Claude Code's version checks, telemetry and error reports.
 
 ## The same two models without a routing service
 
