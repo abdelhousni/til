@@ -50,6 +50,15 @@ git config user.email "23284113+abdelhousni@users.noreply.github.com"
 Rewriting history afterwards to fix authorship means a force push, so get it
 right before committing.
 
+## Commit messages
+
+Commit messages and pull request titles follow
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
+`type(scope): summary`, with `type` one of `feat`, `fix`, `docs`, `chore`,
+`refactor`, `test` or `ci`, and the topic directory as the optional scope,
+for example `docs(podman): add the podman compose socket entry` or
+`fix(ansible): define selectattr on first use`.
+
 ## Merging
 
 Open pull requests, but do not merge them unless explicitly asked to in the
