@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->137<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->139<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -186,6 +186,7 @@ Browse these TILs at https://til.housni.eu/
 * [Building a custom WSL2 kernel on GitHub Actions: `KCFLAGS`, not `CFLAGS`](https://til.housni.eu/linux/wsl2-kernel-on-github-actions.html) - 2026-09-28
 * [Checking new firewall rules with nc and Python: open, refused, or dropped](https://til.housni.eu/linux/check-firewall-rules-with-nc-and-python.html) - 2026-09-29
 * [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
+* [Changing when logrotate runs: the systemd timer, from the command line and with Ansible](https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html) - 2026-10-15
 
 ## windows
 
@@ -194,6 +195,7 @@ Browse these TILs at https://til.housni.eu/
 * [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 * [Running Linux containers on Windows with wslc, the container CLI built into WSL](https://til.housni.eu/windows/wslc-containers-in-wsl.html) - 2026-10-06
+* [A lightweight graphical file manager in WSLg: Thunar on Ubuntu, RHEL 9 and NixOS](https://til.housni.eu/windows/thunar-file-manager-in-wslg.html) - 2026-10-15
 
 ## vscode
 
