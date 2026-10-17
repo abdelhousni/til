@@ -92,5 +92,13 @@
       "ansible/inventory-testing-in-ci-json-schema.md",
       "ansible/inventory-local-facts-facts-d-risks.md"
     ]
+  },
+  "coding-harnesses-routing": {
+    "title": "Coding harnesses through an AI routing service (OpenRouter, Opper, Eden AI…)",
+    "entries": [
+      "coding-harnesses/coding-harnesses-and-ai-routing-services.md",
+      "coding-harnesses/claude-code-with-two-models-through-a-routing-service.md",
+      "coding-harnesses/opencode-with-two-models-through-a-routing-service.md"
+    ]
   }
 }
