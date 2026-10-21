@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->140<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->141<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -216,6 +216,10 @@ Browse these TILs at https://til.housni.eu/
 ## claude-code
 
 * [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://til.housni.eu/claude-code/typesafe-jev-plugin.html) - 2026-09-29
+
+## artifactory
+
+* [Uploading files larger than Artifactory's upload limit](https://til.housni.eu/artifactory/uploading-files-larger-than-the-ui-limit.html) - 2026-10-21
 <!-- index ends -->
 
 ---
