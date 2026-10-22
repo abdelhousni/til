@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->144<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->145<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -178,6 +178,7 @@ Browse these TILs at https://til.housni.eu/
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://til.housni.eu/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [Terraform state locking just dropped its DynamoDB requirement](https://til.housni.eu/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-23
 * [What Terraform, OpenTofu, and Packer promise about secrets, and where each promise stops](https://til.housni.eu/terraform/what-terraform-opentofu-and-packer-promise-about-secrets.html) - 2026-09-29
+* [OpenTofu in a GitLab pipeline: GitLab-managed state and the OpenTofu CI/CD component](https://til.housni.eu/terraform/opentofu-gitlab-pipeline-managed-state-component.html) - 2026-10-23
 
 ## apache
 
