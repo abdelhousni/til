@@ -92,5 +92,13 @@
       "ansible/inventory-testing-in-ci-json-schema.md",
       "ansible/inventory-local-facts-facts-d-risks.md"
     ]
+  },
+  "iac-controller": {
+    "title": "Running IaC from a controller, the GitOps way",
+    "entries": [
+      "ansible/control-node-runner-controller-tower-awx-aap.md",
+      "ansible/ansible-controllers-2026-awx-aap-semaphore-ci.md",
+      "gitops/gitops-with-push-tools-ansible-opentofu.md"
+    ]
   }
 }
