@@ -98,7 +98,8 @@
     "entries": [
       "ansible/control-node-runner-controller-tower-awx-aap.md",
       "ansible/ansible-controllers-2026-awx-aap-semaphore-ci.md",
-      "gitops/gitops-with-push-tools-ansible-opentofu.md"
+      "gitops/gitops-with-push-tools-ansible-opentofu.md",
+      "terraform/opentofu-gitlab-pipeline-managed-state-component.md"
     ]
   }
 }
