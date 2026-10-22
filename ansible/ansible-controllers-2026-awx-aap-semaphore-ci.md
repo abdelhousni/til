@@ -1,6 +1,6 @@
 # Ansible controllers in 2026: AWX paused, AAP, Semaphore UI, or plain CI
 
-Second entry in the Running IaC from a controller, the GitOps way series. [The first entry](control-node-runner-controller-tower-awx-aap.md) separated the three roles: the *control node* runs `ansible-playbook`; a *runner* runs CI jobs; a *controller* is a service that stores projects, inventories, credentials and templates, launches runs and keeps their history. This one compares the four ways a team can run its Ansible centrally today, and runs one of them, Semaphore UI, against a playbook kept in GitLab.
+Second entry in the Running IaC and CaC from a controller series. [The first entry](control-node-runner-controller-tower-awx-aap.md) separated the three roles: the *control node* runs `ansible-playbook`; a *runner* runs CI jobs; a *controller* is a service that stores projects, inventories, credentials and templates, launches runs and keeps their history. This one compares the four ways a team can run its Ansible centrally today, and runs one of them, Semaphore UI, against a playbook kept in GitLab.
 
 ## The four options
 

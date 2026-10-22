@@ -1,6 +1,6 @@
 # GitOps with tools that push: Ansible and OpenTofu against the four OpenGitOps principles
 
-Third entry in the Running IaC from a controller, the GitOps way series. [The first two entries](../ansible/control-node-runner-controller-tower-awx-aap.md) looked at what runs Ansible: a pipeline's runner job or a controller. Both are often called "GitOps" as soon as the playbooks live in Git. GitOps has a stricter definition than that, written for agents that run all the time, and Ansible and OpenTofu don't work that way. This entry compares them against it, so that the series can say precisely which parts a GitLab pipeline gives and which it only approximates.
+Third entry in the Running IaC and CaC from a controller series. [The first two entries](../ansible/control-node-runner-controller-tower-awx-aap.md) looked at what runs Ansible: a pipeline's runner job or a controller. Both are often called "GitOps" as soon as the playbooks live in Git. GitOps has a stricter definition than that, written for agents that run all the time, and Ansible and OpenTofu don't work that way. This entry compares them against it, so that the series can say precisely which parts a GitLab pipeline gives and which it only approximates.
 
 ## The definition
 
@@ -56,7 +56,7 @@ A GitLab pipeline can't pull, but it can run without a commit. A *scheduled pipe
 - **Detect drift.** OpenTofu's `tofu plan -detailed-exitcode` exits with 0 when nothing would change, 1 on error and 2 when the real infrastructure differs from the code, so a scheduled job can fail, and alert, on 2. For Ansible, `ansible-playbook --check --diff` reports what would change without changing it; a host with `changed` tasks has drifted.
 - **Correct drift.** The scheduled job applies instead of checking: `tofu apply` or `ansible-playbook` on the schedule, as `ansible-pull` without `-o` does on its timer.
 
-Detecting leaves the decision to a person; correcting is closer to the principles but applies changes nobody reviewed at that moment, such as a provider upgrade changing a default. Pinning narrows that: if the scheduled job runs a release tag, an execution environment by digest and providers at locked versions, the only thing it can apply is what was reviewed when that tag was made. The Red Hat CoP good practices ask for the same in production: *"Never use 'latest' or branch names in production references"* ([Git workflow](https://github.com/redhat-cop/automation-good-practices/blob/main/git_workflow/README.adoc)). The series will show both, from GitLab, with the plan or the check report kept as a job artifact.
+Detecting leaves the decision to a person; correcting is closer to the principles but applies changes nobody reviewed at that moment, such as a provider upgrade changing a default. Pinning narrows that: if the scheduled job runs a release tag, an execution environment by digest and providers at locked versions, the only thing it can apply is what was reviewed when that tag was made. The Red Hat CoP good practices ask for the same in production: *"Never use 'latest' or branch names in production references"* ([Git workflow](https://github.com/redhat-cop/automation-good-practices/blob/main/git_workflow/README.adoc)). The series comes back to both in a later part.
 
 For OpenTofu there is also a way to meet all four principles: the [Tofu Controller](https://github.com/flux-iac/tofu-controller), formerly Weave TF-Controller, a Flux controller that reconciles OpenTofu and Terraform resources *"in the GitOps way"*, with a drift-detection-only mode among its models. It needs a Kubernetes cluster running Flux, which this series doesn't use.
 
@@ -65,6 +65,6 @@ For OpenTofu there is also a way to meet all four principles: the [Tofu Controll
 - **GitOps** in the OpenGitOps sense: an agent pulls from Git and reconciles continuously. In this series, only `ansible-pull` without `-o` and the Tofu Controller meet it.
 - **A pipeline driven by Git**, often called *push-based GitOps*: Git is the source of truth, merge requests are the only way to change it, and a pipeline applies each merge. Principles 1 and 2 hold; 3 doesn't; 4 holds only as far as scheduled runs go.
 
-Most of this series builds the second, because Ansible and OpenTofu are push tools, and adds the scheduled runs that bring it closer to the first.
+Most of this series builds the second, because Ansible and OpenTofu are push tools. The scheduled runs that bring it closer to the first are left for a later part.
 
 The `ansible-pull` runs ran in the Semaphore UI 2.19.17 container of the companion repository's lab, against GitLab CE 19.5.1; nothing else in this entry was run.
