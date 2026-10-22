@@ -94,7 +94,7 @@
     ]
   },
   "iac-controller": {
-    "title": "Running IaC from a controller, the GitOps way",
+    "title": "Running IaC and CaC from a controller",
     "entries": [
       "ansible/control-node-runner-controller-tower-awx-aap.md",
       "ansible/ansible-controllers-2026-awx-aap-semaphore-ci.md",
