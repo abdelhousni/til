@@ -25,7 +25,9 @@ What that means for a team starting today: installing AWX means installing 24.6.
 
 ## AAP: the supported controller
 
-AAP is what AWX becomes once Red Hat packages and supports it. Since AAP 2.5 (October 2024), a *platform gateway* handles login and access for all of its services in one interface, and a containerized installer deploys it on RHEL with Podman ([AAP 2.5 release notes](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/release_notes/index)). The 2.6 documentation lists patch releases into 2026 ([AAP 2.6 release notes](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html-single/release_notes/index)). It needs a Red Hat subscription, and Red Hat offers a time-limited trial. This series describes AAP from Red Hat's documentation and doesn't run it; the inventory series' [AAP entry](inventory-in-aap-sources-smart-constructed.md) covers how its inventories work.
+AAP is what AWX becomes once Red Hat packages and supports it. Since AAP 2.5 (October 2024), a *platform gateway* handles login and access for all of its services in one interface, and a containerized installer deploys it on RHEL with Podman ([AAP 2.5 release notes](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html-single/release_notes/index)). The 2.6 documentation lists patch releases into 2026 ([AAP 2.6 release notes](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.6/html-single/release_notes/index)). It needs a Red Hat subscription, and Red Hat offers a time-limited trial.
+
+A controller with a web interface invites changes made by clicking, which Git never sees. Red Hat's Communities of Practice (CoP), in their [automation good practices](https://github.com/redhat-cop/automation-good-practices/blob/main/aap_configuration/README.adoc), ask for the opposite: *"All AAP objects -- organizations, teams, credentials, projects, inventories, job templates, workflow templates, execution environments, schedules, and settings -- should be defined as YAML data in a Git repository"*, with *"no manual changes"* through the interface, applied *"through CI/CD pipelines, not manually"*. The CoP's collection for this is [`infra.aap_configuration`](https://github.com/redhat-cop/infra.aap_configuration) for AAP 2.5 and later; `infra.controller_configuration` covers AAP 2.4 and earlier. Done that way, a controller is configured by a pipeline like any other system, and the interface is for launching and reading runs. This series describes AAP from Red Hat's documentation and doesn't run it; the inventory series' [AAP entry](inventory-in-aap-sources-smart-constructed.md) covers how its inventories work.
 
 ## Semaphore UI, run against GitLab
 
@@ -33,7 +35,7 @@ Semaphore UI organises work in *projects*. Its [README](https://github.com/semap
 
 1. `site.yml` goes into a **private** GitLab project.
 2. GitLab creates a *project access token*, a token tied to one project rather than to a person, with the Reporter role and only the `read_repository` scope, valid for one day.
-3. Semaphore gets that token as a `login_password` key, a repository `http://gitlab/root/ctl-02.git` that uses it, a static inventory (`semaphore-container ansible_connection=local`, the Semaphore container itself) and a template for `site.yml`.
+3. Semaphore gets that token as a `login_password` key, a repository `http://gitlab/root/ctl-02.git` that uses it, a static inventory (`semaphore-container`, the Semaphore container itself), a variable group setting `ansible_connection: local`, and a template for `site.yml` on branch `main`.
 4. The template runs, and the script prints what the task reported.
 
 The playbook prints the ansible-core version it ran with:
@@ -44,6 +46,7 @@ The playbook prints the ansible-core version it ran with:
     msg: >-
       ansible-core {{ ansible_version.full }} ran site.yml
       for {{ inventory_hostname }}
+    verbosity: 0
 ```
 
 The output, from Semaphore UI 2.19.17:
@@ -76,6 +79,6 @@ These questions separate the options more than feature lists do:
 - **Who launches runs?** If only people who already merge to Git do, the pipeline is enough. If others need a button with a form (a help desk restarting a service, an application team deploying), a controller gives them that without giving them Git.
 - **Can you run Kubernetes or pay for AAP?** AWX needs Kubernetes; AAP needs a subscription; Semaphore UI and GitLab CI run in plain containers.
 - **Who chooses the ansible-core version?** Per project with an EE (CI, AWX, AAP), or once for the whole server (Semaphore UI's bundled one, unless you build your own image).
-- **Must every change go through a merge request?** A controller can run any commit of any branch it can reach; a pipeline on a protected branch runs only what was merged.
+- **Must every change go through a merge request?** A pipeline on a protected branch runs only what was merged. A controller runs whatever its projects and templates point at, so the same guarantee needs two things: its objects defined in Git and applied by a pipeline, as above, and its projects pinned to a release tag rather than a branch. The CoP good practices ask for exactly that: *"Never use 'latest' or branch names in production references"* ([Git workflow](https://github.com/redhat-cop/automation-good-practices/blob/main/git_workflow/README.adoc)). Example 02 runs `main` because it's a lab.
 
 The commands above ran in a Linux container with Docker: GitLab CE 19.5.1, GitLab Runner 19.5.1 and Semaphore UI 2.19.17 from the companion repository's lab. AWX and AAP were not run.
