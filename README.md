@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->141<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->144<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -75,6 +75,8 @@ Browse these TILs at https://til.housni.eu/
 * [Testing the inventory in CI, with a JSON Schema and policy checks](https://til.housni.eu/ansible/inventory-testing-in-ci-json-schema.html) - 2026-10-03
 * [Local facts in facts.d: declared data that looks measured](https://til.housni.eu/ansible/inventory-local-facts-facts-d-risks.html) - 2026-10-04
 * [A playbook hangs at fact gathering or `service_facts`: find the blocking call, then bound it](https://til.housni.eu/ansible/playbook-hangs-at-fact-gathering-or-service-facts.html) - 2026-10-17
+* [Control node, runner, controller: who runs your Ansible, and how Tower became AWX and AAP](https://til.housni.eu/ansible/control-node-runner-controller-tower-awx-aap.html) - 2026-10-22
+* [Ansible controllers in 2026: AWX paused, AAP, Semaphore UI, or plain CI](https://til.housni.eu/ansible/ansible-controllers-2026-awx-aap-semaphore-ci.html) - 2026-10-22
 
 ## github-pages
 
@@ -220,6 +222,10 @@ Browse these TILs at https://til.housni.eu/
 ## artifactory
 
 * [Uploading files larger than Artifactory's upload limit](https://til.housni.eu/artifactory/uploading-files-larger-than-the-ui-limit.html) - 2026-10-21
+
+## gitops
+
+* [GitOps with tools that push: Ansible and OpenTofu against the four OpenGitOps principles](https://til.housni.eu/gitops/gitops-with-push-tools-ansible-opentofu.html) - 2026-10-22
 <!-- index ends -->
 
 ---
