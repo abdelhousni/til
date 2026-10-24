@@ -14,7 +14,8 @@
       "kubernetes/rke2-etcd-snapshot-restore-drill.md",
       "kubernetes/rke2-node-maintenance-drain-reboot.md",
       "kubernetes/rke2-etcd-ha-restore-and-s3-backup.md",
-      "kubernetes/rke2-node-scheduling-labels-taints-tolerations.md"
+      "kubernetes/rke2-node-scheduling-labels-taints-tolerations.md",
+      "kubernetes/namespaces-resourcequota-limitrange-rke2.md"
     ]
   },
   "hashicorp": {

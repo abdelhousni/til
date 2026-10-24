@@ -144,4 +144,4 @@ That also explains `--ignore-daemonsets`, which that entry described as necessar
 
 ## Where this series goes next
 
-RBAC — who is actually allowed to run `kubectl taint`, `kubectl label`, or any of the other commands in this entry.
+Namespaces, and the quotas, limit ranges, network policies and Pod Security levels that make a namespace a boundary.
