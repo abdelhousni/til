@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->145<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->146<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -227,6 +227,10 @@ Browse these TILs at https://til.housni.eu/
 ## gitops
 
 * [GitOps with tools that push: Ansible and OpenTofu against the four OpenGitOps principles](https://til.housni.eu/gitops/gitops-with-push-tools-ansible-opentofu.html) - 2026-10-22
+
+## devops
+
+* [DevOps and DevSecOps terminology: DORA metrics, CI/CD for Ansible, feature branches and GitOps](https://til.housni.eu/devops/devops-devsecops-dora-cicd-gitops-terminology.html) - unknown
 <!-- index ends -->
 
 ---
