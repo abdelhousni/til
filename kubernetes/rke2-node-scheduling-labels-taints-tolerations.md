@@ -1,6 +1,6 @@
 # RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along
 
-Eleventh entry in the RKE2/Kubernetes series. Ten entries in, every Pod created along the way has landed on a node without anyone choosing which one — including on the multi-server cluster from [the HA entry](rke2-ha-embedded-etcd-external-datastore.md), where some of those Pods were sharing a machine with etcd and the API server. That isn't an accident or an oversight in the setup. It's RKE2's documented default, and it's the opposite of what the most common Kubernetes installer does.
+Thirteenth entry in the RKE2/Kubernetes series. Twelve entries in, every Pod created along the way has landed on a node without anyone choosing which one — including on the multi-server cluster from [the HA entry](rke2-ha-embedded-etcd-external-datastore.md), where some of those Pods were sharing a machine with etcd and the API server. That isn't an accident or an oversight in the setup. It's RKE2's documented default, and it's the opposite of what the most common Kubernetes installer does.
 
 ## The scheduler picks, in two stages
 
