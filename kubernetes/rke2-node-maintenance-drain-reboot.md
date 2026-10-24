@@ -1,6 +1,6 @@
 # Cleanly stopping an RKE2 node for planned maintenance
 
-Draining and stopping a node the right way for a patch/reboot is mostly ordinary Kubernetes practice; the one RKE2-specific trap is reaching for the wrong bundled script to actually stop it.
+Eleventh entry in the RKE2/Kubernetes series. Draining and stopping a node the right way for a patch/reboot is mostly ordinary Kubernetes practice; the one RKE2-specific trap is reaching for the wrong bundled script to actually stop it.
 
 ## The sequence
 
