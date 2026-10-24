@@ -27,7 +27,7 @@ Typical automated checks, and where they run:
 | Check | What it looks for | Example for IaC |
 |---|---|---|
 | Secret scanning | passwords, tokens or keys committed to Git | `gitleaks`, GitHub secret scanning |
-| SAST (static application security testing) | dangerous patterns in source code, without running it | `ansible-lint`, `checkov` or `KICS` on playbooks and Terraform |
+| SAST (static application security testing) | dangerous patterns in source code, without running it | `KICS` or `checkov` on playbooks and Terraform |
 | SCA (software composition analysis) | dependencies with known vulnerabilities | collections and Python packages in an execution environment |
 | Image scanning | vulnerable packages in a container image | `trivy` on the image a job runs in |
 | DAST (dynamic application security testing) | weaknesses in the running application | tests against a staging deployment |
@@ -57,20 +57,21 @@ DevSecOps is not a separate method: it is DevOps in which security checks are pa
 
 ## DORA metrics
 
-DORA (DevOps Research and Assessment) is a research programme, now part of Google Cloud, that surveys thousands of teams every year in its *State of DevOps* report. It found that a few measurements predict how well a team delivers software. The four classic ones form two pairs:
+DORA (DevOps Research and Assessment) is a research programme run by Google Cloud that surveys thousands of teams every year for its *Accelerate State of DevOps* report. It found that a few measurements predict how well a team delivers software. It started with four, the "four keys", and since the 2024 report it uses five, in two groups ([DORA's software delivery performance metrics](https://dora.dev/guides/dora-metrics/)):
 
-| Metric | Question it answers | Measures |
+| Group | Metric | DORA's definition |
 |---|---|---|
-| Deployment frequency | how often do we deploy to production? | throughput |
-| Lead time for changes | how long from commit to running in production? | throughput |
-| Change failure rate | what share of deployments cause a failure that needs a fix or rollback? | stability |
-| Failed deployment recovery time | how long to recover when a deployment fails? | stability |
+| Throughput | Change lead time | *"The amount of time it takes for a change to go from committed to version control to deployed in production."* |
+| Throughput | Deployment frequency | *"The number of deployments over a given period or the time between deployments."* |
+| Throughput | Failed deployment recovery time | *"The time it takes to recover from a deployment that fails and requires immediate intervention."* |
+| Instability | Change fail rate | *"The ratio of deployments that require immediate intervention following a deployment."* |
+| Instability | Deployment rework rate | *"The ratio of deployments that are unplanned but happen as a result of an incident in production."* |
 
-The last one was called *mean time to restore* (MTTR) before 2023, when DORA narrowed it to failures caused by a deployment. In 2024 DORA added a fifth, *rework rate*: the share of deployments that were not planned but made to fix a problem in production.
+The metrics changed over time ([history of DORA's metrics](https://dora.dev/insights/dora-metrics-history/)): failed deployment recovery time replaced *mean time to restore* (MTTR) in the 2023 report, which narrowed it to failures caused by a change to production, and rework rate was added as the fifth metric in 2024, when recovery time also moved from the stability group to throughput.
 
-The point of the pairs is that speed and stability are measured together: deploying more often only counts as progress if the failure rate and recovery time don't get worse. DORA's research found that the teams that deploy most often also tend to fail least, because small changes are easier to test and to undo.
+Speed and the failure metrics are measured together, so that deploying more often only counts as progress if failures don't rise. DORA reports that they are not a trade-off: *"speed and stability are not tradeoffs. In fact, we see that the metrics are correlated for most teams. Top performers do well across all five metrics, and low performers do poorly."*
 
-For an Ansible repository, the metrics map to things a pipeline already records: merges to `main` that ran the deploy job (frequency), the time between the first commit of a merge request and its deploy job (lead time), deploy jobs followed by a revert or hotfix (failure rate), and the time until the next successful deploy (recovery).
+For an Ansible repository, the metrics map to things a pipeline already records: merges to `main` that ran the deploy job (frequency), the time between the first commit of a merge request and its deploy job (lead time), deploy jobs followed by a revert or a fix (change fail rate), unplanned deploys made to fix an incident (rework rate), and the time until the next successful deploy (recovery).
 
 ## CI/CD applied to IaC: Ansible as an example
 
@@ -96,7 +97,7 @@ flowchart TD
 What each step brings:
 
 - **Lint**: `ansible-lint` flags deprecated modules, missing names and risky patterns such as `shell` where a module exists ([how to run it in the editor and in CI](../ansible/ansible-lint-fix-in-the-editor-and-in-ci.md)).
-- **Molecule** is the Ansible tool that creates a test instance (often a container), runs the role against it, runs it a second time to check that nothing changes (*idempotence*: the same result however many times it runs), and runs verification tests.
+- **Molecule** is the Ansible tool that creates a test instance (often a container), runs the role against it, runs it a second time to check that nothing changes (*idempotence*: the same result however many times it runs), and runs verification tests. `molecule test` runs that whole sequence, then destroys the instance; the steps are listed in the scenario's `test_sequence`.
 - **`--check --diff`** runs the playbook in dry-run mode and shows the changes it would make, the Ansible equivalent of `tofu plan`.
 - **The same execution environment everywhere**: running every job in one pinned container image keeps the Ansible version and collections identical between CI, staging and production ([building one from a locked requirements file](../ansible/execution-environment-from-a-locked-requirements-file.md)).
 - **Secrets** come from the CI platform's protected variables or a vault at run time, never from the repository.
@@ -167,7 +168,7 @@ The workflow is sometimes sold under names such as a "no-rework architecture"; t
 - **Short-lived branches**: a branch that lives for days drifts away from `main` and ends in a large merge conflict, which is rework of its own. Merging `main` into the branch, or merging the branch often, keeps the difference small.
 - **One change per branch**: a small merge request is reviewed faster and reverted more easily.
 
-It connects back to DORA: changes that are caught on the branch never count as failed deployments (change failure rate, rework rate), and small branches reach production sooner (lead time).
+It connects back to DORA: changes that are caught on the branch never count as failed deployments (change fail rate, rework rate), and small branches reach production sooner (lead time).
 
 *Trunk-based development* takes the same idea further: branches last hours rather than days, and unfinished work is hidden behind feature flags instead of kept on a branch. *Git flow* goes the other way, with long-lived `develop` and `release` branches; it suits software shipped in versions more than infrastructure deployed continuously.
 
