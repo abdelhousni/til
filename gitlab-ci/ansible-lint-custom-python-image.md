@@ -104,4 +104,6 @@ build-image:
 
 The `-debug` variant is needed because it ships a shell for `script:`, and the empty `entrypoint` stops Kaniko from running before the script does. Upstream Kaniko (`gcr.io/kaniko-project/executor`) was archived in 2025; it still works, but `martizih/kaniko` is a maintained fork. GitLab's own docs also point at BuildKit (rootless) and Buildah.
 
+If the build fails at random with `i/o timeout` while pulling the base image or packages, see [Building CI images on a flaky network](gitlab-ci-images-flaky-network.md).
+
 These pipelines were run on a GitLab runner on a private RKE2 (Kubernetes) node, not in the Linux cloud container where this entry was drafted.
