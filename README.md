@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->147<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->148<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -88,6 +88,7 @@ Browse these TILs at https://til.housni.eu/
 ## gitlab-ci
 
 * [A simple GitLab CI pipeline for ansible-lint on a custom Python image](https://til.housni.eu/gitlab-ci/ansible-lint-custom-python-image.html) - 2026-09-05
+* [Building GitLab CI images on a flaky network](https://til.housni.eu/gitlab-ci/gitlab-ci-images-flaky-network.html) - 2026-10-25
 
 ## http
 
