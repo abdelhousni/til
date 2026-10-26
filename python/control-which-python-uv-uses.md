@@ -1,6 +1,6 @@
 # Controlling which Python uv uses
 
-[uv](https://docs.astral.sh/uv/) is Astral's Python package and project manager. When it needs an interpreter it can either use one already on the machine (a *system* Python: the OS's, Homebrew's, pyenv's) or download its own *managed* build into `~/.local/share/uv/python`. By default it prefers managed Pythons, but it still prefers an existing system Python over downloading a new one ([Python versions](https://docs.astral.sh/uv/concepts/python-versions/)).
+[uv](https://docs.astral.sh/uv/) is Astral's Python package and project manager. When it needs an interpreter it can either use one already on the machine (a *system* Python: the OS's, or one from another installer such as pyenv) or download its own *managed* build into `~/.local/share/uv/python`. By default it prefers managed Pythons, but it still prefers an existing system Python over downloading a new one ([Python versions](https://docs.astral.sh/uv/concepts/python-versions/)).
 
 That's how a surprise happens: a package manager installs a brand-new Python as a dependency of something else, uv picks it up, and a tool run with `uv tool run` (which runs a command-line tool in a throwaway environment) breaks because, for example, `ansible-core` doesn't support that version yet. Removing that Python can break whatever depends on it; telling uv which version to use leaves it in place. This entry covers how to choose, check and clean up the Python uv uses. Checked with uv 0.13.
 
