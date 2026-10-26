@@ -2,7 +2,7 @@
 
 [uv](https://docs.astral.sh/uv/) is Astral's Python package and project manager. When it needs an interpreter it can either use one already on the machine (a *system* Python: the OS's, Homebrew's, pyenv's) or download its own *managed* build into `~/.local/share/uv/python`. By default it prefers managed Pythons, but it still prefers an existing system Python over downloading a new one ([Python versions](https://docs.astral.sh/uv/concepts/python-versions/)).
 
-That's how a surprise happens: `brew install` pulls in a brand-new Python (say `python@3.15`) as a dependency of something else, uv picks it up, and a tool run with `uv tool run` (which runs a command-line tool in a throwaway environment) breaks because, for example, `ansible-core` doesn't support it yet. This entry starts from that case and covers the other ways to choose, check and clean up the Python uv uses. Checked with uv 0.13.
+That's how a surprise happens: a package manager installs a brand-new Python as a dependency of something else, uv picks it up, and a tool run with `uv tool run` (which runs a command-line tool in a throwaway environment) breaks because, for example, `ansible-core` doesn't support that version yet. Removing that Python can break whatever depends on it; telling uv which version to use leaves it in place. This entry covers how to choose, check and clean up the Python uv uses. Checked with uv 0.13.
 
 ## See which Python uv picks
 
@@ -11,18 +11,7 @@ uv python find                    # the interpreter uv would use here
 uv python list --only-installed   # every Python uv can see, managed or not
 ```
 
-`uv python list` prints one line per interpreter with its path, so a Homebrew Python shows up under `/opt/homebrew/` (or `/usr/local/` on Intel Macs).
-
-## Don't uninstall the Homebrew Python first
-
-The reflex is to uninstall that Python. Homebrew often refuses, because another formula (a Homebrew package, here `keychain`) depends on it, and forcing it with `--ignore-dependencies` leaves that formula broken. Check what depends on it:
-
-```sh
-brew uses --installed --recursive python@3.15   # installed formulae that need it
-brew deps --installed keychain                  # what keychain needs
-```
-
-If anything you still use shows up, leave the formula alone and tell uv which version to use instead.
+`uv python list` prints one line per interpreter with its path, so you can tell a managed Python (under `~/.local/share/uv/python`) from a system one.
 
 ## Tell uv which version to use
 
@@ -78,7 +67,7 @@ The `python-preference` setting in `~/.config/uv/uv.toml` (uv's user configurati
 | Value | Uses |
 |---|---|
 | `managed` (default) | managed first, system if no managed one fits |
-| `only-managed` | managed only, never Homebrew's or the OS's |
+| `only-managed` | managed only, never a system one |
 | `system` | system first, managed if no system one fits |
 | `only-system` | system only, for example where the OS's Python is mandated |
 
@@ -117,14 +106,6 @@ Each managed version stays under `~/.local/share/uv/python` until you remove it.
 uv python install --default 3.13
 ```
 
-That adds `python` and `python3` links in `~/.local/bin`. Nothing under `/usr/bin` or Homebrew's prefix changes; whether your shell finds them first depends on `~/.local/bin` coming before those directories in `PATH`.
+That adds `python` and `python3` links in `~/.local/bin`. Nothing under `/usr/bin` changes; whether your shell finds them first depends on `~/.local/bin` coming before those directories in `PATH`.
 
-## If you still want the Homebrew Python gone
-
-1. Remove what depends on it first, if you don't need it: `brew uninstall keychain`. Otherwise accept that `python@3.15` stays.
-2. Run `brew autoremove --dry-run` and review the list before running `brew autoremove`, which removes formulae that were only installed as dependencies.
-3. Run `brew uninstall python@3.15`.
-
-Forcing the removal breaks dependents, and the usual way out is reinstalling them afterwards.
-
-The uv commands ran in a Linux cloud container with uv 0.13, except `uv python install --default`, `uv python upgrade` and `uv python uninstall`, whose options were only checked in `uv help`; the Homebrew commands were not run, and macOS wasn't used.
+The uv commands ran in a Linux cloud container with uv 0.13, except `uv python install --default`, `uv python upgrade` and `uv python uninstall`, whose options were only checked in `uv help`.
