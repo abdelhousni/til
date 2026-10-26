@@ -161,7 +161,7 @@ gitGraph
     commit id: "release 1.3"
 ```
 
-The workflow is sometimes sold under names such as a "no-rework architecture"; that isn't a standard term, but it describes the aim: catch a problem on the branch, before the merge, so that nothing has to be redone on `main`. What makes that work:
+The [companion repository](https://github.com/Apress/DevSecOps-for-Linux) of Marco Antonio Carcano's book *DevSecOps and DevOps for Linux: The Foundations* (Apress) calls this "The Feature-Branch Methodology (No-Rework Architecture)": a codebase extended feature by feature, one branch each, *"with zero (or minimal) code rework"*. "No-rework architecture" is the book's name rather than a widely used term, but it describes the aim: catch a problem on the branch, before the merge, so that nothing has to be redone on `main`. What makes that work:
 
 - **Branch protection**: `main` refuses direct pushes and requires a passing pipeline and an approval before a merge.
 - **The same checks on the branch as on `main`**: lint, secret scan and Molecule run on every push, so the merge request shows the result before anyone reviews it.
