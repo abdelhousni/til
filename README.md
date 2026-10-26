@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->149<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->150<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -118,6 +118,7 @@ Browse these TILs at https://til.housni.eu/
 
 * [A regex link checker breaks on the exact HTML it was meant to check](https://til.housni.eu/python/regex-vs-htmlparser-for-dead-links.html) - 2026-09-05
 * [Getting a newer Python on RHEL without touching the system python3](https://til.housni.eu/python/newer-python-with-uv-without-touching-system-python-rhel.html) - 2026-09-29
+* [Controlling which Python uv uses](https://til.housni.eu/python/control-which-python-uv-uses.html) - 2026-10-26
 
 ## seo
 
