@@ -104,6 +104,15 @@ build-image:
 
 The `-debug` variant is needed because it ships a shell for `script:`, and the empty `entrypoint` stops Kaniko from running before the script does. Upstream Kaniko (`gcr.io/kaniko-project/executor`) was archived in 2025; it still works, but `martizih/kaniko` is a maintained fork. GitLab's own docs also point at BuildKit (rootless) and Buildah.
 
+### Why not GitLab's Podman setup
+
+GitLab also documents [Podman on the Kubernetes executor](https://docs.gitlab.com/runner/executors/kubernetes/use_podman_with_kubernetes/), with the `quay.io/podman/stable` image. Podman builds images without a separate engine, so there's no dind service to wait for. The page gives two runner configurations, and neither is a job-level change like Kaniko:
+
+- **Non-root user, `privileged = true`.** The pod is still privileged, so it carries the same security tradeoff as `docker:dind`.
+- **Root user, `privileged = false`.** Podman's overlay storage then needs `/dev/fuse`, the device that lets a program implement a filesystem outside the kernel, inside the pod. The page provides it with a device plugin (a component that advertises a node's hardware to Kubernetes) deployed as a DaemonSet, a Kubernetes object that runs one pod on every node. It also asks for SELinux, the Linux security layer that labels files and processes and checks every access, to be disabled on the hosts. On top of that, the runner's `config.toml` needs `allow_privilege_escalation = false`, a root security context, and a `pod_spec` patch that only works with the `FF_USE_ADVANCED_POD_SPEC_CONFIGURATION` feature flag.
+
+Both need a runner or cluster admin to change something. The Kaniko job above only needs `.gitlab-ci.yml`.
+
 If the build fails at random with `i/o timeout` while pulling the base image or packages, see [Building CI images on a flaky network](gitlab-ci-images-flaky-network.md).
 
 These pipelines were run on a GitLab runner on a private RKE2 (Kubernetes) node, not in the Linux cloud container where this entry was drafted.
