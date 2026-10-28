@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->151<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->152<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -108,11 +108,11 @@ Browse these TILs at https://til.housni.eu/
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://til.housni.eu/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
-* [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://til.housni.eu/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://til.housni.eu/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 * [Debugging a Proxmox VM whose cloud-init config didn't apply](https://til.housni.eu/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A Proxmox VM on demand, NixOS from Git: OpenTofu builds a skeleton, nixos-anywhere replaces it, and the host key exists before the VM](https://til.housni.eu/proxmox/nixos-on-demand-opentofu-nixos-anywhere-sops.html) - 2026-09-27
 * [ntfy in a Proxmox LXC, private and behind Caddy for TLS](https://til.housni.eu/proxmox/ntfy-lxc-behind-caddy-tls.html) - 2026-10-08
+* [Injecting qemu-guest-agent into Debian, Ubuntu, RHEL-family and openSUSE cloud templates, from the CLI](https://til.housni.eu/proxmox/inject-qemu-guest-agent-cloud-templates.html) - 2026-10-28
 
 ## python
 
@@ -176,6 +176,7 @@ Browse these TILs at https://til.housni.eu/
 ## ssh
 
 * [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://til.housni.eu/ssh/ssh-config-patterns-for-iac.html) - 2026-09-17
+* [Reuse one ssh-agent across shells with keychain](https://til.housni.eu/ssh/reuse-one-ssh-agent-across-shells-with-keychain.html) - 2026-10-28
 
 ## terraform
 
