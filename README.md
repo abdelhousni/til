@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->150<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->151<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -144,6 +144,7 @@ Browse these TILs at https://til.housni.eu/
 * [Syncing a diverged fork: take the pipeline fixes, not the content](https://til.housni.eu/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 * [Configuring a repository for coding agents: what the guidance actually says](https://til.housni.eu/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
 * [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://til.housni.eu/git/resync-clone-after-force-push.html) - 2026-09-27
+* [Deleting merged branches: GitHub's auto-delete, GitLab's equivalent, and the local clone](https://til.housni.eu/git/delete-merged-branches-github-gitlab-and-local.html) - 2026-10-28
 
 ## oauth2
 
