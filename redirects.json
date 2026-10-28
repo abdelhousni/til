@@ -1,0 +1,3 @@
+{
+  "proxmox/inject-qemu-guest-agent-ubuntu-template.html": "proxmox/inject-qemu-guest-agent-cloud-templates.html"
+}

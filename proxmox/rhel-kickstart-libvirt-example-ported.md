@@ -73,7 +73,7 @@ flowchart TD
 
 ## Kickstart versus what this site's other Proxmox entries already use
 
-Every other Proxmox entry here — [injecting `qemu-guest-agent` into a template](inject-qemu-guest-agent-ubuntu-template.md), [debugging cloud-init on first boot](../cloud-init/vendor-data-alongside-terraform-user-data.md) — starts from an already-installed cloud image and configures it at first boot. Kickstart is the other half of unattended provisioning: it drives the *installer itself*, starting from nothing but a stock vendor ISO. Neither replaces the other — cloud images generally don't exist for every OS or every custom partition layout a Kickstart file can express, and Kickstart doesn't help once the OS is already on disk. Which one is the right tool depends on whether there's a suitable cloud image to start from at all.
+Every other Proxmox entry here — [injecting `qemu-guest-agent` into a template](inject-qemu-guest-agent-cloud-templates.md), [debugging cloud-init on first boot](../cloud-init/vendor-data-alongside-terraform-user-data.md) — starts from an already-installed cloud image and configures it at first boot. Kickstart is the other half of unattended provisioning: it drives the *installer itself*, starting from nothing but a stock vendor ISO. Neither replaces the other — cloud images generally don't exist for every OS or every custom partition layout a Kickstart file can express, and Kickstart doesn't help once the OS is already on disk. Which one is the right tool depends on whether there's a suitable cloud image to start from at all.
 
 ## What to change from the source before using it anywhere real
 

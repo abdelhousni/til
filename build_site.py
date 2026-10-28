@@ -47,6 +47,25 @@ SKIP_DIRS = {".git", ".github", "__pycache__"}
 # works both on the built site and in the markdown twin.
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
 SERIES_MANIFEST = root / "series.json"
+# Old page path -> new page path, both relative to the site root. GitHub
+# Pages has no server-side redirects, so a renamed entry keeps its old URL
+# working through a stub page that forwards to the new one.
+REDIRECTS_MANIFEST = root / "redirects.json"
+
+REDIRECT_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moved</title>
+<link rel="canonical" href="{url}">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url={url}">
+</head>
+<body>
+<p>This page moved to <a href="{url}">{url}</a>.</p>
+</body>
+</html>
+"""
 FEED_ENTRY_LIMIT = 50
 LLMS_TXT_EXCERPT_LIMIT = 200
 RECENT_TILS_LIMIT = 10
@@ -886,6 +905,21 @@ def main():
     (site / "sitemap.xml").write_text(build_sitemap(all_entries, topics))
     (site / "robots.txt").write_text(ROBOTS_TXT.format(site_url=SITE_URL))
     (site / "llms.txt").write_text(build_llms_txt(all_entries, topics, series_nav))
+    write_redirects()
+
+
+def write_redirects():
+    """Write a forwarding stub for every renamed page in redirects.json."""
+    if not REDIRECTS_MANIFEST.exists():
+        return
+    for old, new in json.loads(REDIRECTS_MANIFEST.read_text()).items():
+        if not (site / new).exists():
+            sys.exit(f"redirects.json: {old} points to {new}, which the build didn't produce")
+        if (site / old).exists():
+            sys.exit(f"redirects.json: {old} is still a real page; remove the redirect")
+        stub = site / old
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(REDIRECT_TEMPLATE.format(url=attr_escape(f"{SITE_URL}/{new}")))
 
 
 if __name__ == "__main__":
