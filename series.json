@@ -16,7 +16,8 @@
       "kubernetes/rke2-etcd-ha-restore-and-s3-backup.md",
       "kubernetes/rke2-node-scheduling-labels-taints-tolerations.md",
       "kubernetes/namespaces-resourcequota-limitrange-rke2.md",
-      "kubernetes/liveness-readiness-startup-probes.md"
+      "kubernetes/liveness-readiness-startup-probes.md",
+      "kubernetes/horizontal-pod-autoscaler-rke2.md"
     ]
   },
   "hashicorp": {
