@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->151<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->152<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -176,6 +176,7 @@ Browse these TILs at https://til.housni.eu/
 ## ssh
 
 * [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://til.housni.eu/ssh/ssh-config-patterns-for-iac.html) - 2026-09-17
+* [Reuse one ssh-agent across shells with keychain](https://til.housni.eu/ssh/reuse-one-ssh-agent-across-shells-with-keychain.html) - 2026-10-28
 
 ## terraform
 
