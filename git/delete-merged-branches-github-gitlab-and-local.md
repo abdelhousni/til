@@ -10,6 +10,24 @@ The terms this relies on:
 
 `gh` and `glab`, the GitHub and GitLab command-line tools, need installing and signing in first: see [git-gh-glab-install-and-auth.md](git-gh-glab-install-and-auth.md).
 
+The whole chain, from the merge to the clean clone; each step has its section below:
+
+```mermaid
+flowchart TD
+    A[Pull or merge request merged] --> B{Auto-delete on?}
+    B -- yes --> C[Server deletes the branch]
+    B -- "no, or merged before" --> D["Loop over merged PRs/MRs:<br/>branch tip = merged commit?"]
+    D -- yes --> C
+    D -- no --> K[Keep: new work on it]
+    C --> E["git fetch --prune<br/>(or fetch.prune = true)"]
+    E --> F["Local branch shows [gone]"]
+    F --> G{"How was it merged?"}
+    G -- merge commit --> H["git branch -d"]
+    G -- squash --> I{"git merge-tree:<br/>nothing main lacks?"}
+    I -- yes --> J["git branch -D"]
+    I -- no --> K
+```
+
 ## GitHub: turn on "Automatically delete head branches"
 
 In the repository, **Settings → General → Pull Requests → Automatically delete head branches**. It takes admin rights on the repository. From the command line:
