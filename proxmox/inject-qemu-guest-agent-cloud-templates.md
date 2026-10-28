@@ -1,4 +1,4 @@
-# Injecting qemu-guest-agent into Debian, Ubuntu, RHEL-family and Fedora cloud templates, from the CLI
+# Injecting qemu-guest-agent into Debian, Ubuntu, RHEL-family and openSUSE cloud templates, from the CLI
 
 A **cloud image** is a disk image a distribution publishes with the OS already installed, meant to be configured at first boot rather than through an installer. On Proxmox you import one as a VM's disk, add a **cloud-init** drive (cloud-init is the program inside the image that applies SSH keys, users and network settings on first boot), and turn the VM into a **template**: a read-only VM that you clone instead of starting. Most of these images come as **qcow2**, QEMU's disk-image format.
 
@@ -24,12 +24,14 @@ Each distribution publishes several cloud images; take the generic one for KVM/O
 | Rocky Linux | `GenericCloud-Base` | `.qcow2` | [rockylinux.org/download](https://rockylinux.org/download) |
 | Fedora Cloud | Cloud Base, QEMU | `.qcow2` | [fedoraproject.org/cloud](https://fedoraproject.org/cloud/download/) |
 | RHEL 10 | KVM Guest Image | `.qcow2` | [Red Hat downloads](https://access.redhat.com/downloads/content/rhel) (Red Hat account needed) |
+| openSUSE Leap 16.0 | `Minimal-VM` … `Cloud` | `.qcow2` | [download.opensuse.org](https://download.opensuse.org/distribution/leap/16.0/appliances/) |
 
-AlmaLinux, Rocky Linux and Fedora are the **RHEL family**: distributions built from, or upstream of, Red Hat Enterprise Linux, so they share its `dnf` package manager and its package names. What differs between the images:
+RHEL, AlmaLinux, Rocky Linux and Fedora are the **RHEL family**: Fedora is where RHEL's changes start, AlmaLinux and Rocky Linux are rebuilt from RHEL's sources, so all four share the `dnf` package manager, the package names and SELinux, and one procedure covers them below. openSUSE is a separate family with its own package manager, `zypper`, but the package is also called `qemu-guest-agent`. What differs between the images:
 
 - **Debian**: `genericcloud` drops most kernel hardware drivers that a VM doesn't need; `generic` keeps them. Both run cloud-init. The image called `nocloud` does *not* run cloud-init, despite sharing a name with cloud-init's NoCloud datasource ([source](https://cdimage.debian.org/cdimage/cloud/)).
 - **Ubuntu**: `noble-server-cloudimg-amd64.img` is already qcow2 ([source](https://ubuntu.com/docs/public-images/public-images-how-to/launch-with-libvirt/)). Don't convert it because of the extension; `qemu-img info` shows the real format.
 - **RHEL 10**: the image isn't on a public mirror. Download it from the Red Hat Customer Portal with an account; the no-cost Red Hat Developer subscription is enough. Its package repositories also need that subscription, which changes the injection step below.
+- **openSUSE Leap**: the `Minimal-VM` appliance comes in several variants; take the one named `Cloud`, which runs cloud-init. The `kvm-and-xen` variant configures itself at first boot with openSUSE's own tools (jeos-firstboot, Combustion) instead, so a Proxmox cloud-init drive does nothing to it.
 
 The URLs used below, all for x86_64:
 
@@ -42,13 +44,15 @@ https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
 https://repo.almalinux.org/almalinux/10/cloud/x86_64/images/AlmaLinux-10-GenericCloud-latest.x86_64.qcow2
 # Rocky Linux 10
 https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-GenericCloud-Base.latest.x86_64.qcow2
+# openSUSE Leap 16.0
+https://download.opensuse.org/distribution/leap/16.0/appliances/Leap-16.0-Minimal-VM.x86_64-Cloud.qcow2
 ```
 
 Fedora's file names carry the release and build number, so copy the current one from its download page.
 
 ## Check whether the image already has the agent
 
-`virt-ls`, from `libguestfs-tools`, lists files inside a disk image without booting it. Debian-family images install the agent as `/usr/sbin/qemu-ga`, RHEL-family ones as `/usr/bin/qemu-ga`:
+`virt-ls`, from `libguestfs-tools`, lists files inside a disk image without booting it. Debian-family images install the agent as `/usr/sbin/qemu-ga`, RHEL-family and openSUSE ones as `/usr/bin/qemu-ga`:
 
 ```sh
 apt update
@@ -73,7 +77,28 @@ virt-customize -a "$IMG" \
   --run-command 'systemctl enable qemu-guest-agent.service'
 ```
 
-For AlmaLinux, Rocky Linux and Fedora, add `--selinux-relabel`. These images run **SELinux**, which labels every file with a security context; files written from outside the running system get no label, and a guest with unlabelled files can refuse to boot or to start the service. The option relabels the files on the way out:
+For the RHEL family, one command covers all four distributions. Two things differ from Debian:
+
+- `--selinux-relabel`. These images run **SELinux**, which labels every file with a security context; files written from outside the running system get no label, and a guest with unlabelled files can refuse to boot or to start the service. The option relabels the files on the way out.
+- On RHEL only, `--install` fails on an image that isn't registered, because its repositories need a subscription. `virt-customize` can register the image, install, and unregister it again, so the template doesn't carry your registration into every clone. The `SM` array holds those options for RHEL and stays empty for AlmaLinux, Rocky Linux and Fedora:
+
+```sh
+SM=()    # AlmaLinux, Rocky Linux, Fedora
+
+# RHEL 10 only:
+SM=(--sm-credentials "$RH_USER:password:$RH_PASSWORD" --sm-register --sm-attach auto)
+
+virt-customize -a "$IMG" \
+  "${SM[@]}" \
+  --install qemu-guest-agent \
+  --run-command 'systemctl enable qemu-guest-agent.service' \
+  ${SM:+--sm-unregister} \
+  --selinux-relabel
+```
+
+`${SM:+--sm-unregister}` expands to `--sm-unregister` only when `SM` is set, so the unregistering happens only on an image that was registered. `--sm-credentials` takes `USER:password:PASSWORD`, or `USER:file:FILENAME` to read the password from a file instead of the command line.
+
+For openSUSE Leap, `--install` calls `zypper` inside the image, and the command is Debian's plus the relabel: Leap 16.0 runs SELinux too, and on an image without it the option does nothing:
 
 ```sh
 virt-customize -a "$IMG" \
@@ -82,19 +107,7 @@ virt-customize -a "$IMG" \
   --selinux-relabel
 ```
 
-For RHEL 10, `--install` fails on an image that isn't registered, because its repositories need a subscription. `virt-customize` can register it, install, and unregister it again, so the template doesn't carry your registration into every clone:
-
-```sh
-virt-customize -a "$IMG" \
-  --sm-credentials "$RH_USER:password:$RH_PASSWORD" \
-  --sm-register --sm-attach auto \
-  --install qemu-guest-agent \
-  --run-command 'systemctl enable qemu-guest-agent.service' \
-  --sm-unregister \
-  --selinux-relabel
-```
-
-`--sm-credentials` takes `USER:password:PASSWORD`, or `USER:file:FILENAME` to read the password from a file instead of the command line. If the `virt-ls` check above already found `qemu-ga`, skip the install and keep only the `systemctl enable` and the relabel.
+If the `virt-ls` check above already found `qemu-ga`, drop the `--install` line (and, on RHEL, the `SM` options) and keep the `systemctl enable` and the relabel.
 
 Then run the `virt-ls` check again before building anything on top of the image.
 
@@ -152,10 +165,19 @@ sudo apt update && sudo apt install -y qemu-guest-agent
 sudo systemctl enable --now qemu-guest-agent
 ```
 
-Inside an AlmaLinux, Rocky Linux, Fedora or RHEL 10 guest (RHEL needs to be registered with `subscription-manager register` first, and unregistered with `subscription-manager unregister` before the cleanup):
+Inside a RHEL 10, AlmaLinux, Rocky Linux or Fedora guest; the two `subscription-manager` lines are for RHEL only:
 
 ```sh
+sudo subscription-manager register    # RHEL only
 sudo dnf install -y qemu-guest-agent
+sudo systemctl enable --now qemu-guest-agent
+sudo subscription-manager unregister  # RHEL only
+```
+
+Inside an openSUSE Leap guest:
+
+```sh
+sudo zypper --non-interactive install qemu-guest-agent
 sudo systemctl enable --now qemu-guest-agent
 ```
 
@@ -172,4 +194,4 @@ qm template 101
 
 The `/etc/machine-id` truncation matters and has an ordering requirement: do it only at the very end, after `cloud-init clean`, and only once the VM is about to become a template, never on a VM you're still using. Every clone made from a template regenerates its own machine ID and cloud-init state on first boot; do this too early (or on a running VM you plan to keep using) and you've broken that VM's own identity for no benefit.
 
-The four image URLs above were checked to resolve. The `qm` commands need a Proxmox host and the RHEL 10 steps a Red Hat account; neither was run for the distributions this revision added (Debian, AlmaLinux, Rocky Linux, Fedora, RHEL 10).
+The five image URLs above were checked to resolve. The `qm` commands need a Proxmox host and the RHEL 10 steps a Red Hat account; neither was run for the distributions this revision added (Debian, AlmaLinux, Rocky Linux, Fedora, RHEL 10, openSUSE Leap).
