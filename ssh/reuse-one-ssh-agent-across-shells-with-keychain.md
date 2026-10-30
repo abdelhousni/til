@@ -35,6 +35,21 @@ keychain also writes the same lines to `~/.keychain/<hostname>-sh` (plus `-csh` 
 . ~/.keychain/"$(hostname)"-sh
 ```
 
+## Keep the public key next to the private one
+
+Every SSH key is a pair: the private key file (`~/.ssh/id_ed25519`) and the public key (`~/.ssh/id_ed25519.pub`). keychain needs both files in `~/.ssh/`. It uses the public key to compute the key's fingerprint (a short hash that identifies it) and compare it with the keys the agent already holds. That comparison is what lets a new shell skip the passphrase prompt.
+
+Without the `.pub` file, keychain 2.8.5 prints `Warning: Cannot find separate public key` and falls back to the private key file:
+
+- A key in the current OpenSSH format (first line `-----BEGIN OPENSSH PRIVATE KEY-----`, the default since OpenSSH 7.8) still works: that format stores the public key unencrypted inside the private key file.
+- A passphrase-protected key in the older PEM format (first line `-----BEGIN RSA PRIVATE KEY-----`) is skipped and never loaded: keychain prints `Unable to extract fingerprint ... skipping`.
+
+If you copied only the private key to a machine, recreate the public key from it:
+
+```sh
+ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
+```
+
 ## Check and manage it
 
 The first shell asks for the passphrase. Every later shell prints the same `SSH_AUTH_SOCK`, and keychain reports the key as already loaded (`Known ssh key: ~/.ssh/id_ed25519`), without asking.
