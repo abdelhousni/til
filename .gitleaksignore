@@ -14,3 +14,5 @@ b076513b573735d88cc5f799d01ff7edebfef814:aws/ocr-pdf-textract.md:aws-access-toke
 04abb10aad46269e6c3ad68e2c27bc2af457d2e6:github-actions/s3-bucket-github-actions.md:aws-access-token:18
 # postgresql/constructing-geojson-in-postgresql.md: false positive: an Airtable record ID (rec...)
 698e888a156882453714e40c7f4a3680f0b3df55:postgresql/constructing-geojson-in-postgresql.md:airtable-api-key:75
+# ssh/reuse-one-ssh-agent-across-shells-with-keychain.md: false positive: two quoted PEM header lines, no key material (reworded in the next commit)
+3461f9106c0d65be98f4698c6205d15fb41a4350:ssh/reuse-one-ssh-agent-across-shells-with-keychain.md:private-key:44

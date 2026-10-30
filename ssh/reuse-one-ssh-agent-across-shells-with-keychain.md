@@ -41,8 +41,8 @@ Every SSH key is a pair: the private key file (`~/.ssh/id_ed25519`) and the publ
 
 Without the `.pub` file, keychain 2.8.5 prints `Warning: Cannot find separate public key` and falls back to the private key file:
 
-- A key in the current OpenSSH format (first line `-----BEGIN OPENSSH PRIVATE KEY-----`, the default since OpenSSH 7.8) still works: that format stores the public key unencrypted inside the private key file.
-- A passphrase-protected key in the older PEM format (first line `-----BEGIN RSA PRIVATE KEY-----`) is skipped and never loaded: keychain prints `Unable to extract fingerprint ... skipping`.
+- A key in the current OpenSSH format (the file starts with a `BEGIN OPENSSH PRIVATE KEY` line, the default since OpenSSH 7.8) still works: that format stores the public key unencrypted inside the private key file.
+- A passphrase-protected key in the older PEM format (the file starts with a `BEGIN RSA PRIVATE KEY` line) is skipped and never loaded: keychain prints `Unable to extract fingerprint ... skipping`.
 
 If you copied only the private key to a machine, recreate the public key from it:
 
