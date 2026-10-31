@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->152<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->153<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -133,6 +133,7 @@ Browse these TILs at https://til.housni.eu/
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://til.housni.eu/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
 * [Adding a certificate to a Java keystore/truststore with keytool](https://til.housni.eu/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 * [A Let's Encrypt certificate for a LAN-only service: Caddy, DNS-01 and deSEC](https://til.housni.eu/tls/caddy-dns-01-desec-dedyn-io.html) - 2026-10-08
+* [A wildcard certificate for a private Kubernetes cluster: cert-manager, DNS-01 and deSEC](https://til.housni.eu/tls/cert-manager-dns-01-desec-private-kubernetes.html) - 2026-10-31
 
 ## cloud-init
 
