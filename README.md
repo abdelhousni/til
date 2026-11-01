@@ -146,6 +146,7 @@ Browse these TILs at https://til.housni.eu/
 * [Configuring a repository for coding agents: what the guidance actually says](https://til.housni.eu/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
 * [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://til.housni.eu/git/resync-clone-after-force-push.html) - 2026-09-27
 * [Deleting merged branches: GitHub's auto-delete, GitLab's equivalent, and the local clone](https://til.housni.eu/git/delete-merged-branches-github-gitlab-and-local.html) - 2026-10-28
+* [Conventional Commits: commit messages that tools can read](https://til.housni.eu/git/conventional-commits-messages-that-tools-can-read.html) - unknown
 
 ## oauth2
 
