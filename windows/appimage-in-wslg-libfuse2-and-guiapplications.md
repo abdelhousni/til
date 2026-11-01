@@ -1,5 +1,7 @@
 # Running an AppImage in WSLg: libfuse2, a missing `$DISPLAY`, and `.wslconfig` vs `wsl.conf`
 
+I hadn't used a graphical Linux desktop since Mandrake, a Linux distribution from the late 1990s and early 2000s later renamed Mandriva. Linux has been terminals and servers for me since. So installing one graphical tool in WSL2 meant learning a few things that are probably obvious to people who never left the Linux desktop: AppImages, FUSE, and where WSL's display server comes from.
+
 **WSLg** is the part of WSL2 that shows Linux graphical applications as ordinary Windows windows ([the Thunar entry](thunar-file-manager-in-wslg.md) covers what it is and which Windows versions have it). An **AppImage** is a Linux application packed into one executable file, with no installer and no package manager. Many desktop tools ship that way on Linux, including [Headlamp](https://headlamp.dev/), a graphical interface for Kubernetes clusters (Kubernetes itself is explained in [what Kubernetes is](../kubernetes/what-is-kubernetes-and-how-it-works.md)).
 
 Getting Headlamp 0.46.0 to open on Ubuntu 26.04 under WSL2 hit two separate errors, one after the other. Each has its own cause and fix.
