@@ -32,7 +32,26 @@ You might still be able to extract the contents of this AppImage
 if you run it with the --appimage-extract option.
 ```
 
-**FUSE** (Filesystem in Userspace) lets an ordinary program provide a filesystem. An AppImage uses it to mount its own contents and run the application from there. The AppImage runtime is built against version 2 of the FUSE library, `libfuse.so.2`, while recent Ubuntu releases ship FUSE 3 and no longer install version 2 by default. The two versions can be installed side by side.
+**FUSE** (Filesystem in Userspace) lets an ordinary program provide a filesystem. An AppImage uses it to mount its own contents and run the application from there. The application itself doesn't use FUSE; the **runtime** does, the small program at the start of the AppImage file that does the mounting. Recent Ubuntu releases ship FUSE 3 and no longer install version 2 by default, and which one matters depends on the runtime:
+
+- The older runtime loads version 2 of the FUSE library, `libfuse.so.2`, when it starts. Version 3 (`libfuse3.so.3`) is a different library and doesn't help.
+- The newer [type2-runtime](https://github.com/AppImage/type2-runtime) is linked statically, and its README says `libfuse2` is then no longer required on the system.
+
+To see which one an AppImage carries without running it, look for the library name in the start of the file:
+
+```sh
+head -c 1000000 ~/Applications/Headlamp.AppImage | strings | grep -m3 -i 'libfuse'
+```
+
+Headlamp 0.46.0 prints the older runtime's strings:
+
+```text
+libfuse.so.2
+dlopen(): error loading libfuse.so.2
+dlsym(): error loading symbol from libfuse.so.2
+```
+
+For that runtime, FUSE 2 has to be installed. It can sit side by side with FUSE 3.
 
 Check whether the library is there. `ldconfig -p` prints the cache of shared libraries the dynamic loader knows about, which is what `dlopen()` searches:
 
@@ -124,7 +143,8 @@ A distribution keeps running for a few seconds after its last shell closes, and 
 - AppImage docs, [I get some errors related to something called "FUSE"](https://docs.appimage.org/user-guide/troubleshooting/fuse.html) (FUSE 2 alongside FUSE 3, the `libfuse2t64` rename, extract-and-run), from [AppImage/docs.appimage.org](https://github.com/AppImage/docs.appimage.org), fetched 2026-11-01.
 - [WSLg README](https://github.com/microsoft/wslg/blob/main/README.md): the system distro, `DISPLAY` and `WAYLAND_DISPLAY`, and `guiApplications=false`; fetched 2026-11-01.
 - Microsoft Learn, [Advanced settings configuration in WSL](https://learn.microsoft.com/windows/wsl/wsl-config), from [MicrosoftDocs/WSL](https://github.com/MicrosoftDocs/WSL), fetched 2026-11-01.
+- [AppImage/type2-runtime README](https://github.com/AppImage/type2-runtime/blob/main/README.md): the statically linked runtime, fetched 2026-11-01.
 - Homebrew's [`headlamp` cask](https://github.com/Homebrew/homebrew-cask/blob/main/Casks/h/headlamp.rb), version 0.46.0.
 - The package facts (`libfuse2t64` replacing `libfuse2`, `fuse3` breaking `fuse`, the `ldconfig -p` output) were checked with apt on Ubuntu 24.04.
 
-The Headlamp install, both errors and the `.wslconfig` fix happened on Ubuntu 26.04.1 under WSL2 on Windows. They didn't run in the Linux cloud container where this entry was drafted, which has no WSLg.
+The Headlamp install, the runtime check, both errors and the `.wslconfig` fix happened on Ubuntu 26.04.1 under WSL2 on Windows. They didn't run in the Linux cloud container where this entry was drafted, which has no WSLg.
