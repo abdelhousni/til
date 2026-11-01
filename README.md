@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->153<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->156<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -198,6 +198,7 @@ Browse these TILs at https://til.housni.eu/
 * [Checking new firewall rules with nc and Python: open, refused, or dropped](https://til.housni.eu/linux/check-firewall-rules-with-nc-and-python.html) - 2026-09-29
 * [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
 * [Changing when logrotate runs: the systemd timer, from the command line and with Ansible](https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html) - 2026-10-15
+* [AppImage: "error loading libfuse.so.2" on recent Ubuntu](https://til.housni.eu/linux/appimage-libfuse2-error.html) - 2026-11-01
 
 ## windows
 
@@ -207,6 +208,8 @@ Browse these TILs at https://til.housni.eu/
 * [Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 * [Running Linux containers on Windows with wslc, the container CLI built into WSL](https://til.housni.eu/windows/wslc-containers-in-wsl.html) - 2026-10-06
 * [A lightweight graphical file manager in WSLg: Thunar on Ubuntu, RHEL 9 and NixOS](https://til.housni.eu/windows/thunar-file-manager-in-wslg.html) - 2026-10-15
+* [`.wslconfig` vs `wsl.conf`: which file sets what in WSL](https://til.housni.eu/windows/wslconfig-vs-wsl-conf.html) - 2026-11-01
+* [WSLg: "Missing X server or $DISPLAY" when a Linux GUI app won't open](https://til.housni.eu/windows/wslg-missing-x-server-or-display.html) - 2026-11-01
 
 ## vscode
 
