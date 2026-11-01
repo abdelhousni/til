@@ -124,3 +124,13 @@ from a fresh clone before opening the pull request: `lab/check.sh` passes
 after the documented setup, and every `run.sh` matches its `expected.txt`.
 A new series starts with both; an example that needs a new tool adds it to
 the table and to `lab/check.sh` in the same pull request.
+
+## Stay vanilla (strongly recommended)
+
+Use the stock, upstream tool and its defaults before anything else: stock VS
+Code with extensions from each tool's own vendor only (no VS Code fork such as
+Cursor or Antigravity), project configuration in the repository
+(`.devcontainer/`, `.vscode/`) rather than on the workstation, `kubectl`
+before any cluster UI, Claude Code as the only AI assistant, and upstream
+tools, roles and collections used as published, unpatched. Depart from this
+only when the stock tool can't do the job, and say why in the pull request.
