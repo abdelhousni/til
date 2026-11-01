@@ -1,5 +1,7 @@
 # `.wslconfig` vs `wsl.conf`: which file sets what in WSL
 
+I hadn't used a graphical Linux desktop since Mandrake, a Linux distribution from the late 1990s and early 2000s later renamed Mandriva. Linux has been terminals and servers for me since. So when a graphical tool wouldn't open in WSL2, I first looked for its switch in the wrong configuration file. This entry is the map I was missing.
+
 **WSL** (Windows Subsystem for Linux) runs Linux distributions on Windows. WSL2, its current version, runs every distribution inside one shared, lightweight virtual machine. Two configuration files tune it, at two different levels, and a setting only works in the file that defines it ([Microsoft's WSL configuration page](https://learn.microsoft.com/windows/wsl/wsl-config)).
 
 | | `%USERPROFILE%\.wslconfig` | `/etc/wsl.conf` |

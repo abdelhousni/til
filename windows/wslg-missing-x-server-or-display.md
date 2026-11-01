@@ -1,5 +1,7 @@
 # WSLg: "Missing X server or $DISPLAY" when a Linux GUI app won't open
 
+I hadn't used a graphical Linux desktop since Mandrake, a Linux distribution from the late 1990s and early 2000s later renamed Mandriva. Linux has been terminals and servers for me since. So running one graphical tool in WSL2 meant learning where WSL's display server comes from, which is probably obvious to people who never left the Linux desktop.
+
 **WSLg** is the part of WSL2 that shows Linux graphical applications as ordinary Windows windows ([the Thunar entry](thunar-file-manager-in-wslg.md) covers what it is and which Windows versions have it). When it isn't running, a graphical application starts and exits at once. With [Headlamp](https://headlamp.dev/) 0.46.0, a graphical interface for Kubernetes clusters, on Ubuntu 26.04 under WSL2:
 
 ```text
