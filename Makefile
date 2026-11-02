@@ -10,7 +10,7 @@ VENV := .venv
 VENV_PYTHON := $(VENV)/bin/python
 PORT ?= 8000
 
-.PHONY: help venv build serve check check-external check-mermaid check-entries readme preflight clean clean-all check-history warn-untracked
+.PHONY: help venv build serve check check-external check-mermaid check-svg check-entries readme preflight clean clean-all check-history warn-untracked
 .DEFAULT_GOAL := help
 .NOTPARALLEL:
 
@@ -36,7 +36,7 @@ serve: build ## Build, then serve _site/ on localhost (override PORT=)
 	@echo
 	$(VENV_PYTHON) -m http.server $(PORT) -d _site
 
-check: build check-mermaid ## Build, check internal links and Mermaid syntax (fast)
+check: build check-mermaid check-svg ## Build, check internal links, Mermaid syntax and SVG files (fast)
 	$(VENV_PYTHON) check_links.py
 
 # Advisory, and deliberately not part of "check" or "preflight": it needs
@@ -57,13 +57,17 @@ node_modules: package.json package-lock.json
 check-mermaid: node_modules ## Parse every Mermaid diagram with Mermaid's own parser
 	node check_mermaid.mjs
 
+# Standard library only: no virtualenv, no package.
+check-svg: ## Check hand-written SVG diagrams: well-formed, titled, self-contained
+	$(PYTHON) check_svg.py
+
 check-external: build ## Build and check external links too (slow; this is the deploy gate)
 	$(VENV_PYTHON) check_links.py --external
 
 readme: check-history warn-untracked $(VENV_PYTHON) ## Regenerate the README index in place
 	$(VENV_PYTHON) update_readme.py --rewrite
 
-preflight: readme check-external check-mermaid ## Everything CI runs, in CI's order
+preflight: readme check-external check-mermaid check-svg ## Everything CI runs, in CI's order
 	@echo
 	@echo "  Preflight clean -- this is what the deploy will do."
 

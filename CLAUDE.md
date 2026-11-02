@@ -76,6 +76,38 @@ it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
 
+## Diagrams
+
+Draw a diagram in Mermaid first: a fenced `mermaid` block in the entry,
+parsed by `check_mermaid.mjs` in CI. Use a hand-written SVG file only for
+what Mermaid can't lay out, such as a picture with slopes, angles or shapes
+that aren't boxes and arrows. The first one is
+`devops/pdca-deming-wheel-on-a-slope.svg`.
+
+What each one depends on:
+
+| | Mermaid block | Hand-written SVG |
+|---|---|---|
+| In the reader's browser | JavaScript: `mermaid@11` loaded from cdn.jsdelivr.net when the page opens | nothing: a static file in an `<img>` tag, shown without JavaScript and in the Atom feed |
+| To build | nothing extra | nothing extra: `build_site.py` publishes image files beside the entry |
+| To check | Node 22, and `mermaid` and `jsdom` from `package-lock.json` (`make check-mermaid`) | Python's standard library (`make check-svg`, `check_svg.py`) |
+| To write | a text editor | a text editor; a browser to look at it |
+
+Rules for an SVG:
+
+- Put the file beside its entry, and show it in a `<figure>` with an `<img>`
+  tag that has `alt`, `width` and `height`, plus a `<figcaption>`.
+- Keep it self-contained: no script, no event handler, no external image,
+  font or stylesheet. A browser doesn't run or load these from an `<img>`
+  SVG anyway, so text uses the site's system font stack.
+- Give it a `<title>` and a `<desc>`, and start it with a comment that says
+  where the drawing comes from, what it depends on and how it was laid out.
+- Draw it yourself. Credit a picture that gave the idea in the caption,
+  but never copy the picture.
+- `make check-svg` must pass. A browser shows nothing for an SVG that isn't
+  well-formed XML, and two hyphens in a row inside an XML comment are
+  enough to break it.
+
 ## Authorship
 
 The site says once, on the homepage, in the README and in `llms.txt`, that

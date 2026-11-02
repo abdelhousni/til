@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="790" height="450" viewBox="0 0 790 450" role="img" aria-labelledby="title desc">
+<!--
+  The Deming wheel on the slope of continuous improvement, held by the
+  wedge of experience. Used by pdca-deming-wheel-applied-to-devsecops-work.md.
+
+  Drawn by hand for this site after the idea in Rémi Poillot's picture
+  (https://remi-poillot.fr/la-methode-pdca-roue-de-deming/); his image is
+  not copied. Colours follow his: Plan yellow, Do green, Check red, Act blue,
+  the wedge orange.
+
+  Dependencies: none. Plain SVG 1.1 written in a text editor: no script, no
+  external font, image or stylesheet, no generator. The page shows it with
+  an <img> tag, so it renders without JavaScript and in the Atom feed.
+  build_site.py publishes it beside the entry (IMAGE_SUFFIXES), and
+  check_links.py checks that the <img src> exists. Text uses the site's
+  system font stack; an SVG inside <img> can't load web fonts, so the
+  letters differ slightly from one system to another.
+
+  Geometry: everything sits in one group rotated by the slope (-13.11
+  degrees, a rise of 170 over 730). In that group the slope is the x axis,
+  the wheel (radius 120) touches it at the origin, so its centre is at
+  (0,-120), and the wedge's upper edge is tangent to the wheel.
+
+  To edit: change the numbers below, then check that the file is still
+  well-formed XML with xmllint (its noout option) or Python's
+  xml.etree.ElementTree, and look at it in a browser. A browser shows
+  nothing for an SVG that isn't well-formed, and an XML comment can't
+  contain two hyphens in a row.
+-->
+  <title id="title">The Deming wheel on a slope, held by a wedge</title>
+  <desc id="desc">A wheel split into four quarters, Plan, Do, Check and Act, rests on a slope labelled continuous improvement. A curved arrow shows it rolling up the slope. Behind it, a wedge labelled experience stops it from rolling back down.</desc>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+  <rect width="790" height="450" fill="#ffffff"/>
+  <g transform="translate(330,350) rotate(-13.11)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#1a1a1a">
+    <!-- The slope -->
+    <line x1="-310" y1="0" x2="440" y2="0" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+    <text x="300" y="-16" font-size="20" text-anchor="middle">Continuous improvement</text>
+
+    <!-- The wedge: base on the slope, upper edge tangent to the wheel -->
+    <path d="M-200,0 L-150,-105 L-54,0 Z" fill="#f4b04b" stroke="#8a5a1c" stroke-width="2" stroke-linejoin="round"/>
+    <text x="-131" y="-14" font-size="16" font-weight="bold" text-anchor="middle">Experience</text>
+
+    <!-- The wheel, centre (0,-120), radius 120: one sector per step -->
+    <path d="M0,-120 L84.85,-35.15 A120,120 0 0 1 -84.85,-35.15 Z" fill="#f0d36b" stroke="#b8962c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M0,-120 L84.85,-204.85 A120,120 0 0 1 84.85,-35.15 Z" fill="#86e3d0" stroke="#4fa898" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M0,-120 L-84.85,-204.85 A120,120 0 0 1 84.85,-204.85 Z" fill="#f56f80" stroke="#c0394c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M0,-120 L-84.85,-35.15 A120,120 0 0 1 -84.85,-204.85 Z" fill="#7199ee" stroke="#3f63b8" stroke-width="2" stroke-linejoin="round"/>
+    <g font-size="22" font-weight="bold" text-anchor="middle" dominant-baseline="central">
+      <text x="0" y="-55">Plan</text>
+      <text x="65" y="-120">Do</text>
+      <text x="0" y="-185">Check</text>
+      <text x="-65" y="-120">Act</text>
+    </g>
+
+    <!-- Rolling up: clockwise, from 200 to 250 degrees at radius 152 -->
+    <path d="M-142.83,-171.99 A152,152 0 0 1 -51.99,-262.83" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round" marker-end="url(#arrowhead)"/>
+  </g>
+</svg>
