@@ -17,29 +17,10 @@ The book and the article describe the same four steps. The book's version is aim
 
 The article draws the wheel rolling up a slope with a **wedge** behind it: the experience gained in a cycle is what stops the wheel from rolling back down. It also insists on learning from successes as well as failures, because a success nobody analyses isn't repeated on purpose.
 
-```mermaid
-flowchart LR
-    Exp[/"Experience<br/>the wedge"\] -->|"holds the gain"| Wheel
-    subgraph Wheel["The wheel"]
-        direction TB
-        Plan([Plan]) --> Do([Do])
-        Do --> Check([Check])
-        Check --> Act([Act])
-        Act --> Plan
-    end
-    Wheel -->|"rolls up the slope"| Up(["Continuous improvement"])
-    classDef plan fill:#f0d36b,stroke:#b8962c,color:#000
-    classDef do fill:#86e3d0,stroke:#4fa898,color:#000
-    classDef check fill:#f56f80,stroke:#c0394c,color:#000
-    classDef act fill:#7199ee,stroke:#3f63b8,color:#000
-    classDef wedge fill:#f4b04b,stroke:#8a5a1c,color:#000
-    class Plan plan
-    class Do do
-    class Check check
-    class Act act
-    class Exp wedge
-    style Wheel fill:none,stroke:#888
-```
+<figure>
+<img src="pdca-deming-wheel-on-a-slope.svg" alt="A wheel split into four quarters, Plan, Do, Check and Act, rests on a slope labelled continuous improvement. A curved arrow shows it rolling up the slope. Behind it, a wedge labelled experience stops it from rolling back down." width="790" height="450" loading="lazy">
+<figcaption>The wheel climbs the slope one cycle at a time, and the wedge of experience stops it from rolling back. Drawn for this site after <a href="https://remi-poillot.fr/la-methode-pdca-roue-de-deming/">Rémi Poillot's picture</a>.</figcaption>
+</figure>
 
 ## The book's service design steps
 

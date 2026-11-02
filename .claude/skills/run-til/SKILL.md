@@ -84,7 +84,7 @@ make serve    # builds, then serves on http://localhost:8000/ until ctrl-c
 ## Test
 
 ```bash
-make check    # build, internal link check, then Mermaid syntax
+make check    # build, internal link check, Mermaid syntax, then SVG files
 ```
 
 Mermaid diagrams are checked without a browser: `check_mermaid.mjs` parses
@@ -99,6 +99,17 @@ node check_mermaid.mjs podman/artifactory-as-a-pull-through-mirror.md
 
 It doesn't check layout. For a new or changed diagram, screenshot it with
 the driver and look at it.
+
+Hand-written SVG diagrams (see "Diagrams" in CLAUDE.md) are checked by
+`check_svg.py`, with Python's standard library only. It checks that each
+file is well-formed XML, has a `<title>`, and loads nothing from another
+file. A browser shows nothing for an SVG that isn't well-formed, so run it
+after every edit, then screenshot the `<figure>`:
+
+```bash
+make check-svg
+python3 check_svg.py devops/pdca-deming-wheel-on-a-slope.svg
+```
 
 `make preflight` is what CI runs; it also rewrites `README.md` and checks
 external links, which is slow.

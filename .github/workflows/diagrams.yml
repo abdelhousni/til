@@ -24,3 +24,15 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Parse every Mermaid diagram
         run: node check_mermaid.mjs
+
+  # Hand-written SVG diagrams (check_svg.py): well-formed XML, a <title>, no
+  # script and nothing loaded from another file. Python's standard library
+  # only, and ubuntu-latest ships Python 3, so nothing to install.
+  svg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check every SVG diagram
+        run: python3 check_svg.py
