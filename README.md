@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->156<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->157<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -241,6 +241,7 @@ Browse these TILs at https://til.housni.eu/
 ## devops
 
 * [DevOps and DevSecOps terminology: DORA metrics, CI/CD for Ansible, feature branches and GitOps](https://til.housni.eu/devops/devops-devsecops-dora-cicd-gitops-terminology.html) - 2026-10-24
+* [PDCA, the Deming cycle, as a DevSecOps service design process](https://til.housni.eu/devops/pdca-deming-wheel-applied-to-devsecops-work.html) - 2026-11-02
 <!-- index ends -->
 
 ---
