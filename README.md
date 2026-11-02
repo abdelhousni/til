@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->157<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->158<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -126,6 +126,7 @@ Browse these TILs at https://til.housni.eu/
 * [robots.txt for a small static site is basically a pointer to the sitemap](https://til.housni.eu/seo/robots-txt-is-mostly-just-pointing-at-the-sitemap.html) - 2026-09-05
 * [A schema.org Person block is what actually helps you rank for your own name](https://til.housni.eu/seo/schema-org-person-for-name-search.html) - 2026-09-05
 * [Verifying a GitHub Pages site with Bing Webmaster Tools (no DNS needed)](https://til.housni.eu/seo/verifying-a-github-pages-site-with-bing.html) - 2026-09-05
+* [A "read in French" link on a static site: Google's translation proxy, the reader's language, and what it does to SEO and accessibility](https://til.housni.eu/seo/a-translate-link-in-the-readers-language.html) - 2026-11-02
 
 ## tls
 
