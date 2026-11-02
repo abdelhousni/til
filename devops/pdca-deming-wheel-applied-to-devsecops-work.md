@@ -19,8 +19,26 @@ The article draws the wheel rolling up a slope with a **wedge** behind it: the e
 
 ```mermaid
 flowchart LR
-    Plan --> Do --> Check --> Act --> Plan
-    Act -->|"what worked becomes"| Wedge["Wedge: a standard that holds the gain"]
+    Exp[/"Experience<br/>the wedge"\] -->|"holds the gain"| Wheel
+    subgraph Wheel["The wheel"]
+        direction TB
+        Plan([Plan]) --> Do([Do])
+        Do --> Check([Check])
+        Check --> Act([Act])
+        Act --> Plan
+    end
+    Wheel -->|"rolls up the slope"| Up(["Continuous improvement"])
+    classDef plan fill:#f0d36b,stroke:#b8962c,color:#000
+    classDef do fill:#86e3d0,stroke:#4fa898,color:#000
+    classDef check fill:#f56f80,stroke:#c0394c,color:#000
+    classDef act fill:#7199ee,stroke:#3f63b8,color:#000
+    classDef wedge fill:#f4b04b,stroke:#8a5a1c,color:#000
+    class Plan plan
+    class Do do
+    class Check check
+    class Act act
+    class Exp wedge
+    style Wheel fill:none,stroke:#888
 ```
 
 ## The book's service design steps
@@ -57,7 +75,7 @@ Most of what a cycle needs already exists in a Git workflow. A *merge request* (
 | Check | Did the numbers move as predicted? | Pipeline results, scanner reports, the [DORA metrics](devops-devsecops-dora-cicd-gitops-terminology.md#dora-metrics), monitoring, the time people spent |
 | Act | Keep, adjust or drop? | Merge and roll out (a shared CI template, an Ansible role, a runbook), or revert; record the lesson in the issue, the ADR or a postmortem |
 
-The wedge has a direct equivalent here: something that stops the regression without anyone having to remember. That can be a pipeline job that fails when a secret is committed, a role every server gets, a template every new repository starts from, or a runbook linked from the alert. This is what the book means by "standardise". A lesson that lives only in someone's head or in meeting notes isn't a wedge: the next person rolls the wheel back down.
+The article's wedge is experience: a lesson learnt is what keeps a person from rolling back. In a team, the same lesson has to leave people's heads to hold, because people go on leave, change jobs or forget. A blocking check, a role or a template carries it for everyone, including whoever joins next. In practice that means a pipeline job that fails when a secret is committed, a role every server gets, a template every new repository starts from, or a runbook linked from the alert. This is what the book means by "standardise": experience written down in a form that enforces itself.
 
 ## A cycle on secret detection
 
