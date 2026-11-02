@@ -115,14 +115,16 @@ PAGE_TEMPLATE = """<!doctype html>
 <link rel="describedby" href="../llms.txt">
 </head>
 <body>
-<header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a></header>
+<header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a>
+<p class="translate"><a id="translate-google" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}" lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr">Lire en français (traduction automatique Google)</a> &middot; <a id="translate-firefox" href="https://support.mozilla.org/kb/website-translation" lang="fr" data-goatcounter-click="translate-firefox">ou traduire sur votre ordinateur avec Firefox</a></p>
+</header>
 <main>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
 {body}
 <p class="created">{created_line}</p>
 {series_nav}</main>
-{mermaid_script}{analytics_script}</body>
+{translate_script}{mermaid_script}{analytics_script}</body>
 </html>
 """
 
@@ -249,6 +251,7 @@ STYLE = """
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
 header { margin-bottom: 2rem; }
 header a { text-decoration: none; color: #0969da; }
+header .translate { margin: .4rem 0 0; font-size: .85rem; }
 h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3rem; margin-top: 2.5rem; }
 h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
@@ -289,6 +292,44 @@ ol.reading-order li { margin: .25rem 0; }
 # GoatCounter page views: no cookies, the snippet as GoatCounter documents it.
 ANALYTICS_SCRIPT = """<script data-goatcounter="https://abdel.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+"""
+
+# The entry header links to a machine translation: Google Translate's page
+# proxy, the only service found that translates a page from a plain link, and
+# Firefox's built-in translation, which runs on the reader's own computer.
+# French is the default, without JavaScript too. This script only retargets
+# the Google link at the reader's first browser language when that is neither
+# English (the page's own) nor French. It loads nothing and sends nothing;
+# GoatCounter counts a click through data-goatcounter-click, read at click time.
+TRANSLATE_SCRIPT = """<script>
+(function () {
+  var tag = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+  var lang = tag.split("-")[0].toLowerCase();
+  if (!lang || lang === "en" || lang === "fr") return;
+  // Google Translate needs the script variant for Chinese.
+  if (lang === "zh") lang = /-(tw|hk|mo|hant)\\b/i.test(tag) ? "zh-TW" : "zh-CN";
+  var name;
+  try {
+    name = new Intl.DisplayNames([lang], { type: "language" }).of(lang);
+  } catch (e) {
+    return;
+  }
+  if (!name || name === lang) return;
+  var google = document.getElementById("translate-google");
+  var firefox = document.getElementById("translate-firefox");
+  if (!google || !firefox) return;
+  var url = new URL(google.href);
+  url.searchParams.set("tl", lang);
+  url.searchParams.set("hl", lang);
+  google.href = url.href;
+  google.lang = google.hreflang = lang;
+  google.dir = "auto";
+  google.dataset.goatcounterClick = "translate-" + lang;
+  google.textContent = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1) + " (Google Translate)";
+  firefox.lang = "en";
+  firefox.textContent = "or translate on your own computer with Firefox";
+})();
+</script>
 """
 
 MERMAID_SCRIPT = """<script type="module">
@@ -804,6 +845,7 @@ def main():
                 description=description,
                 author=SITE_AUTHOR,
                 url=url,
+                translate_script=TRANSLATE_SCRIPT,
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
                 analytics_script=ANALYTICS_SCRIPT,
             )
