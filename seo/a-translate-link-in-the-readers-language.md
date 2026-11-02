@@ -32,7 +32,18 @@ sequenceDiagram
     R->>C: page view, path with ?_x_tr_tl=fr
 ```
 
-Linking to `translate.google.com` saves building that host name yourself. In Chromium, through the proxy, the headings and text came back in French, while fenced code blocks and inline code were left untouched, and the [Mermaid diagrams](../github-pages/mermaid-diagrams-in-markdown.md) still rendered. That matters most on a site made of commands. The one glitch: Google sometimes drops the space after inline code ("`ansible-vault`et"). The proxy also rewrites the page's links to stay on `translate.goog`: from the translated homepage, a click on an entry opened that entry in French too, so one link on the homepage is enough to browse the whole site translated.
+Linking to `translate.google.com` saves building that host name yourself. In Chromium, through the proxy, the headings and text came back in French, while fenced code blocks and inline code were left untouched: on five entries, in French and in Irish, all 37 code blocks and 262 inline code spans read exactly as in English. That matters most on a site made of commands. Google skips text inside `<code>`, which is where Python-Markdown puts both.
+
+[Mermaid diagrams](../github-pages/mermaid-diagrams-in-markdown.md) were another matter. Their source sits in a `<pre class="mermaid">` with no `<code>` inside, and Mermaid only turns it into a picture once the page has loaded. Google translated the source first, so Mermaid got text that was no longer Mermaid syntax and drew its "Syntax error in text" picture instead, in French as in Irish. The standard `translate` attribute tells any translator, Google's proxy or a browser's own, to leave an element alone:
+
+```html
+<pre class="mermaid" translate="no">
+flowchart LR
+    ...
+</pre>
+```
+
+With it, the diagrams render through the proxy, with their labels left in English. The one glitch: Google sometimes drops the space after inline code ("`ansible-vault`et"). The proxy also rewrites the page's links to stay on `translate.goog`: from the translated homepage, a click on an entry opened that entry in French too, so one link on the homepage is enough to browse the whole site translated.
 
 I looked for a European service that does the same, and found none that works from a link:
 

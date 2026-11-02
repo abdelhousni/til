@@ -386,6 +386,10 @@ MERMAID_SCRIPT = """<script type="module">
 # otherwise flatten it into an ordinary, unlabelled highlighted code block --
 # indistinguishable from any other unrecognized language, so nothing could
 # find it afterwards to render as a diagram.
+# translate="no" keeps a page translator (Google Translate's proxy, a
+# browser's own translation) away from the diagram source: translated, it is
+# no longer Mermaid syntax and renders as "Syntax error in text". Code blocks
+# don't need it, as translators already skip <code>.
 MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
@@ -857,7 +861,7 @@ def main():
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-            lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+            lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>', body_text
         )
         html_body = unescape_pipes_in_table_code(
             markdown.markdown(
