@@ -1,6 +1,6 @@
 # A "read in French" link on a static site: Google's translation proxy, the reader's language, and what it does to SEO and accessibility
 
-Every entry on this site is in English, and I wanted French-speaking readers to get a French page in one click, without writing or maintaining translations. The result is the line under each entry's header: "Lire en français (traduction automatique Google) · ou traduire sur votre ordinateur avec Firefox". It's one link in the page template, about 30 lines of JavaScript, and an attribute that the site's statistics tool already understands. Most of the work was finding out what such a link can and can't do.
+Every entry on this site is in English, and I wanted French-speaking readers to get a French page in one click, without writing or maintaining translations. The result is the line under the homepage's title and each entry's header: "Lire en français (traduction automatique Google) · ou traduire sur votre ordinateur avec Firefox". It's one link in the page template, about 30 lines of JavaScript, and an attribute that the site's statistics tool already understands. Most of the work was finding out what such a link can and can't do.
 
 ## The only link that translates a whole page
 
@@ -32,7 +32,7 @@ sequenceDiagram
     R->>C: page view, path with ?_x_tr_tl=fr
 ```
 
-Linking to `translate.google.com` saves building that host name yourself. In Chromium, through the proxy, the headings and text came back in French, while fenced code blocks and inline code were left untouched, and the [Mermaid diagrams](../github-pages/mermaid-diagrams-in-markdown.md) still rendered. That matters most on a site made of commands. The one glitch: Google sometimes drops the space after inline code ("`ansible-vault`et").
+Linking to `translate.google.com` saves building that host name yourself. In Chromium, through the proxy, the headings and text came back in French, while fenced code blocks and inline code were left untouched, and the [Mermaid diagrams](../github-pages/mermaid-diagrams-in-markdown.md) still rendered. That matters most on a site made of commands. The one glitch: Google sometimes drops the space after inline code ("`ansible-vault`et"). The proxy also rewrites the page's links to stay on `translate.goog`: from the translated homepage, a click on an entry opened that entry in French too, so one link on the homepage is enough to browse the whole site translated.
 
 I looked for a European service that does the same, and found none that works from a link:
 

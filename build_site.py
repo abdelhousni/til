@@ -116,8 +116,7 @@ PAGE_TEMPLATE = """<!doctype html>
 </head>
 <body>
 <header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a>
-<p class="translate"><a id="translate-google" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}" lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr">Lire en français (traduction automatique Google)</a> &middot; <a id="translate-firefox" href="https://support.mozilla.org/kb/website-translation" lang="fr" data-goatcounter-click="translate-firefox">ou traduire sur votre ordinateur avec Firefox</a></p>
-</header>
+{translate_links}</header>
 <main>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
@@ -151,7 +150,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <body>
 <header>
 <h1>{title}</h1>
-<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
+{translate_links}<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
 <a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
 </p>
 <p>Entries are drafted with Claude Code, which also runs the commands they describe, usually in a Linux cloud container; I choose the topics, review and edit every entry, and publish it. Each entry says what was run and what wasn't.</p>
@@ -160,7 +159,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <main>
 {body}
 </main>
-{analytics_script}</body>
+{translate_script}{analytics_script}</body>
 </html>
 """
 
@@ -294,13 +293,17 @@ ANALYTICS_SCRIPT = """<script data-goatcounter="https://abdel.goatcounter.com/co
         async src="//gc.zgo.at/count.js"></script>
 """
 
-# The entry header links to a machine translation: Google Translate's page
-# proxy, the only service found that translates a page from a plain link, and
-# Firefox's built-in translation, which runs on the reader's own computer.
+# The homepage and entry headers link to a machine translation: Google
+# Translate's page proxy, the only service found that translates a page from a
+# plain link, and Firefox's built-in translation, which runs on the reader's
+# own computer.
 # French is the default, without JavaScript too. This script only retargets
 # the Google link at the reader's first browser language when that is neither
 # English (the page's own) nor French. It loads nothing and sends nothing;
 # GoatCounter counts a click through data-goatcounter-click, read at click time.
+TRANSLATE_LINKS = """<p class="translate"><a id="translate-google" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}" lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr">Lire en français (traduction automatique Google)</a> &middot; <a id="translate-firefox" href="https://support.mozilla.org/kb/website-translation" lang="fr" data-goatcounter-click="translate-firefox">ou traduire sur votre ordinateur avec Firefox</a></p>
+"""
+
 TRANSLATE_SCRIPT = """<script>
 (function () {
   var tag = (navigator.languages && navigator.languages[0]) || navigator.language || "";
@@ -845,6 +848,7 @@ def main():
                 description=description,
                 author=SITE_AUTHOR,
                 url=url,
+                translate_links=TRANSLATE_LINKS.format(url=url),
                 translate_script=TRANSLATE_SCRIPT,
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
                 analytics_script=ANALYTICS_SCRIPT,
@@ -920,6 +924,8 @@ def main():
             url=SITE_URL,
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
+            translate_links=TRANSLATE_LINKS.format(url=f"{SITE_URL}/"),
+            translate_script=TRANSLATE_SCRIPT,
             analytics_script=ANALYTICS_SCRIPT,
         )
     )
