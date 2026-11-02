@@ -250,7 +250,14 @@ STYLE = """
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
 header { margin-bottom: 2rem; }
 header a { text-decoration: none; color: #0969da; }
-header .translate { margin: .4rem 0 0; font-size: .85rem; }
+header .translate { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0 0; font-size: .85rem; }
+header .translate .chip { display: inline-flex; align-items: baseline; gap: .4rem; min-height: 24px; padding: .3rem .7rem; border: 1px solid #d0d7de; border-radius: 999px; background: #fff; }
+header .translate .chip:hover { background: #f6f8fa; border-color: #0969da; }
+header .translate .chip:focus-visible { outline: 2px solid #0969da; outline-offset: 2px; }
+header .translate .chip svg { flex: none; align-self: center; }
+header .translate .chip small { color: #57606a; font-size: .78rem; }
+header .translate .chip small::before { content: "\\00B7  " / ""; }
+header .translate .local { color: #24292f; }
 h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3rem; margin-top: 2.5rem; }
 h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
@@ -301,8 +308,34 @@ ANALYTICS_SCRIPT = """<script data-goatcounter="https://abdel.goatcounter.com/co
 # the Google link at the reader's first browser language when that is neither
 # English (the page's own) nor French. It loads nothing and sends nothing;
 # GoatCounter counts a click through data-goatcounter-click, read at click time.
-TRANSLATE_LINKS = """<p class="translate"><a id="translate-google" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}" lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr">Lire en français (traduction automatique Google)</a> &middot; <a id="translate-firefox" href="https://support.mozilla.org/kb/website-translation" lang="fr" data-goatcounter-click="translate-firefox">ou traduire sur votre ordinateur avec Firefox</a></p>
-"""
+# Decorative icons, hidden from screen readers: a globe for the Google link,
+# a padlock for Firefox's translation, which keeps the text on the computer.
+GLOBE_ICON = (
+    '<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="16" height="16">'
+    '<g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6.5"/>'
+    '<ellipse cx="8" cy="8" rx="2.8" ry="6.5"/><path d="M1.5 8h13M2.6 4.7h10.8M2.6 11.3h10.8"/></g></svg>'
+)
+PADLOCK_ICON = (
+    '<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="16" height="16">'
+    '<g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="7" width="10" height="7" rx="1.5"/>'
+    '<path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>'
+)
+# data-goatcounter-title keeps the icons' markup out of the event's title,
+# which GoatCounter otherwise takes from the link's innerHTML.
+TRANSLATE_LINKS = (
+    '<p class="translate">'
+    '<a id="translate-google" class="chip" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}"'
+    ' lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr"'
+    ' data-goatcounter-title="Lire en français (traduction automatique Google)">'
+    + GLOBE_ICON.replace("{", "{{").replace("}", "}}")
+    + '<span class="label">Lire en français</span> <small>traduction automatique Google</small></a>\n'
+    '<a id="translate-firefox" class="chip local" href="https://support.mozilla.org/kb/website-translation"'
+    ' lang="fr" data-goatcounter-click="translate-firefox"'
+    ' data-goatcounter-title="Traduire sur votre ordinateur avec Firefox">'
+    + PADLOCK_ICON.replace("{", "{{").replace("}", "}}")
+    + '<span class="label">Traduire sur votre ordinateur</span> <small>Firefox</small></a>'
+    '</p>\n'
+)
 
 TRANSLATE_SCRIPT = """<script>
 (function () {
@@ -326,11 +359,17 @@ TRANSLATE_SCRIPT = """<script>
   url.searchParams.set("hl", lang);
   google.href = url.href;
   google.lang = google.hreflang = lang;
-  google.dir = "auto";
+  name = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1);
   google.dataset.goatcounterClick = "translate-" + lang;
-  google.textContent = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1) + " (Google Translate)";
+  google.dataset.goatcounterTitle = name + " (Google Translate)";
+  var label = google.querySelector(".label");
+  label.textContent = name;
+  // Only the name can be right to left (Arabic, Hebrew); the chip stays as it is.
+  label.dir = "auto";
+  google.querySelector("small").textContent = "Google Translate";
   firefox.lang = "en";
-  firefox.textContent = "or translate on your own computer with Firefox";
+  firefox.dataset.goatcounterTitle = "Translate on your own computer with Firefox";
+  firefox.querySelector(".label").textContent = "Translate on your own computer";
 })();
 </script>
 """

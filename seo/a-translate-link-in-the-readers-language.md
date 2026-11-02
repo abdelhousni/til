@@ -1,6 +1,6 @@
 # A "read in French" link on a static site: Google's translation proxy, the reader's language, and what it does to SEO and accessibility
 
-Every entry on this site is in English, and I wanted French-speaking readers to get a French page in one click, without writing or maintaining translations. The result is the line under the homepage's title and each entry's header: "Lire en français (traduction automatique Google) · ou traduire sur votre ordinateur avec Firefox". It's one link in the page template, about 30 lines of JavaScript, and an attribute that the site's statistics tool already understands. Most of the work was finding out what such a link can and can't do.
+Every entry on this site is in English, and I wanted French-speaking readers to get a French page in one click, without writing or maintaining translations. The result is the pair of rounded buttons under the homepage's title and each entry's header: "Lire en français · traduction automatique Google" and "Traduire sur votre ordinateur · Firefox". It's two links in the page template, about 30 lines of JavaScript, and an attribute that the site's statistics tool already understands. Most of the work was finding out what such a link can and can't do.
 
 ## The only link that translates a whole page
 
@@ -68,13 +68,18 @@ The [WCAG 2.2](https://www.w3.org/TR/WCAG22/) success criteria, the reference fo
 - **A label that says where the link goes** (2.4.4, Link Purpose): a machine translation, by Google, so the reader knows they're leaving the site.
 - **No flag.** A flag is a country, not a language: French is spoken in Belgium, France, Switzerland and Quebec, among others.
 - **The same tab**, so the Back button returns to the English page, and **the same place on every entry** (3.2.3, Consistent Navigation).
+- **Icons hidden from screen readers.** The globe and the padlock are inline SVG with `aria-hidden="true"`, so they add nothing to what's read out; the padlock only hints that Firefox keeps the text on the computer.
+- **A target big enough for a finger**: each button is 36 pixels high, above the 24 pixels of 2.5.8 (Target Size, Minimum).
 
 ```html
-<a id="translate-google"
+<a id="translate-google" class="chip"
    href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u=https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html"
    lang="fr" hreflang="fr" rel="nofollow"
-   data-goatcounter-click="translate-fr">Lire en français (traduction automatique Google)</a>
+   data-goatcounter-click="translate-fr"
+   data-goatcounter-title="Lire en français (traduction automatique Google)"><svg aria-hidden="true" focusable="false" ...>...</svg><span class="label">Lire en français</span> <small>traduction automatique Google</small></a>
 ```
+
+The middle dot between the label and the `<small>` text comes from CSS, with an empty alternative text so that screen readers don't read it out: `content: "\00B7 " / "";`. The link's accessible name is then "Lire en français traduction automatique Google".
 
 On a link, `hreflang` only hints at the language of the page it points to; unlike the `<head>` tag above, it's harmless.
 
@@ -102,15 +107,19 @@ A browser lists its user's preferred languages in `navigator.languages`, most pr
   url.searchParams.set("hl", lang);
   google.href = url.href;
   google.lang = google.hreflang = lang;
-  google.dir = "auto";
+  name = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1);
   google.dataset.goatcounterClick = "translate-" + lang;
-  google.textContent = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1) + " (Google Translate)";
+  google.dataset.goatcounterTitle = name + " (Google Translate)";
+  var label = google.querySelector(".label");
+  label.textContent = name;
+  label.dir = "auto";
+  google.querySelector("small").textContent = "Google Translate";
 })();
 ```
 
-`Intl.DisplayNames`, built into browsers, gives a language's name in any language. Asked for Spanish *in Spanish*, it returns "español"; for Arabic, "العربية". The label is therefore always in the reader's own language, and nobody has to translate it by hand. `dir="auto"` lets the browser lay out a right-to-left name such as Arabic correctly.
+`Intl.DisplayNames`, built into browsers, gives a language's name in any language. Asked for Spanish *in Spanish*, it returns "español"; for Arabic, "العربية". The label is therefore always in the reader's own language, and nobody has to translate it by hand. The script changes only the label's text, so the icon stays. `dir="auto"` on the name alone lets the browser lay out a right-to-left name such as Arabic correctly; set on the whole link, it turned the whole button round. The same script switches the Firefox button to English, since its French label means nothing to a Spanish reader.
 
-In Chromium with eight browser locales, `fr-BE` and `en-US` kept the French link. `es-ES` gave "Español (Google Translate)", and `ar-MA`, `de-CH` and `nl-BE` their own languages. `zh-TW` and `zh-CN` were kept apart, which Google's `tl` needs. `es-ES` with JavaScript turned off showed the French link.
+In Chromium with eight browser locales, `fr-BE` and `en-US` kept the French link. `es-ES` gave "Español · Google Translate", and `ar-MA`, `de-CH` and `nl-BE` their own languages. `zh-TW` and `zh-CN` were kept apart, which Google's `tl` needs. `es-ES` with JavaScript turned off showed the French link.
 
 ## The browser's own translation can't be triggered from a page
 
@@ -132,7 +141,7 @@ The site counts page views with [GoatCounter](https://www.goatcounter.com/), whi
 count?p=translate-fr&t=Lire en français (traduction automatique Google)&e=true
 ```
 
-The attribute is read at click time, so the script's change to `translate-es` is the one counted. A second count comes for free: the proxy serves the page with its `count.js`, which runs there too. Because the canonical link points to another host than `translate.goog`, `count.js` sends the proxy's own path, query string included, with the original page as referrer:
+Without `data-goatcounter-title`, the event's title would be the link's `innerHTML`, icon markup included. Both attributes are read at click time, so the script's change to `translate-es` is the one counted. A second count comes for free: the proxy serves the page with its `count.js`, which runs there too. Because the canonical link points to another host than `translate.goog`, `count.js` sends the proxy's own path, query string included, with the original page as referrer:
 
 ```text
 count?p=/linux/change-the-logrotate-timer-schedule.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=fr&r=https://til.housni.eu/
