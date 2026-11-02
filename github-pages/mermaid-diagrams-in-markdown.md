@@ -24,11 +24,11 @@ The fix is to intercept ` ```mermaid ` blocks in the raw text first, before they
 MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-    lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+    lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>', body_text
 )
 ```
 
-Python-Markdown passes block-level raw HTML straight through unchanged by default, so that `<pre class="mermaid">` survives the rest of the conversion untouched — `codehilite` never gets a chance to touch it, because it's no longer a fenced code block by the time Python-Markdown sees it. `escape()` (the same `xml.sax.saxutils.escape` already used for the Atom feed) keeps a stray `<` or `&` in a diagram from being read as real HTML.
+Python-Markdown passes block-level raw HTML straight through unchanged by default, so that `<pre class="mermaid">` survives the rest of the conversion untouched — `codehilite` never gets a chance to touch it, because it's no longer a fenced code block by the time Python-Markdown sees it. `escape()` (the same `xml.sax.saxutils.escape` already used for the Atom feed) keeps a stray `<` or `&` in a diagram from being read as real HTML. `translate="no"` keeps a page translator from rewriting the diagram source before Mermaid reads it; [the entry on the site's translation link](../seo/a-translate-link-in-the-readers-language.md) shows the syntax error it causes otherwise.
 
 ## Rendering it client-side, only on pages that need it
 
