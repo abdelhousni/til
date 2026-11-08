@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->158<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->164<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -147,6 +147,8 @@ Browse these TILs at https://til.housni.eu/
 * [Configuring a repository for coding agents: what the guidance actually says](https://til.housni.eu/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
 * [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://til.housni.eu/git/resync-clone-after-force-push.html) - 2026-09-27
 * [Deleting merged branches: GitHub's auto-delete, GitLab's equivalent, and the local clone](https://til.housni.eu/git/delete-merged-branches-github-gitlab-and-local.html) - 2026-10-28
+* [Conventional Commits: commit messages that tools can read](https://til.housni.eu/git/conventional-commits-messages-that-tools-can-read.html) - 2026-11-08
+* [`git config user.email` isn't the identity Git commits with: check `git var`](https://til.housni.eu/git/git-config-user-email-is-not-the-commit-identity.html) - 2026-11-08
 
 ## oauth2
 
@@ -187,6 +189,7 @@ Browse these TILs at https://til.housni.eu/
 * [Terraform state locking just dropped its DynamoDB requirement](https://til.housni.eu/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-23
 * [What Terraform, OpenTofu, and Packer promise about secrets, and where each promise stops](https://til.housni.eu/terraform/what-terraform-opentofu-and-packer-promise-about-secrets.html) - 2026-09-29
 * [OpenTofu in a GitLab pipeline: GitLab-managed state and the OpenTofu CI/CD component](https://til.housni.eu/terraform/opentofu-gitlab-pipeline-managed-state-component.html) - 2026-10-23
+* [What a root module is in Terraform/OpenTofu, and why the state belongs to it](https://til.housni.eu/terraform/root-module-and-child-modules-who-owns-the-state.html) - 2026-11-08
 
 ## apache
 
@@ -230,6 +233,7 @@ Browse these TILs at https://til.housni.eu/
 ## claude-code
 
 * [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://til.housni.eu/claude-code/typesafe-jev-plugin.html) - 2026-09-29
+* [Docker Hub said 429: pulling base images from the distributions' own registries and a Docker Hub mirror, then trusting the proxy inside the containers](https://til.housni.eu/claude-code/docker-hub-rate-limit-registries-mirror-proxy-ca.html) - 2026-11-08
 
 ## artifactory
 
@@ -243,6 +247,11 @@ Browse these TILs at https://til.housni.eu/
 
 * [DevOps and DevSecOps terminology: DORA metrics, CI/CD for Ansible, feature branches and GitOps](https://til.housni.eu/devops/devops-devsecops-dora-cicd-gitops-terminology.html) - 2026-10-24
 * [PDCA, the Deming cycle, as a DevSecOps service design process](https://til.housni.eu/devops/pdca-deming-wheel-applied-to-devsecops-work.html) - 2026-11-02
+
+## package-managers
+
+* [The package manager map: one portable environment for WSL2 and VMs, from apt to OCI images](https://til.housni.eu/package-managers/portable-environment-map-package-managers-to-images.html) - 2026-11-08
+* [apt, dnf and pacman side by side: one cheat sheet for Ubuntu 26.04, Fedora 45 and Arch](https://til.housni.eu/package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.html) - 2026-11-08
 <!-- index ends -->
 
 ---
