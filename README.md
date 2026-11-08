@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->165<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->166<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -171,6 +171,7 @@ Browse these TILs at https://til.housni.eu/
 * [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://til.housni.eu/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
 * [A namespace on its own protects nothing: quotas, limit ranges, network policies and Pod Security do](https://til.housni.eu/kubernetes/namespaces-resourcequota-limitrange-rke2.html) - 2026-10-24
 * [A liveness probe restarts a container, a readiness probe only takes it out of the Service](https://til.housni.eu/kubernetes/liveness-readiness-startup-probes.html) - 2026-10-25
+* [How the lablabs.rke2 Ansible role upgrades an RKE2 cluster, node by node](https://til.housni.eu/kubernetes/rke2-upgrade-with-the-lablabs-rke2-role.html) - 2026-11-08
 
 ## packer
 
