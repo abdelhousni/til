@@ -139,18 +139,32 @@ longhorn_version: "1.7.2"
 ]
 ```
 
-That found `longhorn` and offered 1.13.0. RKE2 works the same way. The `git-tags` datasource reads tags with `git ls-remote`, so it needs no GitHub token, and its `depName` is the repository URL:
+That found `longhorn` and offered 1.13.0. RKE2 works the same way, with one trap. Its versions are tags in `rancher/rke2`, and the first attempt read them with the `git-tags` datasource, which uses `git ls-remote` and needs no GitHub token. It skipped the release candidates and offered `v1.37.2+rke2r1`, but the per-minor branches it proposed (next section) included `v1.31.14+rke2r2`, `v1.32.13+rke2r2` and `v1.33.13+rke2r3`. Those exist as tags and were never released: there are no release files behind them. Upgrading a cluster to `v1.30.14+rke2r4`, another such tag, stopped in the RKE2 install script:
+
+```text
+[INFO]  downloading checksums at https://github.com/rancher/rke2/releases/download/v1.30.14%2Brke2r4/sha256sum-amd64.txt
+curl: (22) The requested URL returned error: 404
+```
+
+Read RKE2 from its published GitHub releases instead. The `github-releases` datasource leaves out drafts and tags without a release, and treats pre-releases as unstable, which Renovate doesn't propose by default:
 
 ```yaml
-# renovate: datasource=git-tags depName=https://github.com/rancher/rke2
+# renovate: datasource=github-releases depName=rancher/rke2
 rke2_version: "v1.31.4+rke2r1"
 ```
 
-It offered `v1.37.2+rke2r1` and skipped the release candidates (`-rc1+rke2r1`).
+That lookup goes through the GitHub API, so it needs a token (see below). To check by hand whether a version has release files:
+
+```sh
+v=v1.30.14+rke2r2
+curl -sfIL -o /dev/null "https://github.com/rancher/rke2/releases/download/${v/+/%2B}/sha256sum-amd64.txt" && echo released
+```
+
+For 1.30 to 1.33, the newest released versions were one `rke2rN` behind the newest tags: `v1.30.14+rke2r2`, `v1.31.14+rke2r1`, `v1.32.13+rke2r1` and `v1.33.13+rke2r2`.
 
 **An install script fetched from `main` can't be tracked.** Renovate only reads versions written in files. Download a release by version instead (Helm publishes one tarball per version on `get.helm.sh`), put the version in an `ARG` with a comment, and the line becomes an update like any other.
 
-**The GitHub API needs a token.** The run warned `GitHub token is required for some dependencies` for `actions/checkout` and `opentofu/opentofu`, because the container it ran in couldn't reach the GitHub API. The `github-tags` and `github-releases` datasources go through that API. `git-tags`, used for RKE2 above, doesn't. The Mend app on GitHub has a token already. A self-hosted Renovate on another platform needs a GitHub token of its own for these lookups.
+**The GitHub API needs a token.** The run warned `GitHub token is required for some dependencies` for `actions/checkout` and `opentofu/opentofu`, because the container it ran in couldn't reach the GitHub API. The `github-tags` and `github-releases` datasources go through that API. `git-tags` doesn't, which makes it tempting, but it lists every tag, released or not: the RKE2 trap above. The Mend app on GitHub has a token already. A self-hosted Renovate on another platform needs a GitHub token of its own for these lookups.
 
 For workflows on GitHub, `helpers:pinGitHubActionDigests` pins each action to a commit digest, and Renovate then updates the digest according to the tag in a version comment (`uses: actions/checkout@<sha> # v4`). An action pinned to a bare digest, with no version comment, isn't updated at all, because Renovate can't tell which tag it belongs to. Those lookups need the GitHub API, so the run here doesn't show them.
 
@@ -158,7 +172,7 @@ For workflows on GitHub, `helpers:pinGitHubActionDigests` pins each action to a 
 
 By default, Renovate offers only the newest minor: kubectl at `v1.31.0` got one PR straight to `v1.37.2`, and RKE2 one to `v1.37.2+rke2r1`. That's six minors at once. [RKE2](../kubernetes/what-is-rke2-and-how-it-works.md) runs the Kubernetes API server, which the Kubernetes version skew policy says must not skip a minor version when it's upgraded. kubectl is only supported within one minor of that API server, so the two should also move together.
 
-`separateMultipleMinor` gives each minor its own branch. `groupName` puts RKE2 and kubectl in the same branch. With both, the run produced one branch per minor, each carrying both updates: `renovate/minor-1.32-kubernetes` held RKE2 `v1.32.13+rke2r2` and kubectl `v1.32.13`, and so on up to 1.37. The patch updates within 1.31 went to `renovate/kubernetes`.
+`separateMultipleMinor` gives each minor its own branch. `groupName` puts RKE2 and kubectl in the same branch. With both, the run produced one branch per minor, each carrying both updates: `renovate/minor-1.32-kubernetes` held RKE2 1.32 and kubectl `v1.32.13`, and so on up to 1.37. The patch updates within 1.31 went to `renovate/kubernetes`.
 
 Without anything else, all seven PRs would be created as Renovate's rate limits allow, which is 2 an hour and 10 open at a time by default. `dependencyDashboardApproval` holds each one back until its checkbox is ticked on the Dependency Dashboard, so the cluster moves one minor per approval:
 
@@ -166,13 +180,13 @@ Without anything else, all seven PRs would be created as Renovate's rate limits 
 "packageRules": [
   {
     "description": "Cluster components: one PR per minor, created only when approved on the dashboard",
-    "matchDepNames": ["registry.k8s.io/kubectl", "https://github.com/rancher/rke2", "longhorn"],
+    "matchDepNames": ["registry.k8s.io/kubectl", "rancher/rke2", "longhorn"],
     "separateMultipleMinor": true,
     "dependencyDashboardApproval": true
   },
   {
     "description": "RKE2 and kubectl move together",
-    "matchDepNames": ["registry.k8s.io/kubectl", "https://github.com/rancher/rke2"],
+    "matchDepNames": ["registry.k8s.io/kubectl", "rancher/rke2"],
     "groupName": "kubernetes"
   }
 ]
@@ -198,7 +212,7 @@ So Renovate does propose the twice-yearly channel switch in `flake.nix`, as a ma
 
 ## A starting configuration
 
-This is the file the last run used. It validates with `--strict` on 44.222.2:
+This is the file the last run used, except that RKE2 is now matched as `rancher/rke2`, its `github-releases` name. It validates with `--strict` on 44.222.2:
 
 ```json
 {
@@ -225,13 +239,13 @@ This is the file the last run used. It validates with `--strict` on 44.222.2:
   "packageRules": [
     {
       "description": "Cluster components: one PR per minor, created only when approved on the dashboard",
-      "matchDepNames": ["registry.k8s.io/kubectl", "https://github.com/rancher/rke2", "longhorn"],
+      "matchDepNames": ["registry.k8s.io/kubectl", "rancher/rke2", "longhorn"],
       "separateMultipleMinor": true,
       "dependencyDashboardApproval": true
     },
     {
       "description": "RKE2 and kubectl move together",
-      "matchDepNames": ["registry.k8s.io/kubectl", "https://github.com/rancher/rke2"],
+      "matchDepNames": ["registry.k8s.io/kubectl", "rancher/rke2"],
       "groupName": "kubernetes"
     },
     {
@@ -246,11 +260,11 @@ This is the file the last run used. It validates with `--strict` on 44.222.2:
 
 `schedule` limits when Renovate creates or updates branches. `timezone` makes it read that schedule in local time instead of UTC. `automerge` merges a PR once its status checks pass.
 
-Renovate 44.222.2 (the npm `latest` tag on 2026-11-08) ran on Node.js 24.22.2 in a Linux cloud container, with the `local` platform against a scratch Git repository. The registries answered: Ansible Galaxy, Docker Hub, `registry.k8s.io`, the Terraform registry, `charts.longhorn.io`, and `git ls-remote` against GitHub. The GitHub API didn't answer, so no GitHub-hosted version was looked up. The local platform creates no branches, so the Dependency Dashboard, the approval checkboxes and automerge weren't exercised. The Action wasn't installed: those steps come from the documentation listed below. The Mend app was installed on 2026-11-08 by the repository owner, with **Only select repositories**, on two private repositories that already had a `renovate.json` on `main`. Both showed **Silent** on developer.mend.io after the install: their jobs completed and the portal listed the detected dependencies and updates, but nothing appeared on GitHub until the mode was switched to Interactive. The next job, a few minutes later, opened the Dependency Dashboard issue in each repository, with no onboarding PR, since both already had a config on `main`. In that portal, the app also found an update the local run couldn't look up without the GitHub API (`cachix/install-nix-action` v31.11.1 to v31.11.3).
+Renovate 44.222.2 (the npm `latest` tag on 2026-11-08) ran on Node.js 24.22.2 in a Linux cloud container, with the `local` platform against a scratch Git repository. The registries answered: Ansible Galaxy, Docker Hub, `registry.k8s.io`, the Terraform registry, `charts.longhorn.io`, and `git ls-remote` against GitHub. The GitHub API didn't answer, so no GitHub-hosted version was looked up. The local platform creates no branches, so the Dependency Dashboard, the approval checkboxes and automerge weren't exercised. The Action wasn't installed: those steps come from the documentation listed below. The Mend app was installed on 2026-11-08 by the repository owner, with **Only select repositories**, on two private repositories that already had a `renovate.json` on `main`. Both showed **Silent** on developer.mend.io after the install: their jobs completed and the portal listed the detected dependencies and updates, but nothing appeared on GitHub until the mode was switched to Interactive. The next job, a few minutes later, opened the Dependency Dashboard issue in each repository, with no onboarding PR, since both already had a config on `main`. In that portal, the app also found an update the local run couldn't look up without the GitHub API (`cachix/install-nix-action` v31.11.1 to v31.11.3). The first upgrade the owner ran from those PRs hit the unreleased RKE2 tag described above; the `curl` check against the release files ran in the container, but the `github-releases` lookup itself couldn't, without the GitHub API.
 
 ## Sources
 
-- Renovate documentation, for 44.222.2: [Installing and onboarding](https://docs.renovatebot.com/getting-started/installing-onboarding/), [Mend-hosted apps](https://docs.renovatebot.com/mend-hosted/overview/), [Mend-hosted apps configuration](https://docs.renovatebot.com/mend-hosted/hosted-apps-config/) (Silent mode, onboarding), [Security and permissions](https://docs.renovatebot.com/security-and-permissions/), [GitHub platform](https://docs.renovatebot.com/modules/platform/github/), [Local platform](https://docs.renovatebot.com/modules/platform/local/), [Config validation](https://docs.renovatebot.com/config-validation/), [Nix manager](https://docs.renovatebot.com/modules/manager/nix/), [Regex manager](https://docs.renovatebot.com/modules/manager/regex/), [GitHub Actions manager](https://docs.renovatebot.com/modules/manager/github-actions/), [Scheduling](https://docs.renovatebot.com/key-concepts/scheduling/) and [Configuration options](https://docs.renovatebot.com/configuration-options/) (`separateMultipleMinor`, `dependencyDashboardApproval`, `groupName`, `lockFileMaintenance`, `timezone`).
-- Preset definitions read from the installed `renovate@44.222.2` package (`dist/config/presets/internal/`), and the nix manager's default config and `flake.lock` update command (`dist/modules/manager/nix/`).
+- Renovate documentation, for 44.222.2: [Installing and onboarding](https://docs.renovatebot.com/getting-started/installing-onboarding/), [Mend-hosted apps](https://docs.renovatebot.com/mend-hosted/overview/), [Mend-hosted apps configuration](https://docs.renovatebot.com/mend-hosted/hosted-apps-config/) (Silent mode, onboarding), [Security and permissions](https://docs.renovatebot.com/security-and-permissions/), [GitHub platform](https://docs.renovatebot.com/modules/platform/github/), [Local platform](https://docs.renovatebot.com/modules/platform/local/), [Config validation](https://docs.renovatebot.com/config-validation/), [Nix manager](https://docs.renovatebot.com/modules/manager/nix/), [Regex manager](https://docs.renovatebot.com/modules/manager/regex/), [GitHub Releases datasource](https://docs.renovatebot.com/modules/datasource/github-releases/), [GitHub Actions manager](https://docs.renovatebot.com/modules/manager/github-actions/), [Scheduling](https://docs.renovatebot.com/key-concepts/scheduling/) and [Configuration options](https://docs.renovatebot.com/configuration-options/) (`separateMultipleMinor`, `dependencyDashboardApproval`, `groupName`, `lockFileMaintenance`, `timezone`).
+- Preset definitions read from the installed `renovate@44.222.2` package (`dist/config/presets/internal/`), the nix manager's default config and `flake.lock` update command (`dist/modules/manager/nix/`), and how `github-releases` drops drafts and marks pre-releases unstable (`dist/util/github/graphql/query-adapters/releases-query-adapter.js`).
 - [renovatebot/github-action](https://github.com/renovatebot/github-action): README, latest tag v46.3.12.
 - Kubernetes: [Version skew policy](https://kubernetes.io/releases/version-skew-policy/) (`kube-apiserver` minor upgrades, kubectl).
