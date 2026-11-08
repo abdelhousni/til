@@ -1,10 +1,10 @@
-# Adding Renovate to a GitHub or GitLab project: the hosted app, the runner, and the versions it can't see
+# Adding Renovate to a GitHub project: the hosted app, and the versions it can't see
 
-[Renovate](https://docs.renovatebot.com/) is a bot that reads a repository, finds every dependency whose version is written down, looks up newer releases and opens one pull request per update. It's open source, and [Mend](https://www.mend.io/) maintains it and runs a free hosted version. Getting it onto a project takes two steps: choose who runs it, which differs between GitHub and GitLab, and then make sure every version you care about is written somewhere Renovate can read.
+[Renovate](https://docs.renovatebot.com/) is a bot that reads a repository, finds every dependency whose version is written down, looks up newer releases and opens one pull request per update. It's open source, and [Mend](https://www.mend.io/) maintains it and runs a free hosted version. Getting it onto a project takes two steps: choose who runs it, and then make sure every version you care about is written somewhere Renovate can read. This entry runs it on GitHub. Most of it, from the configuration on, applies wherever Renovate runs.
 
 The terms this relies on:
 
-- **Pull request** (GitHub) or **merge request** (GitLab): a proposed change on its own branch, reviewed and merged on the platform. Renovate opens one for each update. The rest of this entry says "PR" for both.
+- **Pull request** (PR): a proposed change on its own branch, reviewed and merged on GitHub. Renovate opens one for each update. GitLab calls the same thing a merge request.
 - **Manager**: the Renovate module that understands one kind of file, such as `ansible-galaxy` for `requirements.yml`, `dockerfile` for a Dockerfile, `terraform` for `.tf` files or `github-actions` for workflows. It *extracts* each dependency's name and current version.
 - **Datasource**: where Renovate looks up the available versions of a dependency, such as Ansible Galaxy, a container registry, the Terraform registry, a Helm chart repository, the GitHub releases API or plain `git ls-remote`.
 - **Preset**: a named, reusable piece of Renovate configuration, pulled in with `"extends"`. `config:recommended` is the usual starting point.
@@ -28,12 +28,12 @@ flowchart LR
 
 ## Who runs it
 
-| | GitHub.com | GitLab.com |
-|---|---|---|
-| Hosted by Mend, free | **Mend Renovate app** from [github.com/apps/renovate](https://github.com/apps/renovate), on a user or an organization, for all or selected repositories | **Mend Developer Platform for GitLab.com**, relaunched in July 2026, installed on a **group** only. Mend's instructions require a paid GitLab account: free GitLab accounts aren't supported |
-| Self-hosted | The [`renovatebot/github-action`](https://github.com/renovatebot/github-action) Action (v46.3.12), with a token or your own GitHub App | The [`renovate-bot/renovate-runner`](https://gitlab.com/renovate-bot/renovate-runner) CI template (v26.1.0), in a scheduled pipeline |
+On GitHub.com there are two ways:
 
-The Renovate documentation advises the hosted app for most users, on both platforms. Mend then keeps the token, schedules runs and updates the Renovate version. On the free Community Cloud plan, Mend runs one job per organization at a time, schedules each active repository every 4 hours, and stops a job after 30 minutes. It also reacts to webhooks, so ticking a box on the dashboard starts a job without waiting for the schedule.
+- **Hosted by Mend, free**: the **Mend Renovate app** from [github.com/apps/renovate](https://github.com/apps/renovate), installed on a user or an organization, for all or selected repositories.
+- **Self-hosted**: the [`renovatebot/github-action`](https://github.com/renovatebot/github-action) Action (v46.3.12), run with a token or your own GitHub App.
+
+The Renovate documentation advises the hosted app for most users. Mend then keeps the token, schedules runs and updates the Renovate version. On the free Community Cloud plan, Mend runs one job per organization at a time, schedules each active repository every 4 hours, and stops a job after 30 minutes. It also reacts to webhooks, so ticking a box on the dashboard starts a job without waiting for the schedule.
 
 ## GitHub: install the Mend Renovate app
 
@@ -46,49 +46,9 @@ The app asks for read access to administration (to read branch protection), Depe
 
 To run Renovate yourself instead, the Action runs the Renovate container image with a token. The documentation lists the permissions a fine-grained token needs: read and write on contents, issues, pull requests, commit statuses and workflows, plus read on Dependabot alerts and organization members. A classic token needs the `repo` scope, and `workflow` to update Actions. Give the self-hosted bot a `branchPrefix` other than the default `renovate/`, so that it doesn't fight with the app if both ever run on one repository.
 
-## GitLab: a scheduled pipeline with renovate-runner
-
-On a free GitLab.com account, or on a self-managed GitLab, Renovate runs as a CI job in a project of its own. The steps:
-
-1. Create a new private project, for example `group/renovate-runner`, just for the bot. The runner's README says not to fork the template project.
-2. Create a token for the bot and add it under **Settings → CI/CD → Variables** as `RENOVATE_TOKEN`, masked. The token's role and scopes are listed after these steps.
-3. Add `RENOVATE_GITHUB_COM_TOKEN`, a GitHub token with the minimum scopes. Renovate uses it to fetch release notes and to look up versions through the GitHub API. Without it, those lookups are skipped or rate-limited (see the dry run below).
-4. Tell the bot which projects to process, in a `RENOVATE_EXTRA_FLAGS` variable, as shown below.
-5. Commit a `.gitlab-ci.yml` that includes the template, pinned to a release tag, as shown below.
-6. Add a schedule under **Build → Pipeline schedules**. The README suggests hourly, `3 * * * *`. The job only runs from a schedule, so start the first run with the schedule's play button.
-
-The token:
-
-- **Which token**: a **group access token** on the group the bot works on, or a personal access token of a dedicated user. A group access token creates its own bot user, which then authors the merge requests. GitLab requires an expiry date on a group access token, so put the renewal in a calendar.
-- **Role**: at least **Developer**, which can open merge requests and issues. To automerge, the token also needs "Allowed to merge" on the protected branch, which means **Maintainer** when only maintainers may merge.
-- **Scopes**: Renovate's GitLab page asks for `api` (`read_api` is enough for a dry run). The runner's README lists `read_user`, `api` and `write_repository`.
-
-Autodiscovery and onboarding are both off by default in the template. To process every project in one group and open an onboarding merge request in each, set `RENOVATE_EXTRA_FLAGS` to:
-
-```text
---autodiscover=true --autodiscover-filter=group/*
-```
-
-Add `--onboarding=false` to process only projects that already have a `renovate.json`. A space-separated list such as `group/app group/infra` names the projects explicitly instead. The filter matters: without it, the bot processes any project that someone invites it into.
-
-The runner project's `.gitlab-ci.yml`:
-
-```yaml
-include:
-  - project: 'renovate-bot/renovate-runner'
-    file: '/templates/renovate.gitlab-ci.yml'
-    ref: v26.1.0
-```
-
-On a self-managed GitLab that can't include a project from GitLab.com, use `remote: https://gitlab.com/renovate-bot/renovate-runner/-/raw/v26.1.0/templates/renovate.gitlab-ci.yml` instead. Adding `gitlab>renovate-bot/renovate-runner` to the `extends` of the runner project's own `renovate.json` lets Renovate update that `ref`.
-
-The template, at v26.1.0, sets `RENOVATE_PLATFORM=gitlab`, takes the endpoint from `$CI_API_V4_URL`, runs the image `ghcr.io/renovatebot/renovate:44` (the latest 44.x on each pull), caches the repository data between runs, and keeps a debug log as a job artifact for a day. Its onboarding config extends `config:recommended`.
-
-The same project ships a second template, `/templates/renovate-config-validator.gitlab-ci.yml`, that adds a job checking `renovate.json` in the project that includes it.
-
 ## The configuration
 
-The onboarding PR or MR proposes a `renovate.json` like this one:
+The onboarding PR proposes a `renovate.json` like this one:
 
 ```json
 {
@@ -97,7 +57,7 @@ The onboarding PR or MR proposes a `renovate.json` like this one:
 }
 ```
 
-`config:recommended` turns on the Dependency Dashboard and groups packages released together, such as the parts of a monorepo. It applies Renovate's package replacements and workarounds, and adds changelog links and release-age badges to the PRs. When the history already uses [Conventional Commits](../git/conventional-commits-messages-that-tools-can-read.md), the onboarding PR turns on semantic commit messages, so Renovate's commits follow the same `type(scope): summary` form. The file can also live at `.github/renovate.json`, `.gitlab/renovate.json` or `.renovaterc.json`, among others.
+`config:recommended` turns on the Dependency Dashboard and groups packages released together, such as the parts of a monorepo. It applies Renovate's package replacements and workarounds, and adds changelog links and release-age badges to the PRs. When the history already uses [Conventional Commits](../git/conventional-commits-messages-that-tools-can-read.md), the onboarding PR turns on semantic commit messages, so Renovate's commits follow the same `type(scope): summary` form. The file can also live at `.github/renovate.json` or `.renovaterc.json`, among others.
 
 Check the file before you push it. Renovate 44.222.2 needs Node.js 24.11 or later (or 26.13 or later):
 
@@ -175,7 +135,7 @@ It offered `v1.37.2+rke2r1` and skipped the release candidates (`-rc1+rke2r1`).
 
 **An install script fetched from `main` can't be tracked.** Renovate only reads versions written in files. Download a release by version instead (Helm publishes one tarball per version on `get.helm.sh`), put the version in an `ARG` with a comment, and the line becomes an update like any other.
 
-**The GitHub API needs a token.** The run warned `GitHub token is required for some dependencies` for `actions/checkout` and `opentofu/opentofu`, because the container it ran in couldn't reach the GitHub API. The `github-tags` and `github-releases` datasources go through that API. `git-tags`, used for RKE2 above, doesn't. The Mend app on GitHub has a token already. A GitLab runner needs `RENOVATE_GITHUB_COM_TOKEN`.
+**The GitHub API needs a token.** The run warned `GitHub token is required for some dependencies` for `actions/checkout` and `opentofu/opentofu`, because the container it ran in couldn't reach the GitHub API. The `github-tags` and `github-releases` datasources go through that API. `git-tags`, used for RKE2 above, doesn't. The Mend app on GitHub has a token already. A self-hosted Renovate on another platform needs a GitHub token of its own for these lookups.
 
 For workflows on GitHub, `helpers:pinGitHubActionDigests` pins each action to a commit digest, and Renovate then updates the digest according to the tag in a version comment (`uses: actions/checkout@<sha> # v4`). An action pinned to a bare digest, with no version comment, isn't updated at all, because Renovate can't tell which tag it belongs to. Those lookups need the GitHub API, so the run here doesn't show them.
 
@@ -269,15 +229,13 @@ This is the file the last run used. It validates with `--strict` on 44.222.2:
 }
 ```
 
-`schedule` limits when Renovate creates or updates branches. `timezone` makes it read that schedule in local time instead of UTC. `automerge` merges a PR once its status checks pass. On GitLab, the token also needs merge rights on the protected branch, as described above.
+`schedule` limits when Renovate creates or updates branches. `timezone` makes it read that schedule in local time instead of UTC. `automerge` merges a PR once its status checks pass.
 
-Renovate 44.222.2 (the npm `latest` tag on 2026-11-08) ran on Node.js 24.22.2 in a Linux cloud container, with the `local` platform against a scratch Git repository. The registries answered: Ansible Galaxy, Docker Hub, `registry.k8s.io`, the Terraform registry, `charts.longhorn.io`, and `git ls-remote` against GitHub. The GitHub API didn't answer, so no GitHub-hosted version was looked up. The local platform creates no branches, so the Dependency Dashboard, the approval checkboxes and automerge weren't exercised. The Mend apps and the GitLab runner weren't installed: those steps come from the documentation listed below.
+Renovate 44.222.2 (the npm `latest` tag on 2026-11-08) ran on Node.js 24.22.2 in a Linux cloud container, with the `local` platform against a scratch Git repository. The registries answered: Ansible Galaxy, Docker Hub, `registry.k8s.io`, the Terraform registry, `charts.longhorn.io`, and `git ls-remote` against GitHub. The GitHub API didn't answer, so no GitHub-hosted version was looked up. The local platform creates no branches, so the Dependency Dashboard, the approval checkboxes and automerge weren't exercised. The Mend app and the Action weren't installed: those steps come from the documentation listed below.
 
 ## Sources
 
-- Renovate documentation, for 44.222.2: [Installing and onboarding](https://docs.renovatebot.com/getting-started/installing-onboarding/), [Mend-hosted apps](https://docs.renovatebot.com/mend-hosted/overview/), [Security and permissions](https://docs.renovatebot.com/security-and-permissions/), [GitHub platform](https://docs.renovatebot.com/modules/platform/github/), [GitLab platform](https://docs.renovatebot.com/modules/platform/gitlab/), [Local platform](https://docs.renovatebot.com/modules/platform/local/), [Config validation](https://docs.renovatebot.com/config-validation/), [Nix manager](https://docs.renovatebot.com/modules/manager/nix/), [Regex manager](https://docs.renovatebot.com/modules/manager/regex/), [GitHub Actions manager](https://docs.renovatebot.com/modules/manager/github-actions/), [Scheduling](https://docs.renovatebot.com/key-concepts/scheduling/) and [Configuration options](https://docs.renovatebot.com/configuration-options/) (`separateMultipleMinor`, `dependencyDashboardApproval`, `groupName`, `lockFileMaintenance`, `timezone`).
+- Renovate documentation, for 44.222.2: [Installing and onboarding](https://docs.renovatebot.com/getting-started/installing-onboarding/), [Mend-hosted apps](https://docs.renovatebot.com/mend-hosted/overview/), [Security and permissions](https://docs.renovatebot.com/security-and-permissions/), [GitHub platform](https://docs.renovatebot.com/modules/platform/github/), [Local platform](https://docs.renovatebot.com/modules/platform/local/), [Config validation](https://docs.renovatebot.com/config-validation/), [Nix manager](https://docs.renovatebot.com/modules/manager/nix/), [Regex manager](https://docs.renovatebot.com/modules/manager/regex/), [GitHub Actions manager](https://docs.renovatebot.com/modules/manager/github-actions/), [Scheduling](https://docs.renovatebot.com/key-concepts/scheduling/) and [Configuration options](https://docs.renovatebot.com/configuration-options/) (`separateMultipleMinor`, `dependencyDashboardApproval`, `groupName`, `lockFileMaintenance`, `timezone`).
 - Preset definitions read from the installed `renovate@44.222.2` package (`dist/config/presets/internal/`), and the nix manager's default config and `flake.lock` update command (`dist/modules/manager/nix/`).
-- Mend documentation: [Install Mend Developer Platform for GitLab.com](https://docs.mend.io/integrations/latest/install-mend-developer-platform-for-gitlab-com).
-- [renovate-bot/renovate-runner](https://gitlab.com/renovate-bot/renovate-runner): README and `templates/renovate.gitlab-ci.yml` at v26.1.0.
 - [renovatebot/github-action](https://github.com/renovatebot/github-action): README, latest tag v46.3.12.
 - Kubernetes: [Version skew policy](https://kubernetes.io/releases/version-skew-policy/) (`kube-apiserver` minor upgrades, kubectl).
