@@ -2,11 +2,13 @@
 
 Things I've learned, collected in [abdelhousni/til](https://github.com/abdelhousni/til). Site pattern and tooling adapted from [simonw/til](https://github.com/simonw/til).
 
+Entries are drafted with [Claude Code](https://claude.com/claude-code), which also runs the commands they describe, usually in a Linux cloud container; I choose the topics, review and edit every entry, and publish it. Each entry says what was run and what wasn't.
+
 [![Linkedin Badge](https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&logo=Linkedin&logoColor=white&labelColor=0A66C2&link=https://www.linkedin.com/in/abdelhousni/)](https://www.linkedin.com/in/abdelhousni/)
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->137<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->164<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -72,6 +74,9 @@ Browse these TILs at https://til.housni.eu/
 * [Inventory in AAP: sources from a project, smart and constructed inventories](https://til.housni.eu/ansible/inventory-in-aap-sources-smart-constructed.html) - 2026-10-03
 * [Testing the inventory in CI, with a JSON Schema and policy checks](https://til.housni.eu/ansible/inventory-testing-in-ci-json-schema.html) - 2026-10-03
 * [Local facts in facts.d: declared data that looks measured](https://til.housni.eu/ansible/inventory-local-facts-facts-d-risks.html) - 2026-10-04
+* [A playbook hangs at fact gathering or `service_facts`: find the blocking call, then bound it](https://til.housni.eu/ansible/playbook-hangs-at-fact-gathering-or-service-facts.html) - 2026-10-17
+* [Control node, runner, controller: who runs your Ansible, and how Tower became AWX and AAP](https://til.housni.eu/ansible/control-node-runner-controller-tower-awx-aap.html) - 2026-10-22
+* [Ansible controllers in 2026: AWX paused, AAP, Semaphore UI, or plain CI](https://til.housni.eu/ansible/ansible-controllers-2026-awx-aap-semaphore-ci.html) - 2026-10-22
 
 ## github-pages
 
@@ -83,6 +88,7 @@ Browse these TILs at https://til.housni.eu/
 ## gitlab-ci
 
 * [A simple GitLab CI pipeline for ansible-lint on a custom Python image](https://til.housni.eu/gitlab-ci/ansible-lint-custom-python-image.html) - 2026-09-05
+* [Building GitLab CI images on a flaky network](https://til.housni.eu/gitlab-ci/gitlab-ci-images-flaky-network.html) - 2026-10-25
 
 ## http
 
@@ -102,16 +108,17 @@ Browse these TILs at https://til.housni.eu/
 ## proxmox
 
 * [Installing a RIPE Atlas software probe in a Proxmox LXC](https://til.housni.eu/proxmox/ripe-atlas-software-probe-lxc.html) - 2026-09-05
-* [Injecting qemu-guest-agent into an Ubuntu cloud template, from the CLI](https://til.housni.eu/proxmox/inject-qemu-guest-agent-ubuntu-template.html) - 2026-09-07
 * [A libvirt RHEL Kickstart example ported to Proxmox, minus the one flag with no equivalent](https://til.housni.eu/proxmox/rhel-kickstart-libvirt-example-ported.html) - 2026-09-20
 * [Debugging a Proxmox VM whose cloud-init config didn't apply](https://til.housni.eu/proxmox/debugging-cloud-init-on-first-boot.html) - 2026-09-20
 * [A Proxmox VM on demand, NixOS from Git: OpenTofu builds a skeleton, nixos-anywhere replaces it, and the host key exists before the VM](https://til.housni.eu/proxmox/nixos-on-demand-opentofu-nixos-anywhere-sops.html) - 2026-09-27
 * [ntfy in a Proxmox LXC, private and behind Caddy for TLS](https://til.housni.eu/proxmox/ntfy-lxc-behind-caddy-tls.html) - 2026-10-08
+* [Injecting qemu-guest-agent into Debian, Ubuntu, RHEL-family and openSUSE cloud templates, from the CLI](https://til.housni.eu/proxmox/inject-qemu-guest-agent-cloud-templates.html) - 2026-10-28
 
 ## python
 
 * [A regex link checker breaks on the exact HTML it was meant to check](https://til.housni.eu/python/regex-vs-htmlparser-for-dead-links.html) - 2026-09-05
 * [Getting a newer Python on RHEL without touching the system python3](https://til.housni.eu/python/newer-python-with-uv-without-touching-system-python-rhel.html) - 2026-09-29
+* [Controlling which Python uv uses](https://til.housni.eu/python/control-which-python-uv-uses.html) - 2026-10-26
 
 ## seo
 
@@ -119,6 +126,7 @@ Browse these TILs at https://til.housni.eu/
 * [robots.txt for a small static site is basically a pointer to the sitemap](https://til.housni.eu/seo/robots-txt-is-mostly-just-pointing-at-the-sitemap.html) - 2026-09-05
 * [A schema.org Person block is what actually helps you rank for your own name](https://til.housni.eu/seo/schema-org-person-for-name-search.html) - 2026-09-05
 * [Verifying a GitHub Pages site with Bing Webmaster Tools (no DNS needed)](https://til.housni.eu/seo/verifying-a-github-pages-site-with-bing.html) - 2026-09-05
+* [A "read in French" link on a static site: Google's translation proxy, the reader's language, and what it does to SEO and accessibility](https://til.housni.eu/seo/a-translate-link-in-the-readers-language.html) - 2026-11-02
 
 ## tls
 
@@ -126,6 +134,7 @@ Browse these TILs at https://til.housni.eu/
 * [Splitting a .pfx into a certificate, key, and CA chain with openssl](https://til.housni.eu/tls/splitting-pfx-into-pem-crt-and-ca-chain.html) - 2026-09-05
 * [Adding a certificate to a Java keystore/truststore with keytool](https://til.housni.eu/tls/keytool-import-certificate-java-truststore.html) - 2026-09-05
 * [A Let's Encrypt certificate for a LAN-only service: Caddy, DNS-01 and deSEC](https://til.housni.eu/tls/caddy-dns-01-desec-dedyn-io.html) - 2026-10-08
+* [A wildcard certificate for a private Kubernetes cluster: cert-manager, DNS-01 and deSEC](https://til.housni.eu/tls/cert-manager-dns-01-desec-private-kubernetes.html) - 2026-11-01
 
 ## cloud-init
 
@@ -137,6 +146,9 @@ Browse these TILs at https://til.housni.eu/
 * [Syncing a diverged fork: take the pipeline fixes, not the content](https://til.housni.eu/git/sync-a-diverged-fork-without-its-content.html) - 2026-09-27
 * [Configuring a repository for coding agents: what the guidance actually says](https://til.housni.eu/git/repo-guardrails-for-coding-agents.html) - 2026-09-27
 * [A branch you fetched was force-pushed: keep the old tip, then `rebase --onto`](https://til.housni.eu/git/resync-clone-after-force-push.html) - 2026-09-27
+* [Deleting merged branches: GitHub's auto-delete, GitLab's equivalent, and the local clone](https://til.housni.eu/git/delete-merged-branches-github-gitlab-and-local.html) - 2026-10-28
+* [Conventional Commits: commit messages that tools can read](https://til.housni.eu/git/conventional-commits-messages-that-tools-can-read.html) - 2026-11-08
+* [`git config user.email` isn't the identity Git commits with: check `git var`](https://til.housni.eu/git/git-config-user-email-is-not-the-commit-identity.html) - 2026-11-08
 
 ## oauth2
 
@@ -157,6 +169,8 @@ Browse these TILs at https://til.housni.eu/
 * [RKE2's etcd snapshots run on schedule, but a fresh cluster starts with none](https://til.housni.eu/kubernetes/rke2-etcd-snapshot-restore-drill.html) - 2026-09-19
 * [Restoring RKE2 etcd across an HA cluster, and backing snapshots up to S3](https://til.housni.eu/kubernetes/rke2-etcd-ha-restore-and-s3-backup.html) - 2026-09-20
 * [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://til.housni.eu/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
+* [A namespace on its own protects nothing: quotas, limit ranges, network policies and Pod Security do](https://til.housni.eu/kubernetes/namespaces-resourcequota-limitrange-rke2.html) - 2026-10-24
+* [A liveness probe restarts a container, a readiness probe only takes it out of the Service](https://til.housni.eu/kubernetes/liveness-readiness-startup-probes.html) - 2026-10-25
 
 ## packer
 
@@ -166,6 +180,7 @@ Browse these TILs at https://til.housni.eu/
 ## ssh
 
 * [Useful ~/.ssh/config patterns for IaC-provisioned hosts](https://til.housni.eu/ssh/ssh-config-patterns-for-iac.html) - 2026-09-17
+* [Reuse one ssh-agent across shells with keychain](https://til.housni.eu/ssh/reuse-one-ssh-agent-across-shells-with-keychain.html) - 2026-10-28
 
 ## terraform
 
@@ -173,6 +188,8 @@ Browse these TILs at https://til.housni.eu/
 * [What Terraform/OpenTofu, Nomad, and Packer are, and how they relate](https://til.housni.eu/terraform/terraform-opentofu-nomad-packer-how-they-relate.html) - 2026-09-17
 * [Terraform state locking just dropped its DynamoDB requirement](https://til.housni.eu/terraform/state-locking-inspection-refactoring-drift.html) - 2026-09-23
 * [What Terraform, OpenTofu, and Packer promise about secrets, and where each promise stops](https://til.housni.eu/terraform/what-terraform-opentofu-and-packer-promise-about-secrets.html) - 2026-09-29
+* [OpenTofu in a GitLab pipeline: GitLab-managed state and the OpenTofu CI/CD component](https://til.housni.eu/terraform/opentofu-gitlab-pipeline-managed-state-component.html) - 2026-10-23
+* [What a root module is in Terraform/OpenTofu, and why the state belongs to it](https://til.housni.eu/terraform/root-module-and-child-modules-who-owns-the-state.html) - 2026-11-08
 
 ## apache
 
@@ -184,6 +201,8 @@ Browse these TILs at https://til.housni.eu/
 * [Building a custom WSL2 kernel on GitHub Actions: `KCFLAGS`, not `CFLAGS`](https://til.housni.eu/linux/wsl2-kernel-on-github-actions.html) - 2026-09-28
 * [Checking new firewall rules with nc and Python: open, refused, or dropped](https://til.housni.eu/linux/check-firewall-rules-with-nc-and-python.html) - 2026-09-29
 * [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
+* [Changing when logrotate runs: the systemd timer, from the command line and with Ansible](https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html) - 2026-10-15
+* [AppImage: "error loading libfuse.so.2" on recent Ubuntu](https://til.housni.eu/linux/appimage-libfuse2-error.html) - 2026-11-01
 
 ## windows
 
@@ -192,6 +211,9 @@ Browse these TILs at https://til.housni.eu/
 * [Oh My Posh in PowerShell and in WSL2 zsh, with one config file](https://til.housni.eu/windows/oh-my-posh-pwsh-and-wsl-zsh.html) - 2026-09-28
 * [Installing PowerShell 7 on Windows, Debian, Ubuntu and RHEL, the way Microsoft documents it](https://til.housni.eu/windows/install-powershell-7-windows-debian-rhel.html) - 2026-09-29
 * [Running Linux containers on Windows with wslc, the container CLI built into WSL](https://til.housni.eu/windows/wslc-containers-in-wsl.html) - 2026-10-06
+* [A lightweight graphical file manager in WSLg: Thunar on Ubuntu, RHEL 9 and NixOS](https://til.housni.eu/windows/thunar-file-manager-in-wslg.html) - 2026-10-15
+* [`.wslconfig` vs `wsl.conf`: which file sets what in WSL](https://til.housni.eu/windows/wslconfig-vs-wsl-conf.html) - 2026-11-01
+* [WSLg: "Missing X server or $DISPLAY" when a Linux GUI app won't open](https://til.housni.eu/windows/wslg-missing-x-server-or-display.html) - 2026-11-01
 
 ## vscode
 
@@ -211,6 +233,25 @@ Browse these TILs at https://til.housni.eu/
 ## claude-code
 
 * [Starting with Jev in Claude Code: a plugin that adds a skill, and an API key for experiments](https://til.housni.eu/claude-code/typesafe-jev-plugin.html) - 2026-09-29
+* [Docker Hub said 429: pulling base images from the distributions' own registries and a Docker Hub mirror, then trusting the proxy inside the containers](https://til.housni.eu/claude-code/docker-hub-rate-limit-registries-mirror-proxy-ca.html) - 2026-11-08
+
+## artifactory
+
+* [Uploading files larger than Artifactory's upload limit](https://til.housni.eu/artifactory/uploading-files-larger-than-the-ui-limit.html) - 2026-10-21
+
+## gitops
+
+* [GitOps with tools that push: Ansible and OpenTofu against the four OpenGitOps principles](https://til.housni.eu/gitops/gitops-with-push-tools-ansible-opentofu.html) - 2026-10-22
+
+## devops
+
+* [DevOps and DevSecOps terminology: DORA metrics, CI/CD for Ansible, feature branches and GitOps](https://til.housni.eu/devops/devops-devsecops-dora-cicd-gitops-terminology.html) - 2026-10-24
+* [PDCA, the Deming cycle, as a DevSecOps service design process](https://til.housni.eu/devops/pdca-deming-wheel-applied-to-devsecops-work.html) - 2026-11-02
+
+## package-managers
+
+* [The package manager map: one portable environment for WSL2 and VMs, from apt to OCI images](https://til.housni.eu/package-managers/portable-environment-map-package-managers-to-images.html) - 2026-11-08
+* [apt, dnf and pacman side by side: one cheat sheet for Ubuntu 26.04, Fedora 45 and Arch](https://til.housni.eu/package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.html) - 2026-11-08
 <!-- index ends -->
 
 ---

@@ -12,7 +12,11 @@
       "kubernetes/rke2-ingress-traefik-nginx-retirement.md",
       "kubernetes/rke2-ha-embedded-etcd-external-datastore.md",
       "kubernetes/rke2-etcd-snapshot-restore-drill.md",
-      "kubernetes/rke2-node-scheduling-labels-taints-tolerations.md"
+      "kubernetes/rke2-node-maintenance-drain-reboot.md",
+      "kubernetes/rke2-etcd-ha-restore-and-s3-backup.md",
+      "kubernetes/rke2-node-scheduling-labels-taints-tolerations.md",
+      "kubernetes/namespaces-resourcequota-limitrange-rke2.md",
+      "kubernetes/liveness-readiness-startup-probes.md"
     ]
   },
   "hashicorp": {
@@ -21,7 +25,8 @@
       "terraform/what-is-terraform-opentofu-and-how-it-works.md",
       "packer/what-is-packer-and-how-it-works.md",
       "terraform/terraform-opentofu-nomad-packer-how-they-relate.md",
-      "terraform/state-locking-inspection-refactoring-drift.md"
+      "terraform/state-locking-inspection-refactoring-drift.md",
+      "terraform/root-module-and-child-modules-who-owns-the-state.md"
     ]
   },
   "ansible-dev-environment": {
@@ -91,6 +96,29 @@
       "ansible/inventory-in-aap-sources-smart-constructed.md",
       "ansible/inventory-testing-in-ci-json-schema.md",
       "ansible/inventory-local-facts-facts-d-risks.md"
+    ]
+  },
+  "iac-controller": {
+    "title": "Running IaC and CaC from a controller",
+    "entries": [
+      "ansible/control-node-runner-controller-tower-awx-aap.md",
+      "ansible/ansible-controllers-2026-awx-aap-semaphore-ci.md",
+      "gitops/gitops-with-push-tools-ansible-opentofu.md",
+      "terraform/opentofu-gitlab-pipeline-managed-state-component.md"
+    ]
+  },
+  "devsecops-linux": {
+    "title": "DevSecOps for Linux, applied",
+    "entries": [
+      "devops/devops-devsecops-dora-cicd-gitops-terminology.md",
+      "devops/pdca-deming-wheel-applied-to-devsecops-work.md"
+    ]
+  },
+  "portable-environments": {
+    "title": "Portable environments",
+    "entries": [
+      "package-managers/portable-environment-map-package-managers-to-images.md",
+      "package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.md"
     ]
   },
   "coding-harnesses-routing": {

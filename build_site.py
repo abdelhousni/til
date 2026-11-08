@@ -47,6 +47,25 @@ SKIP_DIRS = {".git", ".github", "__pycache__"}
 # works both on the built site and in the markdown twin.
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
 SERIES_MANIFEST = root / "series.json"
+# Old page path -> new page path, both relative to the site root. GitHub
+# Pages has no server-side redirects, so a renamed entry keeps its old URL
+# working through a stub page that forwards to the new one.
+REDIRECTS_MANIFEST = root / "redirects.json"
+
+REDIRECT_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moved</title>
+<link rel="canonical" href="{url}">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url={url}">
+</head>
+<body>
+<p>This page moved to <a href="{url}">{url}</a>.</p>
+</body>
+</html>
+"""
 FEED_ENTRY_LIMIT = 50
 LLMS_TXT_EXCERPT_LIMIT = 200
 RECENT_TILS_LIMIT = 10
@@ -96,14 +115,15 @@ PAGE_TEMPLATE = """<!doctype html>
 <link rel="describedby" href="../llms.txt">
 </head>
 <body>
-<header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a></header>
+<header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a>
+{translate_links}</header>
 <main>
 <h1>{title}</h1>
 <p class="meta">{topic} - {date}</p>
 {body}
 <p class="created">{created_line}</p>
 {series_nav}</main>
-{mermaid_script}{analytics_script}</body>
+{translate_script}{mermaid_script}{analytics_script}</body>
 </html>
 """
 
@@ -130,15 +150,16 @@ INDEX_TEMPLATE = """<!doctype html>
 <body>
 <header>
 <h1>{title}</h1>
-<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
+{translate_links}<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
 <a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
 </p>
+<p>Entries are drafted with Claude Code, which also runs the commands they describe, usually in a Linux cloud container; I choose the topics, review and edit every entry, and publish it. Each entry says what was run and what wasn't.</p>
 <p>{count} TILs so far. <a href="feed.atom">Atom feed</a>.</p>
 </header>
 <main>
 {body}
 </main>
-{analytics_script}</body>
+{translate_script}{analytics_script}</body>
 </html>
 """
 
@@ -229,6 +250,14 @@ STYLE = """
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
 header { margin-bottom: 2rem; }
 header a { text-decoration: none; color: #0969da; }
+header .translate { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0 0; font-size: .85rem; }
+header .translate .chip { display: inline-flex; align-items: baseline; gap: .4rem; min-height: 24px; padding: .3rem .7rem; border: 1px solid #d0d7de; border-radius: 999px; background: #fff; }
+header .translate .chip:hover { background: #f6f8fa; border-color: #0969da; }
+header .translate .chip:focus-visible { outline: 2px solid #0969da; outline-offset: 2px; }
+header .translate .chip svg { flex: none; align-self: center; }
+header .translate .chip small { color: #57606a; font-size: .78rem; }
+header .translate .chip small::before { content: "\\00B7  " / ""; }
+header .translate .local { color: #24292f; }
 h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3rem; margin-top: 2.5rem; }
 h3 { margin: 1.5rem 0 .2rem; font-size: 1rem; }
 ul { padding-left: 1.2rem; }
@@ -271,6 +300,80 @@ ANALYTICS_SCRIPT = """<script data-goatcounter="https://abdel.goatcounter.com/co
         async src="//gc.zgo.at/count.js"></script>
 """
 
+# The homepage and entry headers link to a machine translation: Google
+# Translate's page proxy, the only service found that translates a page from a
+# plain link, and Firefox's built-in translation, which runs on the reader's
+# own computer.
+# French is the default, without JavaScript too. This script only retargets
+# the Google link at the reader's first browser language when that is neither
+# English (the page's own) nor French. It loads nothing and sends nothing;
+# GoatCounter counts a click through data-goatcounter-click, read at click time.
+# Decorative icons, hidden from screen readers: a globe for the Google link,
+# a padlock for Firefox's translation, which keeps the text on the computer.
+GLOBE_ICON = (
+    '<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="16" height="16">'
+    '<g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6.5"/>'
+    '<ellipse cx="8" cy="8" rx="2.8" ry="6.5"/><path d="M1.5 8h13M2.6 4.7h10.8M2.6 11.3h10.8"/></g></svg>'
+)
+PADLOCK_ICON = (
+    '<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="16" height="16">'
+    '<g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="7" width="10" height="7" rx="1.5"/>'
+    '<path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>'
+)
+# data-goatcounter-title keeps the icons' markup out of the event's title,
+# which GoatCounter otherwise takes from the link's innerHTML.
+TRANSLATE_LINKS = (
+    '<p class="translate">'
+    '<a id="translate-google" class="chip" href="https://translate.google.com/translate?sl=en&amp;tl=fr&amp;hl=fr&amp;u={url}"'
+    ' lang="fr" hreflang="fr" rel="nofollow" data-goatcounter-click="translate-fr"'
+    ' data-goatcounter-title="Lire en français (traduction automatique Google)">'
+    + GLOBE_ICON.replace("{", "{{").replace("}", "}}")
+    + '<span class="label">Lire en français</span> <small>traduction automatique Google</small></a>\n'
+    '<a id="translate-firefox" class="chip local" href="https://support.mozilla.org/kb/website-translation"'
+    ' lang="fr" data-goatcounter-click="translate-firefox"'
+    ' data-goatcounter-title="Traduire sur votre ordinateur avec Firefox">'
+    + PADLOCK_ICON.replace("{", "{{").replace("}", "}}")
+    + '<span class="label">Traduire sur votre ordinateur</span> <small>Firefox</small></a>'
+    '</p>\n'
+)
+
+TRANSLATE_SCRIPT = """<script>
+(function () {
+  var tag = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+  var lang = tag.split("-")[0].toLowerCase();
+  if (!lang || lang === "en" || lang === "fr") return;
+  // Google Translate needs the script variant for Chinese.
+  if (lang === "zh") lang = /-(tw|hk|mo|hant)\\b/i.test(tag) ? "zh-TW" : "zh-CN";
+  var name;
+  try {
+    name = new Intl.DisplayNames([lang], { type: "language" }).of(lang);
+  } catch (e) {
+    return;
+  }
+  if (!name || name === lang) return;
+  var google = document.getElementById("translate-google");
+  var firefox = document.getElementById("translate-firefox");
+  if (!google || !firefox) return;
+  var url = new URL(google.href);
+  url.searchParams.set("tl", lang);
+  url.searchParams.set("hl", lang);
+  google.href = url.href;
+  google.lang = google.hreflang = lang;
+  name = name.charAt(0).toLocaleUpperCase(lang) + name.slice(1);
+  google.dataset.goatcounterClick = "translate-" + lang;
+  google.dataset.goatcounterTitle = name + " (Google Translate)";
+  var label = google.querySelector(".label");
+  label.textContent = name;
+  // Only the name can be right to left (Arabic, Hebrew); the chip stays as it is.
+  label.dir = "auto";
+  google.querySelector("small").textContent = "Google Translate";
+  firefox.lang = "en";
+  firefox.dataset.goatcounterTitle = "Translate on your own computer with Firefox";
+  firefox.querySelector(".label").textContent = "Translate on your own computer";
+})();
+</script>
+"""
+
 MERMAID_SCRIPT = """<script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
   mermaid.initialize({ startOnLoad: true });
@@ -283,6 +386,10 @@ MERMAID_SCRIPT = """<script type="module">
 # otherwise flatten it into an ordinary, unlabelled highlighted code block --
 # indistinguishable from any other unrecognized language, so nothing could
 # find it afterwards to render as a diagram.
+# translate="no" keeps a page translator (Google Translate's proxy, a
+# browser's own translation) away from the diagram source: translated, it is
+# no longer Mermaid syntax and renders as "Syntax error in text". Code blocks
+# don't need it, as translators already skip <code>.
 MERMAID_FENCE_RE = re.compile(r"^```mermaid[ \t]*\n(.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
@@ -500,6 +607,10 @@ def build_llms_txt(all_entries, topics, series_nav):
         "`.md` in place of `.html`; the links below point at the markdown. Sections are "
         "topics. Each line gives the entry's first-publication date, its place in a "
         "reading series where it has one, and how it opens.",
+        "",
+        "Entries are drafted with Claude Code, which also runs the commands they describe, "
+        "usually in a Linux cloud container; the author chooses the topics, reviews and "
+        "edits every entry, and publishes it. Each entry says what was run and what wasn't.",
         "",
     ]
     for topic, rows, _ in sorted(topics, key=lambda t: t[0]):
@@ -750,7 +861,7 @@ def main():
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-            lambda m: f'<pre class="mermaid">\n{escape(m.group(1))}\n</pre>', body_text
+            lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>', body_text
         )
         html_body = unescape_pipes_in_table_code(
             markdown.markdown(
@@ -780,6 +891,8 @@ def main():
                 description=description,
                 author=SITE_AUTHOR,
                 url=url,
+                translate_links=TRANSLATE_LINKS.format(url=url),
+                translate_script=TRANSLATE_SCRIPT,
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
                 analytics_script=ANALYTICS_SCRIPT,
             )
@@ -854,6 +967,8 @@ def main():
             url=SITE_URL,
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
+            translate_links=TRANSLATE_LINKS.format(url=f"{SITE_URL}/"),
+            translate_script=TRANSLATE_SCRIPT,
             analytics_script=ANALYTICS_SCRIPT,
         )
     )
@@ -881,6 +996,21 @@ def main():
     (site / "sitemap.xml").write_text(build_sitemap(all_entries, topics))
     (site / "robots.txt").write_text(ROBOTS_TXT.format(site_url=SITE_URL))
     (site / "llms.txt").write_text(build_llms_txt(all_entries, topics, series_nav))
+    write_redirects()
+
+
+def write_redirects():
+    """Write a forwarding stub for every renamed page in redirects.json."""
+    if not REDIRECTS_MANIFEST.exists():
+        return
+    for old, new in json.loads(REDIRECTS_MANIFEST.read_text()).items():
+        if not (site / new).exists():
+            sys.exit(f"redirects.json: {old} points to {new}, which the build didn't produce")
+        if (site / old).exists():
+            sys.exit(f"redirects.json: {old} is still a real page; remove the redirect")
+        stub = site / old
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(REDIRECT_TEMPLATE.format(url=attr_escape(f"{SITE_URL}/{new}")))
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ git var GIT_AUTHOR_IDENT
 git var GIT_COMMITTER_IDENT
 ```
 
-Both should show `abdel.h <23284113+abdelhousni@users.noreply.github.com>`.
+Both should show `abdelhousni <23284113+abdelhousni@users.noreply.github.com>`.
 The cloud environment sets `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`,
 `GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL`, which override every git config
 file. `git config user.email` doesn't see them: it still prints
@@ -43,12 +43,21 @@ the variables aren't set in this environment. Set the repository-local
 identity first:
 
 ```bash
-git config user.name "abdel.h"
+git config user.name "abdelhousni"
 git config user.email "23284113+abdelhousni@users.noreply.github.com"
 ```
 
 Rewriting history afterwards to fix authorship means a force push, so get it
 right before committing.
+
+## Commit messages
+
+Commit messages and pull request titles follow
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
+`type(scope): summary`, with `type` one of `feat`, `fix`, `docs`, `chore`,
+`refactor`, `test` or `ci`, and the topic directory as the optional scope,
+for example `docs(podman): add the podman compose socket entry` or
+`fix(ansible): define selectattr on first use`.
 
 ## Merging
 
@@ -66,6 +75,76 @@ repeating it. If no entry does, define it in a sentence or a short list where
 it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
+
+## Sources: current information, never memory
+
+Work from current online information. Before writing a version number, a
+command, an option, a file path, a URL, a maintainer or a feature, check it
+against a current source: run the command on the current release when the
+environment allows, otherwise read the official documentation or release
+notes. Don't write any of these from memory, even when it seems certain;
+release-day articles count as a lead, not a source (Ubuntu 26.04 coverage
+said apt 3.1, and 26.04.1 ships 3.2.0). Link the sources in the entry, and
+say when a source couldn't be reached.
+
+## Diagrams
+
+Draw a diagram in Mermaid first: a fenced `mermaid` block in the entry,
+parsed by `check_mermaid.mjs` in CI. Use a hand-written SVG file only for
+what Mermaid can't lay out, such as a picture with slopes, angles or shapes
+that aren't boxes and arrows. The first one is
+`devops/pdca-deming-wheel-on-a-slope.svg`.
+
+What each one depends on:
+
+| | Mermaid block | Hand-written SVG |
+|---|---|---|
+| In the reader's browser | JavaScript: `mermaid@11` loaded from cdn.jsdelivr.net when the page opens | nothing: a static file in an `<img>` tag, shown without JavaScript and in the Atom feed |
+| To build | nothing extra | nothing extra: `build_site.py` publishes image files beside the entry |
+| To check | Node 22, and `mermaid` and `jsdom` from `package-lock.json` (`make check-mermaid`) | Python's standard library (`make check-svg`, `check_svg.py`) |
+| To write | a text editor | a text editor; a browser to look at it |
+
+Rules for an SVG:
+
+- Put the file beside its entry, and show it in a `<figure>` with an `<img>`
+  tag that has `alt`, `width` and `height`, plus a `<figcaption>`.
+- Keep it self-contained: no script, no event handler, no external image,
+  font or stylesheet. A browser doesn't run or load these from an `<img>`
+  SVG anyway, so text uses the site's system font stack.
+- Give it a `<title>` and a `<desc>`, and start it with a comment that says
+  where the drawing comes from, what it depends on and how it was laid out.
+- Draw it yourself. Credit a picture that gave the idea in the caption,
+  but never copy the picture.
+- `make check-svg` must pass. A browser shows nothing for an SVG that isn't
+  well-formed XML, and two hyphens in a row inside an XML comment are
+  enough to break it.
+
+## Authorship
+
+The site says once, on the homepage, in the README and in `llms.txt`, that
+entries are drafted with Claude Code, which runs their commands, usually in
+a Linux cloud container, and that the owner reviews, edits and publishes
+them. Keep that note true when the way entries are made changes.
+
+Two cases go further, entry by entry:
+
+- **Where it ran matters.** When the entry is about an environment the
+  commands didn't run in (WSL, Windows, macOS, a GUI, real hardware, an
+  internal system) and a reader would assume they did, end the entry with
+  one line naming where the commands ran and where they didn't.
+- **Opinions.** A recommendation or judgement ("prefer X", "skip Y",
+  "the best way") is the owner's to make. List each such sentence in the
+  pull request description, under "Opinions to confirm", so the owner can
+  keep, rewrite or drop it before merging. Facts and procedures don't need
+  this.
+
+## Decisions
+
+An entry explains how something works; it doesn't record which option was
+chosen. When a session chooses between options (a tool, an approach, a
+structure), record the decision as an ADR with the `adr` skill of the
+`toolkit` plugin, which says which private repository it goes in. Don't
+link those ADRs from entries: this repository is public.
 
 ## Companion repositories
 
@@ -88,3 +167,13 @@ from a fresh clone before opening the pull request: `lab/check.sh` passes
 after the documented setup, and every `run.sh` matches its `expected.txt`.
 A new series starts with both; an example that needs a new tool adds it to
 the table and to `lab/check.sh` in the same pull request.
+
+## Stay vanilla (strongly recommended)
+
+Use the stock, upstream tool and its defaults before anything else: stock VS
+Code with extensions from each tool's own vendor only (no VS Code fork such as
+Cursor or Antigravity), project configuration in the repository
+(`.devcontainer/`, `.vscode/`) rather than on the workstation, `kubectl`
+before any cluster UI, Claude Code as the only AI assistant, and upstream
+tools, roles and collections used as published, unpatched. Depart from this
+only when the stock tool can't do the job, and say why in the pull request.
