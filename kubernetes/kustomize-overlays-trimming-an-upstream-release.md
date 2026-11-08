@@ -153,11 +153,63 @@ comm -23 <(names upstream) <(names overlay)
 
 The second check needs the cluster: `kubectl apply --server-side --dry-run=server -k overlay` has the API server validate every object without storing anything, once the CRDs it uses exist.
 
-The renders and the failing `test` ran with kubectl v1.37.1 in a Linux cloud container; the same counts came out on the owner's workstation, and the overlay was then applied to the homelab's RKE2 cluster.
+## Two clusters, two overlays
+
+The homelab runs kube-prometheus on a second cluster, a single-node GitLab lab, which has its own Grafana in a `grafana` namespace. Its overlay is a second directory next to the first, with the same shape (`resources: [../upstream]` and a list of patches), pinned to its own release: v0.18.0 there, v0.19.0 on the three-node cluster. Most patches are the same text in both: prometheus-adapter, blackbox-exporter, the three ServiceMonitors, the PodDisruptionBudgets, the guarded rule groups (at the same positions in both releases, so both `test` pairs pass), and the `Prometheus` and `Alertmanager` changes. What differs follows from that Grafana:
+
+- **Dashboards kept, minus those for what doesn't run there.** Instead of deleting every `grafana-dashboard-.*`, the lab's overlay deletes 13 of them by name, those for the scheduler, the controller manager, kube-proxy, Windows, AIX and macOS nodes, remote write, several clusters, and Grafana itself (its ServiceMonitor is deleted, so nothing collects its metrics):
+
+  ```yaml
+    - target:
+        kind: ConfigMap
+        name: grafana-dashboard-(controller-manager|scheduler|proxy|grafana-overview|prometheus-remote-write|k8s-resources-multicluster|k8s-resources-windows-.*|k8s-windows-.*|nodes-aix|nodes-darwin)
+      patch: *delete
+  ```
+
+- **A label on the 20 that remain.** The lab's Grafana runs with a *sidecar*, a second container that loads dashboards from ConfigMaps. In the Grafana chart (grafana-community 14.2.0), it picks up the ConfigMaps "marked with" the label `grafana_dashboard`, any value. The next patch adds it to every dashboard still there; patches apply in order, so the 13 deleted above are no longer there to match:
+
+  ```yaml
+    - target:
+        kind: ConfigMap
+        name: grafana-dashboard-.*
+      patch: |-
+        - op: add
+          path: /metadata/labels/grafana_dashboard
+          value: "1"
+  ```
+
+- **One more rule in Prometheus's NetworkPolicy.** Upstream's policy admits Grafana pods of its own namespace only, and this Grafana lives in another. The rule is appended to the existing list: in a JSON patch path, `-` stands for the end of an array, and RFC 6902's `add` then appends:
+
+  ```yaml
+    - target:
+        kind: NetworkPolicy
+        name: prometheus-k8s
+      patch: |-
+        - op: add
+          path: /spec/ingress/-
+          value:
+            from:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: grafana
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: grafana
+            ports:
+              - port: 9090
+                protocol: TCP
+  ```
+
+  Rendered, the policy keeps upstream's three rules and gains this fourth.
+
+Against v0.18.0's 131 objects, the lab's overlay renders 82: the same deletions, minus the 20 dashboards it keeps. Each overlay reads only its own release, so one cluster can move to a new kube-prometheus without the other: the guarded `test` operations say at build time whether the new release still fits.
+
+The renders and the failing `test` ran with kubectl v1.37.1 in a Linux cloud container, against v0.19.0 and, for the GitLab lab's overlay, v0.18.0; the same counts came out on the owner's workstation, and the overlays were applied to the two clusters.
 
 ## Sources
 
 - Kustomize: [Kustomization reference](https://kubectl.docs.kubernetes.io/references/kustomize/), [`patches`](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/) (targets, anchored regular expressions, kind and name left untouched, custom resources), [`examples/loadHttp`](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/loadHttp/kustomization.yaml) and [`examples/inlinePatch.md`](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/inlinePatch.md) (`$patch: delete`).
 - Kubernetes: [Strategic merge patch](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-api-machinery/strategic-merge-patch.md) (the `delete` directive).
 - [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902), JavaScript Object Notation (JSON) Patch: `add`, `replace`, `remove`, `test`, and errors ending the patch.
-- kube-prometheus v0.19.0: [`kustomization.yaml`](https://github.com/prometheus-operator/kube-prometheus/blob/v0.19.0/kustomization.yaml), [Customizing Kube-Prometheus](https://github.com/prometheus-operator/kube-prometheus/blob/v0.19.0/docs/customizing.md) (jsonnet), `manifests/prometheus-prometheus.yaml` and `manifests/alertmanager-alertmanager.yaml` (replicas, resources), and the `Prometheus` CRD (`retention` default).
+- Grafana chart, grafana-community 14.2.0: `values.yaml` (`sidecar.dashboards.label: grafana_dashboard`, `labelValue: ""`), read with `helm show values`.
+- kube-prometheus v0.19.0: [`kustomization.yaml`](https://github.com/prometheus-operator/kube-prometheus/blob/v0.19.0/kustomization.yaml), [Customizing Kube-Prometheus](https://github.com/prometheus-operator/kube-prometheus/blob/v0.19.0/docs/customizing.md) (jsonnet), `manifests/prometheus-prometheus.yaml` and `manifests/alertmanager-alertmanager.yaml` (replicas, resources), and the `Prometheus` CRD (`retention` default). kube-prometheus [v0.18.0](https://github.com/prometheus-operator/kube-prometheus/tree/v0.18.0) for the GitLab lab's overlay.
