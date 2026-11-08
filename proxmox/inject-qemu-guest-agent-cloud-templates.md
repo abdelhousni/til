@@ -134,7 +134,7 @@ qm set "$VMID" \
 qm template "$VMID"
 ```
 
-`--agent enabled=1` is the Proxmox-side switch: it adds the virtio serial port the agent talks through, for anything cloned from this template, and it's independent of whatever's installed inside the guest. On an existing VM, `qm set <vmid> --agent 1` does the same; the VM needs a full stop and start, not a reboot from inside, before the port appears.
+`--agent enabled=1` is the Proxmox-side switch: it adds the virtio serial port the agent talks through, for anything cloned from this template, and it's independent of whatever's installed inside the guest. On an existing VM, `qm set <vmid> --agent 1` does the same; the VM needs a full stop and start, not a reboot from inside, before the port appears ([source](https://pve.proxmox.com/pve-docs/chapter-qm.html)).
 
 ## Verify on a disposable clone, not the template itself
 
