@@ -113,5 +113,12 @@
       "devops/devops-devsecops-dora-cicd-gitops-terminology.md",
       "devops/pdca-deming-wheel-applied-to-devsecops-work.md"
     ]
+  },
+  "portable-environments": {
+    "title": "Portable environments",
+    "entries": [
+      "package-managers/portable-environment-map-package-managers-to-images.md",
+      "package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.md"
+    ]
   }
 }
