@@ -76,6 +76,17 @@ it first appears. Don't leave a term that a reader new to the topic would
 have to look up elsewhere, and don't point to a later entry for a definition
 the current one needs.
 
+## Sources: current information, never memory
+
+Work from current online information. Before writing a version number, a
+command, an option, a file path, a URL, a maintainer or a feature, check it
+against a current source: run the command on the current release when the
+environment allows, otherwise read the official documentation or release
+notes. Don't write any of these from memory, even when it seems certain;
+release-day articles count as a lead, not a source (Ubuntu 26.04 coverage
+said apt 3.1, and 26.04.1 ships 3.2.0). Link the sources in the entry, and
+say when a source couldn't be reached.
+
 ## Diagrams
 
 Draw a diagram in Mermaid first: a fenced `mermaid` block in the entry,
