@@ -118,7 +118,8 @@
     "title": "Portable environments",
     "entries": [
       "package-managers/portable-environment-map-package-managers-to-images.md",
-      "package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.md"
+      "package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.md",
+      "package-managers/homebrew-nix-pkgx-cross-distribution-cli-tools.md"
     ]
   }
 }
