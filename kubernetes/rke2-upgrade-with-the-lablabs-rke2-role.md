@@ -1,6 +1,6 @@
 # How the lablabs.rke2 Ansible role upgrades an RKE2 cluster, node by node
 
-Sixteenth entry in the RKE2/Kubernetes series. It comes from upgrading the series' Proxmox cluster (one server, two agents) from v1.30.6 to v1.35.10 on 2026-11-08, one minor version at a time. The cluster is installed by [lablabs.rke2](https://github.com/lablabs/ansible-role-rke2), an Ansible *role*: a packaged set of tasks, defaults and templates that a playbook applies to the hosts of an inventory. Changing its `rke2_version` variable and running the playbook again is the whole upgrade. This entry reads what the role does then, in version 1.54.0, and what it leaves to you.
+Sixteenth entry in the RKE2/Kubernetes series. It comes from upgrading the series' Proxmox cluster (one server, two agents) from v1.30.6 to v1.37.2 on 2026-11-08, one minor version at a time. The cluster is installed by [lablabs.rke2](https://github.com/lablabs/ansible-role-rke2), an Ansible *role*: a packaged set of tasks, defaults and templates that a playbook applies to the hosts of an inventory. Changing its `rke2_version` variable and running the playbook again is the whole upgrade. This entry reads what the role does then, in version 1.54.0, and what it leaves to you.
 
 [RKE2](what-is-rke2-and-how-it-works.md) is a Kubernetes distribution. A *server* runs the control plane (the API server, etcd, the scheduler) and an *agent* runs only workloads. An RKE2 version is a Kubernetes version plus an RKE2 release number: `v1.35.10+rke2r1` is Kubernetes 1.35.10.
 
@@ -124,6 +124,26 @@ Version parameter to compare against cannot be empty
 ```
 
 The check extracts `vX.Y.Z` from the running version to compare it, and `outdated` has none. The role skips this check when `rke2_allow_downgrade` is a boolean `true`, but that also turns off the protection the check is for. With the new binaries already installed, the way out here was to do the second phase by hand, in the role's order: drain the server, `systemctl restart rke2-server` on it, wait for every node to be Ready, uncordon, then the same for each agent with `rke2-agent`. Once every node ran the target, the role read a real running version again, and the next step went through it normally.
+
+## A role default that RKE2 1.37 refuses
+
+The step to 1.37 failed at "Restart RKE2 service on rke2-server-1". The server's journal would have said why, and RKE2's source at v1.37.2+rke2r1 does too (`pkg/cli/cmds/server.go`):
+
+```
+ingress-nginx is no longer supported as a standalone ingress controller, please use traefik.
+```
+
+The cluster runs no ingress controller: its `rke2_disable` list turns off the `rke2-ingress-nginx` chart. But the role still writes its default, `rke2_ingress_controller: ingress-nginx`, into the server's `config.yaml`, and from 1.37 RKE2 exits at start when that is the only value. 1.36.6 has no such check, so the step before went through. Setting `rke2_ingress_controller: none` keeps the cluster as it was. RKE2 1.37 accepts `none` or `traefik`, plus `ingress-nginx` only next to traefik while migrating away from it: see [the ingress entry](rke2-ingress-traefik-nginx-retirement.md).
+
+That failure also showed what the role does when a server doesn't come back. Ansible dropped the server from the run and went on to the agents. The first agent was drained, and its restart never ended: RKE2's units are `Type=notify` with `TimeoutStartSec=0`, so systemd waits for the start with no time limit, and the agent didn't finish starting without its server. Ctrl+C stopped the run, with 1.37 installed on every node:
+
+| Node | State left |
+|---|---|
+| server | stopped, cordoned |
+| first agent | starting, cordoned |
+| second agent | still running 1.36 from a replaced binary, so `outdated` |
+
+Rerunning the playbook with the setting, limited to the server and the first agent, started the server with the new `config.yaml`, and the first agent joined it. Both stayed cordoned, though. The role's uncordon is part of its restart, which it skips on a node that already runs the target. While the only server stayed cordoned, the Canal and CoreDNS install jobs stayed `Pending`: RKE2 installs them as bootstrap charts, whose jobs run only on a control-plane node. `kubectl uncordon` on both nodes let them run, and the second agent was restarted by hand as in the previous section.
 
 ## What the role doesn't look at: the packaged charts
 
