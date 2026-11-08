@@ -81,7 +81,7 @@ Two terms used in the table:
 | `apt`, `dnf`, `pacman` | Operating system | yes | none built in | only by repository snapshot | its own distribution only | yes |
 | Homebrew | CLI tools | once, to install it | `Brewfile` | weak | all three | yes |
 | Nix | anything | once, to install it | `flake.nix` | `flake.lock` | all three | yes |
-| `pkgx` | CLI tools | no | per project | partial | all three | yes |
+| `pkgx` | CLI tools | once, to install it | `pkgx.yaml`, per project | version ranges, no lockfile | all three | not checked |
 | Flatpak | desktop applications | no, with per-user installs | a scripted list | by commit | all three | through WSLg |
 | Snap | applications and CLI tools | yes | a scripted list | by channel | Ubuntu-first | needs systemd |
 | AppImage | desktop applications | no | none | the file is the version | all three | through WSLg |
