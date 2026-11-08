@@ -71,6 +71,8 @@ flowchart TD
     HTTP --> ANACONDA
 ```
 
+Packer automates both halves of this. Its `proxmox-iso` builder serves the kickstart file itself from an `http_directory`, and its `boot_command` types the `inst.ks=http://...` argument at the installer's boot prompt, so neither the `args:` line nor a separately started web server is needed. [Kickstart, cloud-init and Image Builder are three layers](../packer/rhel-template-kickstart-cloud-init-image-builder.md) shows that source block, and [what Packer is and how it works](../packer/what-is-packer-and-how-it-works.md) explains the tool.
+
 ## Kickstart versus what this site's other Proxmox entries already use
 
 Every other Proxmox entry here — [injecting `qemu-guest-agent` into a template](inject-qemu-guest-agent-cloud-templates.md), [debugging cloud-init on first boot](../cloud-init/vendor-data-alongside-terraform-user-data.md) — starts from an already-installed cloud image and configures it at first boot. Kickstart is the other half of unattended provisioning: it drives the *installer itself*, starting from nothing but a stock vendor ISO. Neither replaces the other — cloud images generally don't exist for every OS or every custom partition layout a Kickstart file can express, and Kickstart doesn't help once the OS is already on disk. Which one is the right tool depends on whether there's a suitable cloud image to start from at all.
