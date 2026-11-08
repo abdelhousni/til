@@ -194,6 +194,8 @@ Without anything else, all seven PRs would be created as Renovate's rate limits 
 
 Longhorn got the same treatment on its own: 1.7.3, then one branch for each of 1.8 to 1.13.
 
+Merging one of these PRs only changes the pin: the cluster changes when the playbook runs. [The RKE2 upgrade entry](../kubernetes/rke2-upgrade-with-the-lablabs-rke2-role.md) follows what that run does on each node.
+
 ## Nix flakes: opt in, and the channel moves too
 
 The `nix` manager reads `flake.nix` and its lock (a flake is a Nix project whose inputs are pinned in `flake.lock`: see the flakes section of [NixOS first steps](../nixos/first-steps-configuration-generations-rollback.md)). It is in beta and off by default:
