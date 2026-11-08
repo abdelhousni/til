@@ -25,7 +25,8 @@
       "terraform/what-is-terraform-opentofu-and-how-it-works.md",
       "packer/what-is-packer-and-how-it-works.md",
       "terraform/terraform-opentofu-nomad-packer-how-they-relate.md",
-      "terraform/state-locking-inspection-refactoring-drift.md"
+      "terraform/state-locking-inspection-refactoring-drift.md",
+      "terraform/root-module-and-child-modules-who-owns-the-state.md"
     ]
   },
   "ansible-dev-environment": {
