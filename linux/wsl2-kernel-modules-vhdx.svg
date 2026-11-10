@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="500" viewBox="0 0 860 500" role="img" aria-labelledby="title desc">
+<!--
+  How WSL makes a kernel modules VHDX visible in every distro. Used by
+  wsl2-kernel-modules-vhdx.md, where it replaced a Mermaid flowchart.
+
+  Drawn by hand for this site from what src/linux/init/main.cpp in
+  microsoft/WSL does (mount read-only at /modules, then an overlay on
+  /lib/modules/<release> in each distro) and from the mount and lsmod
+  output in the entry. Sizes are those of the 20261110b build.
+
+  Dependencies: none. Plain SVG 1.1 written in a text editor: no script, no
+  external font, image or stylesheet, no generator. The page shows it with
+  an <img> tag, so it renders without JavaScript and in the Atom feed.
+  Text uses the site's system font stack, and monospace for paths.
+
+  Layout: two boxes side by side. Left (x 20 to 260), the Windows host and
+  its files; right (x 330 to 840), the VM: the kernel, the /modules disk,
+  then one box per distro. The two arrows between them are cubic curves
+  whose control points sit at different x (270 and 310) so they don't
+  cross. Monospace text is about 7.2 px per character at 12 px; keep each
+  line inside its box when editing.
+
+  To edit: change the numbers, run make check-svg (well-formed XML, a
+  title, nothing external), and look at it in a browser. An XML comment
+  can't contain two hyphens in a row.
+-->
+  <title id="title">A kernel modules VHDX, from the Windows host to every WSL distro</title>
+  <desc id="desc">On the Windows host, .wslconfig points kernel= to a bzImage and kernelModules= to modules.vhdx. In the WSL2 virtual machine, the bzImage boots as the one Linux kernel, and the VHDX is mounted read-only at /modules. Each distro, here Ubuntu 26.04 and NixOS, gets an overlay on /lib/modules/release: a writable upper layer in the distro over the read-only modules from /modules. A module loaded with modprobe in Ubuntu shows up in lsmod in NixOS, because both share the kernel.</desc>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+  <rect width="860" height="500" fill="#ffffff"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#1a1a1a">
+
+    <!-- Windows host -->
+    <rect x="20" y="40" width="240" height="440" rx="10" fill="#eef3fb" stroke="#5b7bb5" stroke-width="2"/>
+    <text x="34" y="66" font-size="15" font-weight="bold">Windows host</text>
+
+    <rect x="34" y="82" width="212" height="104" rx="6" fill="#ffffff" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="46" y="102" font-size="13" font-weight="bold">%UserProfile%\.wslconfig</text>
+    <g font-family="Consolas, 'SFMono-Regular', Menlo, monospace" font-size="12">
+      <text x="46" y="126">[wsl2]</text>
+      <text x="46" y="146">kernel=…\bzImage</text>
+      <text x="46" y="166">kernelModules=…\modules.vhdx</text>
+      <text x="34" y="232">G:\wsl\kernels\</text>
+    </g>
+
+    <rect x="34" y="244" width="212" height="64" rx="6" fill="#ffffff" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="46" y="268" font-size="14" font-weight="bold">bzImage</text>
+    <text x="46" y="290" font-size="12">16 MB: the kernel, no modules</text>
+
+    <rect x="34" y="336" width="212" height="84" rx="6" fill="#ffffff" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="46" y="360" font-size="14" font-weight="bold">modules.vhdx</text>
+    <text x="46" y="382" font-size="12">143 MB: 748 .ko files</text>
+    <text x="46" y="402" font-size="12">an ext4 image in a VHDX disk</text>
+
+    <text x="34" y="452" font-size="12">Both come from the same build:</text>
+    <text x="34" y="468" font-size="12">same uname -r, same compile.</text>
+
+    <!-- The VM -->
+    <rect x="330" y="40" width="510" height="440" rx="10" fill="#f4f1fb" stroke="#7a62b8" stroke-width="2"/>
+    <text x="346" y="66" font-size="15" font-weight="bold">WSL2 virtual machine: one kernel for every distro</text>
+
+    <rect x="346" y="82" width="478" height="60" rx="6" fill="#ffffff" stroke="#7a62b8" stroke-width="1.5"/>
+    <text x="358" y="106" font-size="14" font-weight="bold">Linux kernel</text>
+    <text x="358" y="128" font-size="12" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">&lt;release&gt; = uname -r = 6.18.58.1-wsl2-x86_64-v3+</text>
+
+    <rect x="346" y="170" width="478" height="86" rx="6" fill="#dbe7fb" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="358" y="194" font-size="14" font-weight="bold">/modules: the VHDX, mounted read-only (ext4)</text>
+    <g font-family="Consolas, 'SFMono-Regular', Menlo, monospace" font-size="12">
+      <text x="358" y="218">&lt;release&gt;/modules</text>
+      <text x="358" y="238">&lt;release&gt;/linux-headers</text>
+    </g>
+
+    <!-- Into each distro -->
+    <path d="M460,256 L460,286" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="468" y="276" font-size="11">overlay lower layer</text>
+    <path d="M710,256 L710,286" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="718" y="276" font-size="11">overlay lower layer</text>
+
+    <!-- Ubuntu -->
+    <rect x="346" y="290" width="229" height="174" rx="6" fill="#ffffff" stroke="#7a62b8" stroke-width="1.5"/>
+    <text x="358" y="314" font-size="14" font-weight="bold">Ubuntu 26.04</text>
+    <text x="358" y="336" font-size="12" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">/lib/modules/&lt;release&gt;</text>
+    <rect x="358" y="348" width="205" height="30" rx="4" fill="#fdf0c4" stroke="#b8962c"/>
+    <text x="366" y="368" font-size="12">upper: writable, in the distro</text>
+    <rect x="358" y="382" width="205" height="30" rx="4" fill="#dbe7fb" stroke="#5b7bb5"/>
+    <text x="366" y="402" font-size="12">lower: from /modules, read-only</text>
+    <text x="358" y="436" font-size="12" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">$ sudo modprobe wireguard</text>
+    <text x="358" y="454" font-size="11">loads the module into the kernel</text>
+
+    <!-- NixOS -->
+    <rect x="595" y="290" width="229" height="174" rx="6" fill="#ffffff" stroke="#7a62b8" stroke-width="1.5"/>
+    <text x="607" y="314" font-size="14" font-weight="bold">NixOS</text>
+    <text x="607" y="336" font-size="12" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">/lib/modules/&lt;release&gt;</text>
+    <rect x="607" y="348" width="205" height="30" rx="4" fill="#fdf0c4" stroke="#b8962c"/>
+    <text x="615" y="368" font-size="12">upper: writable, in the distro</text>
+    <rect x="607" y="382" width="205" height="30" rx="4" fill="#dbe7fb" stroke="#5b7bb5"/>
+    <text x="615" y="402" font-size="12">lower: from /modules, read-only</text>
+    <text x="607" y="436" font-size="12" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">$ lsmod | grep wireguard</text>
+    <text x="607" y="454" font-size="11">already loaded: same kernel</text>
+
+    <!-- From the host into the VM, drawn last so the arrowheads sit on top -->
+    <path d="M246,276 C270,276 270,112 342,112" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="259" y="196" font-size="12" text-anchor="middle" transform="rotate(-90 259 196)">boots</text>
+    <path d="M246,378 C310,378 310,213 342,213" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="318" y="318" font-size="12" text-anchor="middle" transform="rotate(-90 318 318)">attached</text>
+  </g>
+</svg>

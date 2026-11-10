@@ -27,14 +27,10 @@ Both work for every distro at once. The rest of this entry is the VHDX route.
 
 `kernelModules=` in the `[wsl2]` section of `%UserProfile%\.wslconfig` takes "an absolute Windows path to a custom Linux kernel modules VHD" ([wsl-config](https://learn.microsoft.com/en-us/windows/wsl/wsl-config)). WSL's own init (`src/linux/init/main.cpp` in [microsoft/WSL](https://github.com/microsoft/WSL)) then:
 
-```mermaid
-flowchart LR
-  A[".wslconfig<br/>kernelModules=G:\\...\\modules.vhdx"] --> B["VM boots;<br/>VHDX attached as a SCSI disk"]
-  B --> C["mounted read-only, ext4,<br/>at /modules"]
-  C --> D["/modules/&lt;release&gt;/modules<br/>(nested layout)"]
-  D --> E["overlayfs on<br/>/lib/modules/&lt;release&gt;<br/>in every distro"]
-  E --> F["modprobe works;<br/>loadKernelModules= list loaded"]
-```
+<figure>
+<img src="wsl2-kernel-modules-vhdx.svg" alt="On the Windows host, .wslconfig points kernel= to a bzImage and kernelModules= to modules.vhdx. In the WSL2 virtual machine, the bzImage boots as the one Linux kernel, and the VHDX is attached and mounted read-only at /modules. Each distro, here Ubuntu 26.04 and NixOS, gets an overlay on /lib/modules/release: a writable upper layer in the distro over the read-only modules from /modules. A module loaded with modprobe in Ubuntu shows up in lsmod in NixOS, because both share the kernel." width="860" height="500" loading="lazy">
+<figcaption>One <code>.wslconfig</code> line attaches the VHDX to the VM (as a SCSI disk). WSL mounts it once, then gives every distro an overlay on top of it.</figcaption>
+</figure>
 
 - The VHDX lays its files out as `<release>/modules` and `<release>/linux-headers`. WSL also accepts the older flat layout (the modules tree at the disk's root), with a warning that support for it is going away.
 - On top of the read-only disk sits a writable overlay. The only thing written to a distro's own disk is the empty mountpoint directory `/usr/lib/modules/<release>/` (4 KB). NixOS gets the same overlay at `/lib/modules/<release>`.
