@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->168<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->169<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -206,6 +206,7 @@ Browse these TILs at https://til.housni.eu/
 * [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
 * [Changing when logrotate runs: the systemd timer, from the command line and with Ansible](https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html) - 2026-10-15
 * [AppImage: "error loading libfuse.so.2" on recent Ubuntu](https://til.housni.eu/linux/appimage-libfuse2-error.html) - 2026-11-01
+* [Loadable modules for a custom WSL2 kernel: a `modules.vhdx` and one `.wslconfig` line](https://til.housni.eu/linux/wsl2-kernel-modules-vhdx.html) - 2026-11-10
 
 ## windows
 
