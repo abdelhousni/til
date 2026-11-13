@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->169<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->170<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -149,6 +149,7 @@ Browse these TILs at https://til.housni.eu/
 * [Deleting merged branches: GitHub's auto-delete, GitLab's equivalent, and the local clone](https://til.housni.eu/git/delete-merged-branches-github-gitlab-and-local.html) - 2026-10-28
 * [Conventional Commits: commit messages that tools can read](https://til.housni.eu/git/conventional-commits-messages-that-tools-can-read.html) - 2026-11-08
 * [`git config user.email` isn't the identity Git commits with: check `git var`](https://til.housni.eu/git/git-config-user-email-is-not-the-commit-identity.html) - 2026-11-08
+* [Ignore your own scratch files without touching `.gitignore`: use `.git/info/exclude`](https://til.housni.eu/git/ignore-local-files-without-touching-gitignore.html) - 2026-11-13
 
 ## oauth2
 
