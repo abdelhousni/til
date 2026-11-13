@@ -119,6 +119,22 @@ Rules for an SVG:
   well-formed XML, and two hyphens in a row inside an XML comment are
   enough to break it.
 
+### Signing diagrams
+
+Every diagram on the site carries the line
+`© <year> Abdellatif Housni · til.housni.eu`, where `<year>` is the year
+the diagram was drawn. Don't update it later.
+
+- **Hand-written SVG**: put the line in the file itself, as a last
+  `<text>` element in the bottom-right corner (`text-anchor="end"`,
+  `font-size="11"`, `fill="#6e7781"`, the system font stack). Leave room
+  for it in the layout.
+- **Mermaid**: don't write it in the block. `build_site.py` adds it under
+  each rendered diagram (`diagram_signature`), using the year the entry
+  was created.
+- **Any other picture** (a screenshot, a PNG): sign it in its
+  `<figcaption>`.
+
 ## Authorship
 
 The site says once, on the homepage, in the README and in `llms.txt`, that
