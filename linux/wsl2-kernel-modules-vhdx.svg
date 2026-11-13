@@ -108,4 +108,6 @@
     <path d="M246,378 C310,378 310,213 342,213" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
     <text x="318" y="318" font-size="12" text-anchor="middle" transform="rotate(-90 318 318)">attached</text>
   </g>
+  <!-- Signature: the year is the year this drawing was made -->
+  <text x="840" y="495" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#6e7781" text-anchor="end">© 2026 Abdellatif Housni · til.housni.eu</text>
 </svg>
