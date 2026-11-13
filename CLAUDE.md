@@ -132,8 +132,10 @@ the diagram was drawn. Don't update it later.
 - **Mermaid**: don't write it in the block. `build_site.py` adds it under
   each rendered diagram (`diagram_signature`), using the year the entry
   was created.
-- **Any other picture** (a screenshot, a PNG): sign it in its
-  `<figcaption>`.
+- **Any other picture** (a screenshot, a PNG): sign it in a `title`
+  attribute on its `<img>`, shown as a tooltip on hover. Not in `alt`,
+  which screen readers read as the picture's description, and not in the
+  visible `<figcaption>`.
 
 ## Authorship
 
