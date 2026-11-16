@@ -41,6 +41,20 @@ From [the SOPS age documentation](https://getsops.io/docs/usage/identities/age/)
 
 The command isn't run through a shell. In [`age/keysource.go`](https://github.com/getsops/sops/blob/v3.13.3/age/keysource.go) SOPS splits the string into words the way a shell would quote them (`shlex.Split`) and runs the first word directly. A pipe, a redirection or `$VAR` in the string is passed to the program as a literal argument. For any of those, wrap it: `SOPS_AGE_KEY_CMD="sh -c '…'"`. The command inherits SOPS's environment, which is how `bw` gets `BW_SESSION`.
 
+### When `keys.txt` already exists
+
+The documentation says the variables "override the default lookup", but in 3.13.3 nothing is overridden: `loadIdentities` in `age/keysource.go` reads **every** source it finds (`SOPS_AGE_KEY`, `SOPS_AGE_KEY_FILE`, `SOPS_AGE_KEY_CMD`, the default `keys.txt` and SSH keys) and merges the keys. Errors from one source are reported only if no key works. Tested with a temporary `XDG_CONFIG_HOME`:
+
+| `keys.txt` holds | `SOPS_AGE_KEY_CMD` | Result |
+|---|---|---|
+| the right key | fails (`exit 1`) | decrypts; the command still ran |
+| another key | prints the right key | decrypts |
+| another key | fails | fails, and the error names the failed command |
+
+`SOPS_AGE_KEY_FILE` behaves the same way: pointed at a wrong key, decryption still succeeded with the right key from `keys.txt`.
+
+So moving the key into Bitwarden only removes it from the disk if you delete the old file afterwards. Once the vault copy decrypts your files, run `shred -u ~/.config/sops/age/keys.txt` (if it holds other keys, move those to the vault first). Until then, a working decryption proves nothing about the vault, because `keys.txt` may be doing the work.
+
 ## Put the key in the vault
 
 Log in once, then unlock. `bw unlock --raw` prints only the session key, which every later `bw` command reads from `BW_SESSION` ([Bitwarden CLI docs, "Using a session key"](https://bitwarden.com/help/cli/#using-a-session-key)):
