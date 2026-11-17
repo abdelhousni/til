@@ -164,6 +164,6 @@ The probe docs draw the same line between the two checks: a liveness probe is fo
 
 ## Where this series goes next
 
-Autoscaling with the HorizontalPodAutoscaler: adding and removing replicas based on the CPU requests that the namespaces entry made mandatory.
+Upgrading the Proxmox cluster's RKE2 with its Ansible role, one minor version at a time. After that, autoscaling with the HorizontalPodAutoscaler: adding and removing replicas based on the CPU requests that the namespaces entry made mandatory.
 
 These commands ran on a single-node RKE2 v1.36.4 cluster inside a Docker container in a cloud sandbox, not on the Proxmox homelab the earlier entries used.

@@ -62,6 +62,8 @@ To use it:
 
 4. Run `wsl --shutdown`, reopen the distro, and check `uname -r`.
 
+This `bzImage` carries only what the config builds in (`=y`). For the options it leaves as modules (`=m`), see [Loadable modules for a custom WSL2 kernel](wsl2-kernel-modules-vhdx.md).
+
 Microsoft's branches are `linux-msft-wsl-6.18.y`, `6.6.y`, `6.1.y`, and so on. Tags such as `linux-msft-wsl-6.18.40.1` pin one release. `git ls-remote --heads https://github.com/microsoft/WSL2-Linux-Kernel` lists them.
 
 ## `CFLAGS=` breaks the build; `KCFLAGS=` doesn't

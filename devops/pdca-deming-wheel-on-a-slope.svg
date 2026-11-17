@@ -59,4 +59,6 @@
     <!-- Rolling up: clockwise, from 200 to 250 degrees at radius 152 -->
     <path d="M-142.83,-171.99 A152,152 0 0 1 -51.99,-262.83" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round" marker-end="url(#arrowhead)"/>
   </g>
+  <!-- Signature: the year is the year this drawing was made -->
+  <text x="780" y="440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#6e7781" text-anchor="end">© 2026 Abdellatif Housni · til.housni.eu</text>
 </svg>

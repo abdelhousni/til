@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->164<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->169<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -171,6 +171,9 @@ Browse these TILs at https://til.housni.eu/
 * [RKE2 leaves its servers schedulable, so your workloads have been running on the control plane all along](https://til.housni.eu/kubernetes/rke2-node-scheduling-labels-taints-tolerations.html) - 2026-09-20
 * [A namespace on its own protects nothing: quotas, limit ranges, network policies and Pod Security do](https://til.housni.eu/kubernetes/namespaces-resourcequota-limitrange-rke2.html) - 2026-10-24
 * [A liveness probe restarts a container, a readiness probe only takes it out of the Service](https://til.housni.eu/kubernetes/liveness-readiness-startup-probes.html) - 2026-10-25
+* [How the lablabs.rke2 Ansible role upgrades an RKE2 cluster, node by node](https://til.housni.eu/kubernetes/rke2-upgrade-with-the-lablabs-rke2-role.html) - 2026-11-08
+* [Installing kube-prometheus on RKE2, one step at a time](https://til.housni.eu/kubernetes/kube-prometheus-on-rke2-step-by-step.html) - 2026-11-08
+* [Kustomize overlays: trimming an upstream release without editing it](https://til.housni.eu/kubernetes/kustomize-overlays-trimming-an-upstream-release.html) - 2026-11-08
 
 ## packer
 
@@ -203,6 +206,7 @@ Browse these TILs at https://til.housni.eu/
 * [Sudo rules that hand out a root shell, and a CI check that refuses them](https://til.housni.eu/linux/sudo-rules-that-hand-out-a-root-shell.html) - 2026-10-01
 * [Changing when logrotate runs: the systemd timer, from the command line and with Ansible](https://til.housni.eu/linux/change-the-logrotate-timer-schedule.html) - 2026-10-15
 * [AppImage: "error loading libfuse.so.2" on recent Ubuntu](https://til.housni.eu/linux/appimage-libfuse2-error.html) - 2026-11-01
+* [Loadable modules for a custom WSL2 kernel: a `modules.vhdx` and one `.wslconfig` line](https://til.housni.eu/linux/wsl2-kernel-modules-vhdx.html) - 2026-11-10
 
 ## windows
 
@@ -252,6 +256,10 @@ Browse these TILs at https://til.housni.eu/
 
 * [The package manager map: one portable environment for WSL2 and VMs, from apt to OCI images](https://til.housni.eu/package-managers/portable-environment-map-package-managers-to-images.html) - 2026-11-08
 * [apt, dnf and pacman side by side: one cheat sheet for Ubuntu 26.04, Fedora 45 and Arch](https://til.housni.eu/package-managers/apt-dnf-pacman-side-by-side-ubuntu-fedora-arch.html) - 2026-11-08
+
+## renovate
+
+* [Adding Renovate to a GitHub project: the hosted app, and the versions it can't see](https://til.housni.eu/renovate/adding-renovate-to-a-github-project.html) - 2026-11-08
 <!-- index ends -->
 
 ---

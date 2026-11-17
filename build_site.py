@@ -276,6 +276,7 @@ pre code { background: none; padding: 0; }
 a { color: #0969da; }
 pre.mermaid { background: none; padding: 0; text-align: center; }
 pre.mermaid svg { max-width: 100%; height: auto; }
+.diagram-signature { text-align: right; color: #6e7781; font-size: .75rem; margin: .25rem 0 1rem; }
 table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: .95rem; display: block; overflow-x: auto; }
 th, td { border: 1px solid #d0d7de; padding: .5rem .75rem; text-align: left; vertical-align: top; }
 thead th { background: #f6f8fa; font-weight: 600; border-bottom-width: 2px; }
@@ -453,6 +454,19 @@ def separate_lists_from_paragraphs(text):
         out.append(line)
         prev = line
     return "\n".join(out)
+
+
+# Every diagram on the site is signed (see CLAUDE.md, "Signing diagrams").
+# A hand-written SVG carries the line itself; a Mermaid block can't show a
+# footer cleanly, so the build adds the same line under each rendered one.
+SIGNATURE = "Abdellatif Housni · til.housni.eu"
+
+
+def diagram_signature(created_date):
+    """The line under a Mermaid diagram. The year is the entry's creation
+    year (when the diagram was drawn), or this year for an uncommitted draft."""
+    year = created_date[:4] if created_date[:4].isdigit() else str(datetime.now().year)
+    return f'<p class="diagram-signature" translate="no">© {year} {SIGNATURE}</p>'
 
 
 def created_date_and_timestamp(path):
@@ -861,7 +875,9 @@ def main():
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-            lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>', body_text
+            lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>\n'
+            + diagram_signature(date),
+            body_text,
         )
         html_body = unescape_pipes_in_table_code(
             markdown.markdown(

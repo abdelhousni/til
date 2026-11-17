@@ -29,6 +29,8 @@ That last branch isn't a warning in a log somewhere. RKE2's current source treat
 
 > `"ingress-nginx is no longer supported as a standalone ingress controller, please use traefik. Using ingress-nginx in dual mode for migration is still supported."`
 
+"Explicitly set" can happen without anyone choosing it: the lablabs.rke2 Ansible role writes `ingress-controller: ingress-nginx` by default, even when the `rke2-ingress-nginx` chart is disabled. [The upgrade entry](rke2-upgrade-with-the-lablabs-rke2-role.md#a-role-default-that-rke2-137-refuses) hit that on the way to 1.37.
+
 The upgrade-keeps-nginx behavior is deliberate and is decided by detection rather than by config: RKE2 picks ingress-nginx *"if its HelmChart is present in the cluster, otherwise traefik."* An upgrade doesn't silently swap the thing serving your production traffic — but it also doesn't migrate you, which means the clock above is still running and the migration is yours to schedule.
 
 ## The migration is dual-mode on purpose

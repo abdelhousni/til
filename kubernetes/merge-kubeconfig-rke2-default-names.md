@@ -1,6 +1,6 @@
 # Two RKE2 kubeconfigs merge into one cluster: rename before you merge
 
-Sixteenth entry in the RKE2/Kubernetes series. [The off-node `kubectl` entry](kubectl-off-node-rke2-tls-san.md) copied one cluster's `rke2.yaml` to a workstation and pointed `kubectl` at it with `KUBECONFIG` or `--kubeconfig`. A second cluster brings a second file, and the usual next step is to merge both into `~/.kube/config` so that one file reaches every cluster. With two RKE2 files, that merge loses the second cluster and prints no error. This entry shows why, renames the entries with `kubectl` alone, and then merges safely.
+Seventeenth entry in the RKE2/Kubernetes series. [The off-node `kubectl` entry](kubectl-off-node-rke2-tls-san.md) copied one cluster's `rke2.yaml` to a workstation and pointed `kubectl` at it with `KUBECONFIG` or `--kubeconfig`. A second cluster brings a second file, and the usual next step is to merge both into `~/.kube/config` so that one file reaches every cluster. With two RKE2 files, that merge loses the second cluster and prints no error. This entry shows why, renames the entries with `kubectl` alone, and then merges safely.
 
 ## What a kubeconfig holds
 
