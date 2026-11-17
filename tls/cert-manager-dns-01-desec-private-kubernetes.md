@@ -79,7 +79,7 @@ In the lab, `helm` couldn't pull from `oci://` because of a broken Docker creden
 
 **Why `dns01RecursiveNameservers`.** Before telling Let's Encrypt to look, cert-manager runs a *self-check*: it finds the zone's *authoritative* nameservers (deSEC's own) by asking a *recursive* resolver (the one that answers ordinary lookups, from the node's `/etc/resolv.conf` by default), then asks the authoritative servers whether the TXT record is there. This node resolved through NextDNS, a filtering resolver that rewrote some names of this zone to LAN addresses. Pointing the first step at public resolvers takes it out of the path. The self-check itself still goes to deSEC's servers, unless `--dns01-recursive-nameservers-only` is also set.
 
-**If the zone is managed as code** (octoDNS, Terraform's DNS providers), make sure the tool ignores `_acme-challenge`, or it may delete the record mid-challenge or report it as drift.
+**If the zone is managed as code** (octoDNS, Terraform's DNS providers), make sure the tool ignores `_acme-challenge` ([how with octoDNS](../dns/octodns-adopt-an-existing-dns-zone.md)), or it may delete the record mid-challenge or report it as drift.
 
 ## 3. Two ClusterIssuers, staging first
 
