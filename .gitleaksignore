@@ -16,3 +16,5 @@ b076513b573735d88cc5f799d01ff7edebfef814:aws/ocr-pdf-textract.md:aws-access-toke
 698e888a156882453714e40c7f4a3680f0b3df55:postgresql/constructing-geojson-in-postgresql.md:airtable-api-key:75
 # ssh/reuse-one-ssh-agent-across-shells-with-keychain.md: false positive: two quoted PEM header lines, no key material (reworded in the next commit)
 3461f9106c0d65be98f4698c6205d15fb41a4350:ssh/reuse-one-ssh-agent-across-shells-with-keychain.md:private-key:44
+# secrets/sops-age-key-from-bitwarden-cli.md (branch claude/zealous-hopper-t44n04, no pull request): false positive: an age public key in age-keygen's output, public by design
+6c37b0a110b430287d1daec63cadf73c25007113:secrets/sops-age-key-from-bitwarden-cli.md:generic-api-key:65
