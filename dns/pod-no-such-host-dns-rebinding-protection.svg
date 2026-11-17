@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="520" viewBox="0 0 860 520" role="img" aria-labelledby="title desc">
+<!--
+  The path of one lookup from a pod to the authoritative server and back,
+  and where the private answer is dropped. Used by
+  pod-no-such-host-dns-rebinding-protection.md, where it replaced a
+  Mermaid flowchart.
+
+  Drawn by hand for this site from the lookups in the entry: the pod asks
+  CoreDNS at 10.43.0.10, CoreDNS forwards to the node's /etc/resolv.conf,
+  the resolver gets the private A record from ns1.desec.io and passes on
+  NOERROR with no records. Names and addresses are the entry's placeholders.
+
+  Dependencies: none. Plain SVG 1.1 written in a text editor: no script, no
+  external font, image or stylesheet, no generator. The page shows it with
+  an img tag, so it renders without JavaScript and in the Atom feed.
+  Text uses the site's system font stack, and monospace for names and
+  addresses.
+
+  Layout: a sequence diagram. Four participants with lifelines at x 110
+  (pod), 330 (CoreDNS), 560 (node's resolver) and 770 (authoritative
+  server). Messages go down the page, one row each, between y 170 and
+  440. The shaded box behind the first two lifelines is the cluster.
+  Monospace text is about 7.2 px per character at 12 px, sans text about
+  6.5 px; keep each label inside the span of its arrow when editing.
+
+  To edit: change the numbers, run make check-svg (well-formed XML, a
+  title, nothing external), and look at it in a browser. An XML comment
+  can't contain two hyphens in a row.
+-->
+  <title id="title">Where a pod's lookup of a private address is dropped</title>
+  <desc id="desc">A pod asks CoreDNS at 10.43.0.10 for the A record of kas.myhome.dedyn.io. It isn't a cluster name, so CoreDNS forwards the question to the resolver in the node's /etc/resolv.conf. The resolver asks the authoritative server, ns1.desec.io, which answers with the private address 192.168.1.20. The resolver's DNS rebinding protection drops that answer and replies NOERROR with no records, known as NODATA. CoreDNS passes the empty answer to the pod, and Go reports it as no such host.</desc>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+  <rect width="860" height="520" fill="#ffffff"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#1a1a1a">
+
+    <!-- The cluster, behind the first two lifelines -->
+    <rect x="20" y="20" width="420" height="470" rx="10" fill="#eef3fb" stroke="#5b7bb5" stroke-width="2"/>
+    <text x="34" y="44" font-size="15" font-weight="bold">RKE2 cluster</text>
+    <text x="460" y="44" font-size="15" font-weight="bold">Outside the cluster</text>
+
+    <!-- Participants -->
+    <rect x="40" y="58" width="140" height="60" rx="6" fill="#ffffff" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="110" y="82" font-size="14" font-weight="bold" text-anchor="middle">Pod</text>
+    <text x="110" y="104" font-size="12" text-anchor="middle">a client written in Go</text>
+
+    <rect x="250" y="58" width="160" height="60" rx="6" fill="#ffffff" stroke="#5b7bb5" stroke-width="1.5"/>
+    <text x="330" y="82" font-size="14" font-weight="bold" text-anchor="middle">CoreDNS</text>
+    <text x="330" y="104" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">10.43.0.10</text>
+
+    <rect x="470" y="58" width="180" height="60" rx="6" fill="#ffffff" stroke="#7a62b8" stroke-width="1.5"/>
+    <text x="560" y="82" font-size="14" font-weight="bold" text-anchor="middle">Node's resolver</text>
+    <text x="560" y="104" font-size="12" text-anchor="middle">filters private answers</text>
+
+    <rect x="680" y="58" width="170" height="60" rx="6" fill="#ffffff" stroke="#7a62b8" stroke-width="1.5"/>
+    <text x="765" y="82" font-size="13" font-weight="bold" text-anchor="middle">Authoritative server</text>
+    <text x="765" y="104" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">ns1.desec.io</text>
+
+    <!-- Lifelines -->
+    <g stroke="#8c959f" stroke-width="1.5" stroke-dasharray="4 4">
+      <path d="M110,118 L110,455"/>
+      <path d="M330,118 L330,455"/>
+      <path d="M560,118 L560,455"/>
+      <path d="M765,118 L765,455"/>
+    </g>
+
+    <!-- The question, going out -->
+    <path d="M110,170 L326,170" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="220" y="162" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">A? kas.myhome.dedyn.io</text>
+
+    <path d="M330,230 L556,230" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="445" y="204" font-size="12" text-anchor="middle">not a cluster name, so</text>
+    <text x="445" y="222" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">forward . /etc/resolv.conf</text>
+
+    <path d="M560,280 L761,280" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="662" y="272" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">A? kas.myhome.dedyn.io</text>
+
+    <!-- The answer, coming back -->
+    <path d="M765,320 L564,320" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="662" y="312" font-size="12" text-anchor="middle" font-family="Consolas, 'SFMono-Regular', Menlo, monospace">A 192.168.1.20</text>
+
+    <rect x="480" y="333" width="160" height="46" rx="4" fill="#fdf0c4" stroke="#b8962c"/>
+    <text x="560" y="352" font-size="12" text-anchor="middle">private address:</text>
+    <text x="560" y="369" font-size="12" text-anchor="middle" font-weight="bold">answer dropped</text>
+
+    <path d="M560,405 L334,405" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="445" y="397" font-size="12" text-anchor="middle">NOERROR, no records (NODATA)</text>
+
+    <path d="M330,440 L114,440" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="220" y="432" font-size="12" text-anchor="middle">NOERROR, no records</text>
+
+    <!-- What the pod's program reports -->
+    <text x="110" y="476" font-size="12" text-anchor="middle" fill="#b42318">Go: no such host</text>
+  </g>
+  <!-- Signature: the year is the year this drawing was made -->
+  <text x="840" y="510" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#6e7781" text-anchor="end">© 2026 Abdellatif Housni · til.housni.eu</text>
+</svg>

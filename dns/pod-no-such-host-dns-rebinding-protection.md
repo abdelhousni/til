@@ -30,15 +30,10 @@ kubectl -n kube-system get configmap rke2-coredns-rke2-coredns -o jsonpath='{.da
 
 So public names go to whichever resolvers the node has in `/etc/resolv.conf`. If those differ from your laptop's, a pod and a laptop can get different answers for the same name. See [what RKE2 is](../kubernetes/what-is-rke2-and-how-it-works.md) for how the cluster fits together.
 
-```mermaid
-flowchart LR
-    POD[Pod] -->|kas.myhome.dedyn.io?| CDNS["CoreDNS<br/>10.43.0.10"]
-    CDNS -->|"not a cluster name:<br/>forward . /etc/resolv.conf"| RES["Node's resolver<br/>(filters private answers)"]
-    RES -->|asks| AUTH["Authoritative server<br/>ns1.desec.io"]
-    AUTH -->|"A 192.168.1.20"| RES
-    RES -->|"NOERROR, no records"| CDNS
-    CDNS -->|"NOERROR, no records"| POD
-```
+<figure>
+<img src="pod-no-such-host-dns-rebinding-protection.svg" alt="A pod asks CoreDNS at 10.43.0.10 for the A record of kas.myhome.dedyn.io. It isn't a cluster name, so CoreDNS forwards the question to the resolver in the node's /etc/resolv.conf. The resolver asks the authoritative server, ns1.desec.io, which answers with the private address 192.168.1.20. The resolver drops that answer and replies NOERROR with no records, known as NODATA. CoreDNS passes the empty answer to the pod, and Go reports it as no such host." width="860" height="520" loading="lazy">
+<figcaption>The record reaches the node's resolver intact. The resolver drops it on the way back, and CoreDNS only passes the empty answer along.</figcaption>
+</figure>
 
 ## What DNS rebinding protection does
 
