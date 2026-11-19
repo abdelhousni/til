@@ -8,7 +8,7 @@ Entries are drafted with [Claude Code](https://claude.com/claude-code), which al
 
 Browse these TILs at https://til.housni.eu/
 
-<!-- count starts -->169<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
+<!-- count starts -->170<!-- count ends --> TILs so far. <a href="https://til.housni.eu/feed.atom">Atom feed here</a>.
 
 <!-- index starts -->
 ## ansible
@@ -260,6 +260,10 @@ Browse these TILs at https://til.housni.eu/
 ## renovate
 
 * [Adding Renovate to a GitHub project: the hosted app, and the versions it can't see](https://til.housni.eu/renovate/adding-renovate-to-a-github-project.html) - 2026-11-08
+
+## containers
+
+* [Docker Swarm and Kubernetes side by side: the same concepts, two vocabularies](https://til.housni.eu/containers/docker-swarm-vs-kubernetes-cheat-sheet.html) - 2026-11-19
 <!-- index ends -->
 
 ---
