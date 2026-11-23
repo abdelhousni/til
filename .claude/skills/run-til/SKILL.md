@@ -31,6 +31,13 @@ git fetch --unshallow   # only if make build says "This is a shallow clone"
 make build    # creates .venv on first run, then writes _site/
 ```
 
+`make build` runs `build_site.py`, then Pagefind
+(`.venv/bin/python -m pagefind --site _site`), which writes the search index
+and its UI into `_site/pagefind/`. A build made with `build_site.py` alone
+has no working search: the search button doesn't appear, and the two
+`pagefind/pagefind-component-ui` files answer 404, which the driver reports
+as failed requests.
+
 ## Run (agent path)
 
 Serve `_site/` in the background and wait for the port:

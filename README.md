@@ -272,6 +272,8 @@ Browse these TILs at https://til.housni.eu/
 
 The published site is built by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) running three scripts and uploading `_site/`. The `Makefile` runs the same three, in the same order, so a clean `make preflight` locally means a clean deploy.
 
+Search runs in the reader's browser: after `build_site.py`, [Pagefind](https://pagefind.app/) (`python -m pagefind --site _site`, pinned in `requirements.txt`) indexes the entries and writes the index and its search UI into `_site/pagefind/`.
+
 ```bash
 git clone https://github.com/abdelhousni/til.git    # not --depth 1, see below
 cd til
@@ -282,7 +284,7 @@ make serve            # creates .venv, installs deps, builds, serves on :8000
 | --- | --- |
 | `make help` | list these targets |
 | `make venv` | create `.venv` and install `requirements.txt` |
-| `make build` | build the site into `_site/` |
+| `make build` | build the site and its search index into `_site/` |
 | `make serve` | build, then serve on `localhost:8000` (`make serve PORT=9000` to move it) |
 | `make check` | build + internal link check, fast |
 | `make check-external` | build + external link check, slow — this one is the deploy gate |
