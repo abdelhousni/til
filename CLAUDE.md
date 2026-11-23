@@ -22,7 +22,7 @@ remove it — editing the body does not re-append it.
 
 ## Commit authorship
 
-Commits are authored by the repository owner, with Claude credited only in the
+Commits are authored by the repository owner, with Claude credited in the
 `Co-Authored-By` trailer. Before the first commit in a session, check the
 identity Git will actually use:
 
@@ -31,16 +31,35 @@ git var GIT_AUTHOR_IDENT
 git var GIT_COMMITTER_IDENT
 ```
 
-Both should show `abdelhousni <23284113+abdelhousni@users.noreply.github.com>`.
-The cloud environment sets `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`,
-`GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL`, which override every git config
-file. `git config user.email` doesn't see them: it still prints
-`noreply@anthropic.com`, which the cloud session writes to `~/.gitconfig` at
-start, so don't go by it.
+The author must be `abdelhousni <23284113+abdelhousni@users.noreply.github.com>`.
+The cloud environment sets `GIT_AUTHOR_NAME` and `GIT_AUTHOR_EMAIL`, which
+override every git config file. `git config user.email` doesn't see them: it
+still prints `noreply@anthropic.com`, which the cloud session writes to
+`~/.gitconfig` at start, so don't go by it.
 
-If either line shows another identity, such as `Claude <noreply@anthropic.com>`,
-the variables aren't set in this environment. Set the repository-local
-identity first:
+The committer depends on where the commit is made:
+
+- **In a cloud session**: `Claude <noreply@anthropic.com>`, from that
+  `~/.gitconfig`. The session signs every commit with a key GitHub knows as
+  Claude's, and GitHub checks a signature against the committer. With the
+  owner as committer the commit shows as Unverified; with Claude it shows as
+  Verified. Don't set `GIT_COMMITTER_NAME` or `GIT_COMMITTER_EMAIL`, and if
+  the environment still sets them, unset them for the commit:
+  `env -u GIT_COMMITTER_NAME -u GIT_COMMITTER_EMAIL git commit ...`. See
+  `git/unverified-commits-from-a-cloud-session.md`.
+- **On the owner's machine**: the owner, like the author.
+
+If the author line shows another identity, such as
+`Claude <noreply@anthropic.com>`, the variables aren't set in this
+environment. In a cloud session, set the author only, so the committer stays
+the one that signs:
+
+```bash
+export GIT_AUTHOR_NAME="abdelhousni"
+export GIT_AUTHOR_EMAIL="23284113+abdelhousni@users.noreply.github.com"
+```
+
+Elsewhere, set the repository-local identity:
 
 ```bash
 git config user.name "abdelhousni"
