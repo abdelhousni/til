@@ -55,6 +55,8 @@ jobs:
         echo "::warning::README index could not be pushed after 3 attempts; the next run will regenerate it."
     - name: Build site
       run: python build_site.py
+    - name: Build the search index
+      run: python -m pagefind --site _site
     - name: Check for dead links
       run: python check_links.py --external
     - name: Upload artifact

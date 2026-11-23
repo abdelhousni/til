@@ -1,2 +1,4 @@
 markdown
 pygments
+# Pinned: the extra ships the platform binary that indexes _site for search.
+pagefind[bin]==1.6.0
