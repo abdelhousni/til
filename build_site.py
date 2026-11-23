@@ -73,6 +73,22 @@ RECENT_TILS_LIMIT = 10
 TAG_RE = re.compile(r"<[^>]+>")
 
 
+# Search runs entirely in the reader's browser: Pagefind indexes _site after
+# this script (python -m pagefind --site _site) and writes the index and the
+# component UI into _site/pagefind/. Entry pages mark <main> with
+# data-pagefind-body, so only entries are indexed, never the homepage, topic
+# pages or redirect stubs. `prefix` is the path from the page to the site root.
+def search_head(prefix):
+    return (
+        f'<link rel="stylesheet" href="{prefix}pagefind/pagefind-component-ui.css">\n'
+        f'<script src="{prefix}pagefind/pagefind-component-ui.js" type="module"></script>'
+    )
+
+
+SEARCH_UI = """<div class="search"><pagefind-modal-trigger></pagefind-modal-trigger></div>
+<pagefind-modal></pagefind-modal>"""
+
+
 def plain_text_summary(html_body, limit=160):
     """First paragraph of rendered HTML, tags stripped, for a <meta description>."""
     match = re.search(r"<p>(.*?)</p>", html_body, re.DOTALL)
@@ -110,19 +126,21 @@ PAGE_TEMPLATE = """<!doctype html>
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
+{search_head}
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 <link rel="alternate" type="text/markdown" href="{slug}.md">
 <link rel="describedby" href="../llms.txt">
 </head>
 <body>
 <header><a href="../index.html">&larr; All TILs</a> &middot; <a href="./">{topic}</a>
+{search_ui}
 {translate_links}</header>
-<main>
+<main data-pagefind-body>
 <h1>{title}</h1>
-<p class="meta">{topic} - {date}</p>
+<p class="meta"><span data-pagefind-filter="topic">{topic}</span><span data-pagefind-ignore> - {date}</span></p>
 {body}
-<p class="created">{created_line}</p>
-{series_nav}</main>
+<p class="created" data-pagefind-ignore>{created_line}</p>
+<div data-pagefind-ignore>{series_nav}</div></main>
 {translate_script}{mermaid_script}{analytics_script}</body>
 </html>
 """
@@ -142,6 +160,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{url}/">
 <link rel="stylesheet" href="style.css">
+{search_head}
 <link rel="alternate" type="application/atom+xml" title="{title}" href="feed.atom">
 <link rel="describedby" href="llms.txt">
 {rel_me_links}
@@ -150,6 +169,7 @@ INDEX_TEMPLATE = """<!doctype html>
 <body>
 <header>
 <h1>{title}</h1>
+{search_ui}
 {translate_links}<p>Things I've learned, collected in <a href="https://github.com/abdelhousni/til">abdelhousni/til</a>. Site pattern and tooling adapted from <a href="https://github.com/simonw/til">simonw/til</a>.<br>
 <a href="https://www.linkedin.com/in/abdelhousni/"><img src="https://img.shields.io/badge/abdelhousni-0A66C2?style=flat&amp;logo=Linkedin&amp;logoColor=white&amp;labelColor=0A66C2" alt="LinkedIn Badge"></a>
 </p>
@@ -177,12 +197,14 @@ TOPIC_TEMPLATE = """<!doctype html>
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{url}">
 <link rel="stylesheet" href="../style.css">
+{search_head}
 <link rel="alternate" type="application/atom+xml" title="{topic} - {site_title}" href="feed.atom">
 <link rel="alternate" type="application/atom+xml" title="{site_title}" href="../feed.atom">
 <link rel="describedby" href="../llms.txt">
 </head>
 <body>
-<header><a href="../index.html">&larr; All TILs</a></header>
+<header><a href="../index.html">&larr; All TILs</a>
+{search_ui}</header>
 <main>
 <h1>{topic}</h1>
 <p class="meta">{count} TIL{plural} filed under {topic}. <a href="feed.atom">Atom feed</a> for this topic.</p>
@@ -249,6 +271,7 @@ FEED_ENTRY_TEMPLATE = """<entry>
 STYLE = """
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; max-width: 780px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
 header { margin-bottom: 2rem; }
+header .search { margin: .75rem 0 0; }
 header a { text-decoration: none; color: #0969da; }
 header .translate { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0 0; font-size: .85rem; }
 header .translate .chip { display: inline-flex; align-items: baseline; gap: .4rem; min-height: 24px; padding: .3rem .7rem; border: 1px solid #d0d7de; border-radius: 999px; background: #fff; }
@@ -875,7 +898,7 @@ def main():
         last_modified = last_modified_datetime(md)
         body_text = rewrite_relative_md_links(strip_leading_title(text, title))
         body_text, has_mermaid = MERMAID_FENCE_RE.subn(
-            lambda m: f'<pre class="mermaid" translate="no">\n{escape(m.group(1))}\n</pre>\n'
+            lambda m: f'<pre class="mermaid" translate="no" data-pagefind-ignore>\n{escape(m.group(1))}\n</pre>\n'
             + diagram_signature(date),
             body_text,
         )
@@ -908,6 +931,8 @@ def main():
                 author=SITE_AUTHOR,
                 url=url,
                 translate_links=TRANSLATE_LINKS.format(url=url),
+                search_head=search_head("../"),
+                search_ui=SEARCH_UI,
                 translate_script=TRANSLATE_SCRIPT,
                 mermaid_script=MERMAID_SCRIPT if has_mermaid else "",
                 analytics_script=ANALYTICS_SCRIPT,
@@ -984,6 +1009,8 @@ def main():
             person_schema=build_person_schema(),
             bing_verification_code=BING_VERIFICATION_CODE,
             translate_links=TRANSLATE_LINKS.format(url=f"{SITE_URL}/"),
+            search_head=search_head(""),
+            search_ui=SEARCH_UI,
             translate_script=TRANSLATE_SCRIPT,
             analytics_script=ANALYTICS_SCRIPT,
         )
@@ -1002,6 +1029,8 @@ def main():
                 description=attr_escape(f"{len(rows)} TIL{plural} filed under {topic} on {SITE_TITLE}."),
                 author=SITE_AUTHOR,
                 url=topic_url,
+                search_head=search_head("../"),
+                search_ui=SEARCH_UI,
                 analytics_script=ANALYTICS_SCRIPT,
             )
         )

@@ -27,8 +27,9 @@ $(VENV_PYTHON): requirements.txt
 	$(VENV_PYTHON) -m pip install --quiet -r requirements.txt
 	@touch $(VENV_PYTHON)
 
-build: check-history warn-untracked $(VENV_PYTHON) ## Build the site into _site/
+build: check-history warn-untracked $(VENV_PYTHON) ## Build the site and its search index into _site/
 	$(VENV_PYTHON) build_site.py
+	$(VENV_PYTHON) -m pagefind --site _site
 
 serve: build ## Build, then serve _site/ on localhost (override PORT=)
 	@echo
