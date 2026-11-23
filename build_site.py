@@ -85,7 +85,13 @@ def search_head(prefix):
     )
 
 
+# bundle-path="./" is resolved against pagefind-component-ui.js, which sits in
+# pagefind/ beside pagefind.js. Without it the component UI loads
+# /pagefind/pagefind.js from the root of the host, which is a 404 when the
+# site is served from a subdirectory such as abdelhousni.github.io/til/.
+# Result links then follow the bundle's location, so they get the /til/ too.
 SEARCH_UI = """<div class="search"><pagefind-modal-trigger></pagefind-modal-trigger></div>
+<pagefind-config bundle-path="./"></pagefind-config>
 <pagefind-modal></pagefind-modal>"""
 
 
